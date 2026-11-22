@@ -998,32 +998,22 @@ def substance_matrix(series: list[dict], ethalon: dict,
         if _i == 0 or model_short(str(s["model"])) != \
                 model_short(str(series[_i - 1]["model"])):
             group_start.add(_i)
-    # двухъярусная шапка (решение владельца): верх — модель на всю её
-    # группу уровней (colspan), низ — уровни размышлений; собирается
-    # в фрагменты и повторяется под заголовком КАЖДОГО гриба
-    # (решение владельца «шапку размести под каждой строкой с названием
-    # гриба»)
-    models_row = []
-    thinks_row = []
-    i = 0
-    while i < n_cols:
-        full = str(series[i]["model"])
-        m = model_short(full)
-        span = 1
-        while i + span < n_cols and \
-                model_short(str(series[i + span]["model"])) == m:
-            span += 1
-        models_row.append(f'<th class="mx-model" colspan="{span}" '
-                          f'title="{esc(full)}">{esc(m)}</th>')
-        i += span
     # в шапке уровни сокращены (med) и идут по возрастанию «усилия»
     think_short = {"medium": "med"}
-    for s in series:
-        lv = think_short.get(s["think"], s["think"])
-        thinks_row.append(f'<th class="mx-think">{esc(lv)}</th>')
-    head_repeat = ('<tr><th class="namehd" rowspan="2">Соединения</th>'
-                   + "".join(models_row) + '</tr><tr>'
-                   + "".join(thinks_row) + '</tr>')
+
+    # подсветка фантазий (решение владельца 22.11): внутри каждого гриба
+    # колонки шкалируются от минимума уникальных фантазий (зелёный) до
+    # максимума (красный) — видно, как качество распределено по моделям;
+    # теми же цветами красится строка «уникальных фантазий» и шапка гриба
+    def _heat_style(c: float, lo: float, hi: float) -> str:
+        if hi <= lo:
+            return ""
+        t = (c - lo) / (hi - lo)
+        ca, cb = ((0x3a, 0xa2, 0x5c), (0xe8, 0xb6, 0x4c)) if t <= .5 \
+            else ((0xe8, 0xb6, 0x4c), (0xd7, 0x5f, 0x5f))
+        u = t * 2 if t <= .5 else t * 2 - 1
+        rgb = tuple(round(ca[i] + (cb[i] - ca[i]) * u) for i in range(3))
+        return f"background:#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
 
     def subhdr(text: str) -> str:
         return (f'<tr class="subhdr"><th colspan="{n_cols + 1}">'
@@ -1041,7 +1031,6 @@ def substance_matrix(series: list[dict], ethalon: dict,
         body_rows.append(
             f'<tr class="mushhdr"><th colspan="{n_cols + 1}">'
             f'{with_latin(topic, qid)}</th></tr>')
-        body_rows.append(head_repeat)
 
         def cell_for(k: int, n: int, tip: str, gray: bool = False,
                      first_of_group: bool = False) -> str:
@@ -1071,6 +1060,7 @@ def substance_matrix(series: list[dict], ethalon: dict,
                     f'title="{esc(tip)}">{k}/{n}</td>')
 
         matched: set[str] = set()
+        real_rows: list[str] = []
         # --- блок 1: эталонный (реальный) состав ---
         groups = (("эталон · основные", "основные"),
                   ("эталон · следовые", "следовые"),
@@ -1079,7 +1069,7 @@ def substance_matrix(series: list[dict], ethalon: dict,
             entries = eth.get(key) or []
             if not entries:
                 continue
-            body_rows.append(subhdr(sub))
+            real_rows.append(subhdr(sub))
             for e in entries:
                 targets = [norm_name(t) for t in ethalon_targets(e)]
                 tds = []
@@ -1105,9 +1095,42 @@ def substance_matrix(series: list[dict], ethalon: dict,
                            f"{st.get('галлюцинация', 0)}")
                     tds.append(cell_for(k, n, tip,
                                         first_of_group=si in group_start))
-                body_rows.append(
+                real_rows.append(
                     f'<tr><td class="name">{esc(e["вещество"])}</td>'
                     f'{"".join(tds)}</tr>')
+
+        # число уникальных фантазий по колонкам — им шкалируются и строка
+        # «уникальных фантазий», и шапка гриба (решение владельца 22.11)
+        fant_counts = [sum(1 for nm in (acc.get(qid) or {}) if nm not in matched)
+                       for _s, acc, _n in per_series]
+        lo, hi = min(fant_counts), max(fant_counts)
+        # двухъярусная шапка (решение владельца): верх — модель на всю её
+        # группу уровней (colspan, цвет по среднему её уровней), низ —
+        # уровни размышлений (цветом своей колонки); повторяется под
+        # заголовком КАЖДОГО гриба с подсветкой по фантазиям этого гриба
+        models_row, thinks_row = [], []
+        i = 0
+        while i < n_cols:
+            full = str(series[i]["model"])
+            m = model_short(full)
+            span = 1
+            while i + span < n_cols and \
+                    model_short(str(series[i + span]["model"])) == m:
+                span += 1
+            stl = _heat_style(sum(fant_counts[i:i + span]) / span, lo, hi)
+            stl = f' style="{stl}"' if stl else ''
+            models_row.append(f'<th class="mx-model" colspan="{span}"{stl} '
+                              f'title="{esc(full)}">{esc(m)}</th>')
+            i += span
+        for si, s in enumerate(series):
+            lv = think_short.get(s["think"], s["think"])
+            stl = _heat_style(fant_counts[si], lo, hi)
+            stl = f' style="{stl}"' if stl else ''
+            thinks_row.append(f'<th class="mx-think"{stl}>{esc(lv)}</th>')
+        body_rows.append('<tr><th class="namehd" rowspan="2">Соединения</th>'
+                         + "".join(models_row) + '</tr><tr>'
+                         + "".join(thinks_row) + '</tr>')
+        body_rows.extend(real_rows)
 
         # --- блок 2: фантазии (нет в эталоне) по частоте ---
         # строку сюда определяет строгий матчик (нет совпадения с эталоном);
@@ -1134,12 +1157,12 @@ def substance_matrix(series: list[dict], ethalon: dict,
             # (решение владельца) — масштаб фантазийания каждой серии
             total_tds = []
             for si, (s, acc, n_by_q) in enumerate(per_series):
-                cnt = sum(1 for nm in (acc.get(qid) or {})
-                          if nm not in matched)
+                stl = _heat_style(fant_counts[si], lo, hi)
+                stl = f' style="{stl}"' if stl else ''
                 total_tds.append(
-                    f'<td class="fant-total" '
+                    f'<td class="fant-total"{stl} '
                     f'title="уникальных фантазий (вне эталона) в этой серии">'
-                    f'{cnt}</td>')
+                    f'{fant_counts[si]}</td>')
             body_rows.append(
                 f'<tr><td class="fant-total name-c">уникальных фантазий</td>'
                 f'{"".join(total_tds)}</tr>')
@@ -1181,6 +1204,7 @@ def substance_matrix(series: list[dict], ethalon: dict,
   <span><span class="sw" style="background:#7d838c"></span>фантазии: стабильные</span>
   <span><span class="sw" style="background:#a9aeb6"></span>средние</span>
   <span><span class="sw" style="background:#d4d8dd"></span>редкие</span>
+  <span><span class="sw" style="background:linear-gradient(90deg,#3aa25c,#e8b64c,#d75f5f)"></span>строка «уникальных фантазий» и шапка: зелёный — меньше выдумок, красный — больше (шкала внутри каждого гриба)</span>
   <span class="hint">эталонный блок — цвет по стабильности повторов;
   «фантазии» — градации серого (темнее = повторяется чаще); принадлежность
   эталону определяется положением строки: первый блок каждого гриба — эталон
