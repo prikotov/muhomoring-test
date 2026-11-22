@@ -1013,7 +1013,10 @@ def substance_matrix(series: list[dict], ethalon: dict,
             else ((0xe8, 0xb6, 0x4c), (0xd7, 0x5f, 0x5f))
         u = t * 2 if t <= .5 else t * 2 - 1
         rgb = tuple(round(ca[i] + (cb[i] - ca[i]) * u) for i in range(3))
-        return f"background:#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+        # тёмный текст на всей шкале: фон в средних тонах, светлый текст
+        # шапки (var(--mut)) на нём не читается (замечание владельца)
+        return (f"background:#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x};"
+                f"color:#1d222a")
 
     def subhdr(text: str) -> str:
         return (f'<tr class="subhdr"><th colspan="{n_cols + 1}">'
