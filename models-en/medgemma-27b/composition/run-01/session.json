@@ -1,0 +1,541 @@
+{
+  "model": "medgemma:27b",
+  "run": 1,
+  "started_at": "2026-11-20T11:47:28.450669+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 36.2,
+    "prompt_tokens": 1294,
+    "output_tokens": 2443,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\"mushroom\": \"Amanita muscaria\", \"composition\": [{\"compound\": \"Ibotenic acid\", \"amount\": \"10-50 mg/g (dry weight)\", \"effect\": \"Neuroexcitatory, precursor to muscimol\"}, {\"compound\": \"Muscimol\", \"amount\": \"5-10 mg/g (dry weight)\", \"effect\": \"GABA receptor agonist, psychoactive\"}, {\"compound\": \"Beta-carotene\", \"amount\": \"unknown\", \"effect\": \"Antioxidant, provitamin A\"}, {\"compound\": \"Riboflavin (Vitamin B2)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrient involved in metabolism\"}, {\"compound\": \"Niacin (Vitamin B3)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrient involved in metabolism\"}, {\"compound\": \"Choline\", \"amount\": \"unknown\", \"effect\": \"Neurotransmitter precursor, involved in cell structure\"}, {\"compound\": \"Phosphorus\", \"amount\": \"unknown\", \"effect\": \"Essential mineral for bone health and energy metabolism\"}, {\"compound\": \"Potassium\", \"amount\": \"unknown\", \"effect\": \"Essential electrolyte for nerve and muscle function\"}, {\"compound\": \"Copper\", \"amount\": \"unknown\", \"effect\": \"Essential trace element involved in enzyme function\"}, {\"compound\": \"Selenium\", \"amount\": \"unknown\", \"effect\": \"Essential trace element with antioxidant properties\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "10-50 mg/g (dry weight)",
+          "влияние": "Neuroexcitatory, precursor to muscimol"
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "5-10 mg/g (dry weight)",
+          "влияние": "GABA receptor agonist, psychoactive"
+        },
+        {
+          "вещество": "Beta-carotene",
+          "содержание": "unknown",
+          "влияние": "Antioxidant, provitamin A"
+        },
+        {
+          "вещество": "Riboflavin (Vitamin B2)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient involved in metabolism"
+        },
+        {
+          "вещество": "Niacin (Vitamin B3)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient involved in metabolism"
+        },
+        {
+          "вещество": "Choline",
+          "содержание": "unknown",
+          "влияние": "Neurotransmitter precursor, involved in cell structure"
+        },
+        {
+          "вещество": "Phosphorus",
+          "содержание": "unknown",
+          "влияние": "Essential mineral for bone health and energy metabolism"
+        },
+        {
+          "вещество": "Potassium",
+          "содержание": "unknown",
+          "влияние": "Essential electrolyte for nerve and muscle function"
+        },
+        {
+          "вещество": "Copper",
+          "содержание": "unknown",
+          "влияние": "Essential trace element involved in enzyme function"
+        },
+        {
+          "вещество": "Selenium",
+          "содержание": "unknown",
+          "влияние": "Essential trace element with antioxidant properties"
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 10,
+      "thinking_len": 0,
+      "duration_s": 8.18,
+      "eval_count": 296,
+      "prompt_eval_count": 162,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\"mushroom\": \"Amanita pantherina\", \"composition\": [{\"compound\": \"Ibotenic acid\", \"amount\": \"unknown\", \"effect\": \"Neurotoxic, causing CNS excitation followed by depression.\"}, {\"compound\": \"Muscimol\", \"amount\": \"unknown\", \"effect\": \"Neurotoxic, GABA receptor agonist, causing CNS depression and hallucinations.\"}, {\"compound\": \"Beta-carbolines (e.g., harmaline, harmine)\", \"amount\": \"unknown\", \"effect\": \"MAO inhibitors, potentially enhancing effects of other compounds.\"}, {\"compound\": \"Amanitines (e.g., amanitin)\", \"amount\": \"unknown\", \"effect\": \"Toxic, inhibit RNA polymerase II, potentially causing liver and kidney damage (though less potent than in Amanita phalloides).\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Cholinergic agonist, causing SLUDGE symptoms (Salivation, Lacrimation, Urination, Defecation, Gastrointestinal upset, Emesis).\"}, {\"compound\": \"Volatile compounds\", \"amount\": \"unknown\", \"effect\": \"Contribute to the mushroom's odor and potentially psychoactive effects.\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Neurotoxic, causing CNS excitation followed by depression."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "Neurotoxic, GABA receptor agonist, causing CNS depression and hallucinations."
+        },
+        {
+          "вещество": "Beta-carbolines (e.g., harmaline, harmine)",
+          "содержание": "unknown",
+          "влияние": "MAO inhibitors, potentially enhancing effects of other compounds."
+        },
+        {
+          "вещество": "Amanitines (e.g., amanitin)",
+          "содержание": "unknown",
+          "влияние": "Toxic, inhibit RNA polymerase II, potentially causing liver and kidney damage (though less potent than in Amanita phalloides)."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Cholinergic agonist, causing SLUDGE symptoms (Salivation, Lacrimation, Urination, Defecation, Gastrointestinal upset, Emesis)."
+        },
+        {
+          "вещество": "Volatile compounds",
+          "содержание": "unknown",
+          "влияние": "Contribute to the mushroom's odor and potentially psychoactive effects."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 3.27,
+      "eval_count": 250,
+      "prompt_eval_count": 161,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\"mushroom\": \"Amanita phalloides\", \"composition\": [{\"compound\": \"Amatoxins (e.g., α-amanitin)\", \"amount\": \"unknown\", \"effect\": \"Inhibit RNA polymerase II, causing liver and kidney failure.\"}, {\"compound\": \"Phallotoxins\", \"amount\": \"unknown\", \"effect\": \"Toxic effects less understood, potential for cytotoxicity.\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Stimulates muscarinic receptors, causing cholinergic symptoms (though less significant than amatoxins).\"}, {\"compound\": \"Amino acids\", \"amount\": \"unknown\", \"effect\": \"Building blocks for proteins.\"}, {\"compound\": \"Polysaccharides (e.g., β-glucans)\", \"amount\": \"unknown\", \"effect\": \"Immunomodulatory and prebiotic effects.\"}, {\"compound\": \"Vitamins (e.g., B vitamins, Vitamin C)\", \"amount\": \"unknown\", \"effect\": \"Essential for metabolic processes.\"}, {\"compound\": \"Minerals (e.g., Potassium, Phosphorus, Selenium)\", \"amount\": \"unknown\", \"effect\": \"Essential for various physiological functions.\"}]}",
+      "composition": [
+        {
+          "вещество": "Amatoxins (e.g., α-amanitin)",
+          "содержание": "unknown",
+          "влияние": "Inhibit RNA polymerase II, causing liver and kidney failure."
+        },
+        {
+          "вещество": "Phallotoxins",
+          "содержание": "unknown",
+          "влияние": "Toxic effects less understood, potential for cytotoxicity."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Stimulates muscarinic receptors, causing cholinergic symptoms (though less significant than amatoxins)."
+        },
+        {
+          "вещество": "Amino acids",
+          "содержание": "unknown",
+          "влияние": "Building blocks for proteins."
+        },
+        {
+          "вещество": "Polysaccharides (e.g., β-glucans)",
+          "содержание": "unknown",
+          "влияние": "Immunomodulatory and prebiotic effects."
+        },
+        {
+          "вещество": "Vitamins (e.g., B vitamins, Vitamin C)",
+          "содержание": "unknown",
+          "влияние": "Essential for metabolic processes."
+        },
+        {
+          "вещество": "Minerals (e.g., Potassium, Phosphorus, Selenium)",
+          "содержание": "unknown",
+          "влияние": "Essential for various physiological functions."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 0,
+      "duration_s": 3.14,
+      "eval_count": 240,
+      "prompt_eval_count": 162,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\"mushroom\": \"Amanita citrina\", \"composition\": [{\"compound\": \"Amanitine\", \"amount\": \"unknown\", \"effect\": \"Potent toxin, inhibits RNA polymerase II, causing liver and kidney failure.\"}, {\"compound\": \"Amanitine derivatives (e.g., isoreceptors)\", \"amount\": \"unknown\", \"effect\": \"Potent toxins, similar mechanism to amanitine.\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Stimulates muscarinic acetylcholine receptors, causing cholinergic symptoms (SLUDGE syndrome).\"}, {\"compound\": \"Phalloid acid\", \"amount\": \"unknown\", \"effect\": \"Potent toxin, inhibits actin polymerization, causing liver and kidney damage.\"}, {\"compound\": \"Phalloidin\", \"amount\": \"unknown\", \"effect\": \"Potent toxin, similar mechanism to phalloidic acid.\"}, {\"compound\": \"Hydrazine\", \"amount\": \"unknown\", \"effect\": \"Potential carcinogen and toxin.\"}, {\"compound\": \"Amino acids\", \"amount\": \"unknown\", \"effect\": \"Building blocks of proteins.\"}, {\"compound\": \"Polysaccharides\", \"amount\": \"unknown\", \"effect\": \"Structural components, potential immunostimulants.\"}, {\"compound\": \"Vitamins (e.g., B vitamins, vitamin C)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrients.\"}, {\"compound\": \"Minerals (e.g., potassium, phosphorus, selenium)\", \"amount\": \"unknown\", \"effect\": \"Essential minerals.\"}]}",
+      "composition": [
+        {
+          "вещество": "Amanitine",
+          "содержание": "unknown",
+          "влияние": "Potent toxin, inhibits RNA polymerase II, causing liver and kidney failure."
+        },
+        {
+          "вещество": "Amanitine derivatives (e.g., isoreceptors)",
+          "содержание": "unknown",
+          "влияние": "Potent toxins, similar mechanism to amanitine."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Stimulates muscarinic acetylcholine receptors, causing cholinergic symptoms (SLUDGE syndrome)."
+        },
+        {
+          "вещество": "Phalloid acid",
+          "содержание": "unknown",
+          "влияние": "Potent toxin, inhibits actin polymerization, causing liver and kidney damage."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "unknown",
+          "влияние": "Potent toxin, similar mechanism to phalloidic acid."
+        },
+        {
+          "вещество": "Hydrazine",
+          "содержание": "unknown",
+          "влияние": "Potential carcinogen and toxin."
+        },
+        {
+          "вещество": "Amino acids",
+          "содержание": "unknown",
+          "влияние": "Building blocks of proteins."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "unknown",
+          "влияние": "Structural components, potential immunostimulants."
+        },
+        {
+          "вещество": "Vitamins (e.g., B vitamins, vitamin C)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrients."
+        },
+        {
+          "вещество": "Minerals (e.g., potassium, phosphorus, selenium)",
+          "содержание": "unknown",
+          "влияние": "Essential minerals."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 10,
+      "thinking_len": 0,
+      "duration_s": 4.16,
+      "eval_count": 320,
+      "prompt_eval_count": 162,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\"mushroom\": \"Amanita rubescens\", \"composition\": [{\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Stimulates parasympathetic nervous system, causing SLUDGE symptoms.\"}, {\"compound\": \"Amanitine\", \"amount\": \"unknown\", \"effect\": \"Inhibits RNA polymerase II, leading to liver and kidney damage.\"}, {\"compound\": \"Beta-alanine\", \"amount\": \"unknown\", \"effect\": \"Amino acid, component of peptides.\"}, {\"compound\": \"Hydrazine\", \"amount\": \"unknown\", \"effect\": \"Toxic, potential carcinogen.\"}, {\"compound\": \"Choline\", \"amount\": \"unknown\", \"effect\": \"Precursor to acetylcholine, involved in nerve function.\"}, {\"compound\": \"Riboflavin (Vitamin B2)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrient involved in energy metabolism.\"}, {\"compound\": \"Niacin (Vitamin B3)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrient involved in energy metabolism and DNA repair.\"}, {\"compound\": \"Pantothenic acid (Vitamin B5)\", \"amount\": \"unknown\", \"effect\": \"Essential nutrient involved in energy metabolism.\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"Precursor to Vitamin D2, membrane component.\"}, {\"compound\": \"Triterpenes\", \"amount\": \"unknown\", \"effect\": \"Various biological activities, some anti-inflammatory.\"}, {\"compound\": \"Polysaccharides (Beta-glucans)\", \"amount\": \"unknown\", \"effect\": \"Immune-modulating properties.\"}, {\"compound\": \"Copper\", \"amount\": \"unknown\", \"effect\": \"Essential trace element, involved in enzyme function.\"}, {\"compound\": \"Selenium\", \"amount\": \"unknown\", \"effect\": \"Essential trace element, antioxidant.\"}, {\"compound\": \"Potassium\", \"amount\": \"unknown\", \"effect\": \"Electrolyte, involved in nerve and muscle function.\"}]}",
+      "composition": [
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Stimulates parasympathetic nervous system, causing SLUDGE symptoms."
+        },
+        {
+          "вещество": "Amanitine",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II, leading to liver and kidney damage."
+        },
+        {
+          "вещество": "Beta-alanine",
+          "содержание": "unknown",
+          "влияние": "Amino acid, component of peptides."
+        },
+        {
+          "вещество": "Hydrazine",
+          "содержание": "unknown",
+          "влияние": "Toxic, potential carcinogen."
+        },
+        {
+          "вещество": "Choline",
+          "содержание": "unknown",
+          "влияние": "Precursor to acetylcholine, involved in nerve function."
+        },
+        {
+          "вещество": "Riboflavin (Vitamin B2)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient involved in energy metabolism."
+        },
+        {
+          "вещество": "Niacin (Vitamin B3)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient involved in energy metabolism and DNA repair."
+        },
+        {
+          "вещество": "Pantothenic acid (Vitamin B5)",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient involved in energy metabolism."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "Precursor to Vitamin D2, membrane component."
+        },
+        {
+          "вещество": "Triterpenes",
+          "содержание": "unknown",
+          "влияние": "Various biological activities, some anti-inflammatory."
+        },
+        {
+          "вещество": "Polysaccharides (Beta-glucans)",
+          "содержание": "unknown",
+          "влияние": "Immune-modulating properties."
+        },
+        {
+          "вещество": "Copper",
+          "содержание": "unknown",
+          "влияние": "Essential trace element, involved in enzyme function."
+        },
+        {
+          "вещество": "Selenium",
+          "содержание": "unknown",
+          "влияние": "Essential trace element, antioxidant."
+        },
+        {
+          "вещество": "Potassium",
+          "содержание": "unknown",
+          "влияние": "Electrolyte, involved in nerve and muscle function."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 14,
+      "thinking_len": 0,
+      "duration_s": 5.28,
+      "eval_count": 405,
+      "prompt_eval_count": 161,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\"mushroom\": \"Amanita caesarea\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"90-95% of fresh weight\", \"effect\": \"Main component, contributes to texture and structure.\"}, {\"compound\": \"Protein\", \"amount\": \"1-2% of fresh weight\", \"effect\": \"Essential for cellular structure and function.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"2-3% of fresh weight\", \"effect\": \"Provide energy.\"}, {\"compound\": \"Lipids\", \"amount\": \"0.1-0.2% of fresh weight\", \"effect\": \"Minor component, contribute to cell membranes.\"}, {\"compound\": \"Fiber\", \"amount\": \"2-3% of fresh weight\", \"effect\": \"Aids digestion.\"}, {\"compound\": \"Minerals (e.g., Potassium, Phosphorus, Calcium, Magnesium)\", \"amount\": \"Trace amounts\", \"effect\": \"Essential for various physiological processes.\"}, {\"compound\": \"Vitamins (e.g., B vitamins, Vitamin C)\", \"amount\": \"Trace amounts\", \"effect\": \"Essential for various physiological processes.\"}, {\"compound\": \"Amino acids\", \"amount\": \"Present in proteins\", \"effect\": \"Building blocks of proteins.\"}, {\"compound\": \"Volatile compounds\", \"amount\": \"Trace amounts\", \"effect\": \"Contribute to aroma and flavor.\"}, {\"compound\": \"Psilocybin/Psilocin\", \"amount\": \"Absent\", \"effect\": \"Not psychoactive.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "90-95% of fresh weight",
+          "влияние": "Main component, contributes to texture and structure."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "1-2% of fresh weight",
+          "влияние": "Essential for cellular structure and function."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "2-3% of fresh weight",
+          "влияние": "Provide energy."
+        },
+        {
+          "вещество": "Lipids",
+          "содержание": "0.1-0.2% of fresh weight",
+          "влияние": "Minor component, contribute to cell membranes."
+        },
+        {
+          "вещество": "Fiber",
+          "содержание": "2-3% of fresh weight",
+          "влияние": "Aids digestion."
+        },
+        {
+          "вещество": "Minerals (e.g., Potassium, Phosphorus, Calcium, Magnesium)",
+          "содержание": "Trace amounts",
+          "влияние": "Essential for various physiological processes."
+        },
+        {
+          "вещество": "Vitamins (e.g., B vitamins, Vitamin C)",
+          "содержание": "Trace amounts",
+          "влияние": "Essential for various physiological processes."
+        },
+        {
+          "вещество": "Amino acids",
+          "содержание": "Present in proteins",
+          "влияние": "Building blocks of proteins."
+        },
+        {
+          "вещество": "Volatile compounds",
+          "содержание": "Trace amounts",
+          "влияние": "Contribute to aroma and flavor."
+        },
+        {
+          "вещество": "Psilocybin/Psilocin",
+          "содержание": "Absent",
+          "влияние": "Not psychoactive."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 10,
+      "thinking_len": 0,
+      "duration_s": 4.1,
+      "eval_count": 312,
+      "prompt_eval_count": 163,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\"mushroom\": \"destroying angel (Amanita virosa)\", \"composition\": [{\"compound\": \"Amanitine\", \"amount\": \"unknown\", \"effect\": \"Inhibits RNA polymerase II, leading to liver and kidney failure.\"}, {\"compound\": \"Phalloidine\", \"amount\": \"unknown\", \"effect\": \"Causes cell death and organ damage, particularly in the liver and kidneys.\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Stimulates muscarinic acetylcholine receptors, causing cholinergic symptoms (salivation, sweating, etc.).\"}, {\"compound\": \"Amino acids\", \"amount\": \"unknown\", \"effect\": \"Building blocks for proteins.\"}, {\"compound\": \"Water\", \"amount\": \"approx. 90% of fresh weight\", \"effect\": \"Solvent and transport medium.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"unknown\", \"effect\": \"Energy source.\"}, {\"compound\": \"Lipids\", \"amount\": \"unknown\", \"effect\": \"Energy storage and cell structure.\"}, {\"compound\": \"Minerals (e.g., potassium, phosphorus)\", \"amount\": \"unknown\", \"effect\": \"Essential for various biochemical processes.\"}, {\"compound\": \"Vitamins (e.g., B vitamins)\", \"amount\": \"unknown\", \"effect\": \"Cofactors in metabolic reactions.\"}]}",
+      "composition": [
+        {
+          "вещество": "Amanitine",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II, leading to liver and kidney failure."
+        },
+        {
+          "вещество": "Phalloidine",
+          "содержание": "unknown",
+          "влияние": "Causes cell death and organ damage, particularly in the liver and kidneys."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Stimulates muscarinic acetylcholine receptors, causing cholinergic symptoms (salivation, sweating, etc.)."
+        },
+        {
+          "вещество": "Amino acids",
+          "содержание": "unknown",
+          "влияние": "Building blocks for proteins."
+        },
+        {
+          "вещество": "Water",
+          "содержание": "approx. 90% of fresh weight",
+          "влияние": "Solvent and transport medium."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "unknown",
+          "влияние": "Energy source."
+        },
+        {
+          "вещество": "Lipids",
+          "содержание": "unknown",
+          "влияние": "Energy storage and cell structure."
+        },
+        {
+          "вещество": "Minerals (e.g., potassium, phosphorus)",
+          "содержание": "unknown",
+          "влияние": "Essential for various biochemical processes."
+        },
+        {
+          "вещество": "Vitamins (e.g., B vitamins)",
+          "содержание": "unknown",
+          "влияние": "Cofactors in metabolic reactions."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 9,
+      "thinking_len": 0,
+      "duration_s": 3.69,
+      "eval_count": 281,
+      "prompt_eval_count": 161,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\"mushroom\": \"Armillaria mellea (Honey Fungus)\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"approx. 85% (fresh weight)\", \"effect\": \"Main component, solvent for other compounds\"}, {\"compound\": \"Carbohydrates (e.g., glycogen, trehalose)\", \"amount\": \"approx. 10-15% (dry weight)\", \"effect\": \"Energy storage\"}, {\"compound\": \"Proteins\", \"amount\": \"approx. 15-25% (dry weight)\", \"effect\": \"Essential for cellular structure and function\"}, {\"compound\": \"Lipids\", \"amount\": \"approx. 1-3% (dry weight)\", \"effect\": \"Energy storage, membrane structure\"}, {\"compound\": \"Crude Fiber\", \"amount\": \"approx. 5-10% (dry weight)\", \"effect\": \"Structural component\"}, {\"compound\": \"Ash\", \"amount\": \"approx. 5-10% (dry weight)\", \"effect\": \"Minerals\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"Precursor for Vitamin D2\"}, {\"compound\": \"Various trace elements (e.g., potassium, phosphorus, zinc)\", \"amount\": \"unknown\", \"effect\": \"Essential minerals for human health\"}, {\"compound\": \"Armillarinic acid\", \"amount\": \"unknown\", \"effect\": \"Potential anti-cancer activity\"}, {\"compound\": \"Various polysaccharides (e.g., beta-glucans)\", \"amount\": \"unknown\", \"effect\": \"Potential immune-modulating effects\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "approx. 85% (fresh weight)",
+          "влияние": "Main component, solvent for other compounds"
+        },
+        {
+          "вещество": "Carbohydrates (e.g., glycogen, trehalose)",
+          "содержание": "approx. 10-15% (dry weight)",
+          "влияние": "Energy storage"
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "approx. 15-25% (dry weight)",
+          "влияние": "Essential for cellular structure and function"
+        },
+        {
+          "вещество": "Lipids",
+          "содержание": "approx. 1-3% (dry weight)",
+          "влияние": "Energy storage, membrane structure"
+        },
+        {
+          "вещество": "Crude Fiber",
+          "содержание": "approx. 5-10% (dry weight)",
+          "влияние": "Structural component"
+        },
+        {
+          "вещество": "Ash",
+          "содержание": "approx. 5-10% (dry weight)",
+          "влияние": "Minerals"
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "Precursor for Vitamin D2"
+        },
+        {
+          "вещество": "Various trace elements (e.g., potassium, phosphorus, zinc)",
+          "содержание": "unknown",
+          "влияние": "Essential minerals for human health"
+        },
+        {
+          "вещество": "Armillarinic acid",
+          "содержание": "unknown",
+          "влияние": "Potential anti-cancer activity"
+        },
+        {
+          "вещество": "Various polysaccharides (e.g., beta-glucans)",
+          "содержание": "unknown",
+          "влияние": "Potential immune-modulating effects"
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 10,
+      "thinking_len": 0,
+      "duration_s": 4.43,
+      "eval_count": 339,
+      "prompt_eval_count": 162,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

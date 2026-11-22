@@ -1,0 +1,1711 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Состав мухоморов — gemma4:26b, think medium: 15 прогонов</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    td.cell .tip { display: none; position: absolute; bottom: calc(100% + 6px);
+                   left: 50%; transform: translateX(-50%); width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 10px 2px 2px; max-width: 220px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    table.sx { border-collapse: collapse; background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    td.mx { min-width: 58px; text-align: center; font-weight: 700;
+            font-size: 11.5px; color: rgba(20,24,32,.82); padding: 4px 6px;
+            border-radius: 5px; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+<a class="backlink" href="../../../report.html">← Сводный отчёт</a>
+<h1>Состав мухоморов — gemma4:26b, think medium: 15 прогонов</h1>
+<p class="proto">клетка = вопрос «перечисли состав гриба» (recall-генерация): прогоны v1 — клетки красный/пантерный/бледная/лимонный, прогоны добора v2 — только контрольная группа (серо-розовый, цезарский); таблица гриба показывает только прогоны, где его клетка спрашивалась. Цвет клетки = вердикт судьи (glm-5.3-flash high против эталона), серая = вещество не перечислено в этом прогоне; стабильность = средний Jaccard наборов веществ между прогонами</p>
+<div class="chip">Модель: <b>gemma4:26b</b><br><small>think medium · прогонов: 15 (в таблице гриба — где его клетка спрашивалась)</small></div><div class="chip">Балл судьи (средний): <b>4.1 / 10</b><br><small>по оценённым клеткам</small></div><div class="chip">Галлюцинации: <b>17 / 202</b><br><small>доля вердиктов «галлюцинация»</small></div><div class="chip">Стабильность состава: <b>43%</b><br><small>средний попарный Jaccard веществ между прогонами</small></div><div class="chip">Стабильность реальных: <b>39%</b><br><small>Jaccard по веществам, признанным судьёй</small></div><div class="chip">JSON-разбор: <b>100%</b><br><small>(40 из 40 клеток)</small></div><div class="chip">Время: <b>364 c</b><br><small>токены: 8325 вх / 106615 вых</small></div><div class="chip">Эталон: <b>v3</b><br><small>судья видит справку целиком</small></div>
+
+<h2>Методика</h2>
+<div class="method">
+<h3>Запуск модели</h3>
+<p>Одна клетка = один независимый запрос к ollama
+<code>POST http://nserv:11434/api/chat</code>, stream=false. Истории между клетками
+нет — клетки изолированы, каждый вопрос несёт system-рамку теста. Параметры
+генерации — дефолтные ollama (temperature и прочее не переопределяются),
+seed не фиксируется; уровень размышлений передаётся полем <code>think</code>
+(уровень размышлений этого отчёта: <b>medium</b>).</p>
+<pre class="prompt-sample">{
+ &quot;model&quot;: &quot;gemma4:26b&quot;,
+ &quot;stream&quot;: false,
+ &quot;keep_alive&quot;: &quot;10m&quot;,
+ &quot;think&quot;: &quot;medium&quot;,
+ &quot;messages&quot;: [
+  {
+   &quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;&lt;SYSTEM-ПРОМПТ — целиком ниже&gt;&quot;
+  },
+  {
+   &quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;Перечисли известные тебе вещества химического состава гриба «красный мухомор» (Amanita muscaria) в плодовых телах: действующие (токсичные/психоактивные), алкалоиды, пигменты и прочие характерные компоненты.&quot;
+  }
+ ]
+}</pre>
+<ul>
+<li>внутри прогона <code>keep_alive</code> = 10m — веса держатся
+загруженными;</li>
+<li>модель выгружается перед первым и после каждого прогона
+(<code>keep_alive: 0</code>) — изоляция прогонов, KV-кэш между сериями не
+переживает;</li>
+<li>серия: 5 прогонов на уровень размышлений; уровни не смешиваются;</li>
+<li>ответ должен быть строго JSON; при усечённом/дегенеративном ответе парсер
+достаёт целые фрагменты-объекты (пометка «ремонт», json_ok=false).</li>
+</ul>
+<h3>System-промпт (одинаков во всех запросах)</h3>
+<pre class="prompt-sample">Ты проходишь тест на знание химического состава грибов рода Amanita. Отвечай строго в JSON: {&quot;гриб&quot;: &quot;...&quot;, &quot;состав&quot;: [{&quot;вещество&quot;: &quot;...&quot;, &quot;содержание&quot;: &quot;...&quot;, &quot;влияние&quot;: &quot;...&quot;}]}. В «содержание» укажи число с единицей измерения (% от свежего веса, % от сухого веса, мг/кг, мг/г или на плодовое тело) — если не знаешь, напиши «неизвестно». В «влияние» — одно короткое предложение о действии вещества на человека. Перечисли все известные тебе вещества. Никакого текста вне JSON.</pre>
+<h3>Пример user-сообщения — клетка AMUS</h3>
+<pre class="prompt-sample">Перечисли известные тебе вещества химического состава гриба «красный мухомор» (Amanita muscaria) в плодовых телах: действующие (токсичные/психоактивные), алкалоиды, пигменты и прочие характерные компоненты.</pre>
+<details class="raw"><summary>Пример ответа модели на эту клетку</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает галлюцинации и измененные состояния сознания.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает нейротоксическим действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Беталаны&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают характерную красную окраску шляпки.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терфенилы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+ 
+… (обрезано)</pre></details>
+<h3>Судья</h3>
+<p>Каждый ответ сверяется судьёй — <code>glm-5.3-flash</code>, thinking high,
+транспорт <code>pi</code> (провайдер zai). Судья получает эталонную справку
+состава гриба (ethalon.json) и разобранный состав ответа; по каждому веществу
+выносит вердикт «реальное / спорно / галлюцинация», оценивает концентрацию
+(в норме / завышена / занижена) и влияние на человека, перечисляет пропущенные
+эталонно важные вещества и ставит балл 0–10. Ответы длиннее 100 веществ
+(дегенеративный перебор) режутся до первых 100 с пометкой. Вердикт строго
+JSON: невалидная схема — одна повторная попытка, иначе клетка исключается из
+метрик. Переиспользование вердиктов — по хэшам входов эталона: изменение
+входа конкретного гриба переоценивает только его клетки.</p>
+<details class="raw"><summary>Пример вердикта судьи</summary><pre>{
+ &quot;вещества&quot;: [
+  {
+   &quot;название&quot;: &quot;Мусцимол&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Иботеновая кислота&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Мускарин&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Беталаны&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Терфенилы&quot;,
+   &quot;статус&quot;: &quot;галлюцинация&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;нет данных&quot;
+  }
+ ],
+ &quot;пропущено_важное&quot;: [
+  &quot;мусказон&quot;
+ ],
+ &quot;балл&quot;: 4,
+ &quot;комментарий&quot;: &quot;Модель знает два ключевых токсина (иботеновую кислоту и муцимол) и пигменты, но не даёт никаких количественных данных («неизвестно» для всего), воспроизводит миф о клинически значимом мускарине и выдумывает терфенилы, которых в составе мухомора нет.&quot;
+}</pre></details>
+<details class="raw"><summary>Полный промпт судьи (system + критерии)</summary>
+<pre>Ты — судья теста на знание химического состава грибов, эксперт-микотоксиколог. Тебе дают эталонную справку состава гриба (собранную из проверенных источников) и ответ тестируемой модели. Твоя задача — строгий и честный вердикт строго в JSON. Никакого текста вне JSON.
+
+Задача: оцени ответ модели против эталонной справки.
+
+По КАЖДОМУ веществу из ответа модели вынеси вердикт:
+- «статус»: «реальное» — вещество действительно присутствует в составе этого гриба; «спорно» — присутствие обсуждается в литературе или приписывается ошибочно, но часто; «галлюцинация» — такого вещества в составе нет (выдумка, путаница с другим грибом или организмом);
+- «концентрация»: «в норме» — значение правдоподобно по порядку величины и единицам (проценты свежего/сухого веса, мг/кг и т.п.; при пересчёте свежий↔сухой учти, что сухой вес ~10 % свежего); «завышена» / «занижена» — порядок величины ошибочен; «не указана» — модель не дала значения; «нет данных» — в справке нет цифры, оценить нельзя;
+- «влияние»: «верно» / «частично» / «неверно» — краткое описание действия на человека по справке и общепринятой фармакологии; «нет данных» — модель не описала влияние и справка не позволяет судить.
+
+Затем: «пропущено_важное» — СУЩЕСТВЕННЫЕ эталонные вещества, которых в ответе нет (основные токсины и характерные компоненты; следовые пигменты и прочую мелочь не перечисляй). Пустой список — если всё важное названо.
+«балл» — 0–10: полнота и точность относительно эталона (галлюцинации снижают сильнее пропусков).
+«комментарий» — 1–2 предложения: главный характер ответа (знает / путает / фантазирует).
+
+Формат ответа строго:
+{&quot;вещества&quot;: [{&quot;название&quot;: &quot;&lt;как назвала модель&gt;&quot;, &quot;статус&quot;: &quot;реальное|спорно|галлюцинация&quot;, &quot;концентрация&quot;: &quot;в норме|завышена|занижена|не указана|нет данных&quot;, &quot;влияние&quot;: &quot;верно|частично|неверно|нет данных&quot;}], &quot;пропущено_важное&quot;: [&quot;...&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;...&quot;}
+
+Ответ absent: если ответ модели пуст или отсутствует — верни {&quot;вещества&quot;: [], &quot;пропущено_важное&quot;: [&quot;все основные&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;ответ отсутствует&quot;}.
+</pre></details>
+</div>
+<div class="mush">
+<h3>Красный мухомор <code class="id">AMUS</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.4 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>52%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>60%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>25</b></div>
+  <div class="chip">Галлюцинации: <b>12%</b> (3 из 25 вердиктов)</div>
+  <div class="chip">реальных <b>21</b> · спорных <b>1</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th><th>частота</th></tr>
+<tr><td class="name">Иботеновая кислота</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Обладает нейротоксическим действием.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает нейротоксическим действием.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое и психоактивное действие.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое и психоактивное действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: 0.05% от сухого веса<br>Влияние: Вызывает нейротоксическое возбуждение центральной нервной системы.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>0.05% от сухого веса</b><span>Вызывает нейротоксическое возбуждение центральной нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Действует как нейротоксин и предшественник мусцимола.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Действует как нейротоксин и предшественник мусцимола.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Вызывает возбуждение центральной нервной системы.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает возбуждение центральной нервной системы.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Мускарин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует мускариновые рецепторы парасимпатической системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует мускариновые рецепторы парасимпатической системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует мускариновые рецепторы парасимпатической нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует мускариновые рецепторы парасимпатической нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Мусцимол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает галлюцинации и измененные состояния сознания.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает галлюцинации и измененные состояния сознания.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает галлюцинации и измененное состояние сознания.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает галлюцинации и измененное состояние сознания.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: 0.01% от сухого веса<br>Влияние: Оказывает выраженное психоактивное и седативное действие.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>0.01% от сухого веса</b><span>Оказывает выраженное психоактивное и седативное действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает психоактивные эффекты и галлюцинации.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает психоактивные эффекты и галлюцинации.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Оказывает галлюциногенное и седативное действие.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Оказывает галлюциногенное и седативное действие.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Эргостерол</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D2 в организме.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D2 в организме.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: 1% от сухого веса<br>Влияние: Служит предшественником витамина D2 при облучении ультрафиолетом.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>1% от сухого веса</b><span>Служит предшественником витамина D2 при облучении ультрафиолетом.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: 1-2% от сухого веса<br>Влияние: Является предшественником витамина D2.<br>Судья: реальное · концентрация завышена · влияние верно<br></div><div class="inner"><b>1-2% от сухого веса</b><span>Является предшественником витамина D2.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Вариегатическая кислота</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Вариегатическая кислота</b><br>Содержание: неизвестно<br>Влияние: Не оказывает прямого психоактивного влияния на человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Не оказывает прямого психоактивного влияния на человека.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Вариегатическая кислота</b><br>Содержание: неизвестно<br>Влияние: Не оказывает прямого физиологического влияния на человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Не оказывает прямого физиологического влияния на человека.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Беталамины</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Беталамины</b><br>Содержание: неизвестно<br>Влияние: Придают грибу характерную красную окраску.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Придают грибу характерную красную окраску.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Беталаны</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Беталаны</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают характерную красную окраску шляпки.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают характерную красную окраску шляпки.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Мускафлавин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускафлавин</b><br>Содержание: неизвестно<br>Влияние: Не оказывает прямого физиологического влияния на человека.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Не оказывает прямого физиологического влияния на человека.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Пигменты (варегин)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Пигменты (варегин)</b><br>Содержание: неизвестно<br>Влияние: Не оказывает прямого токсического или психоактивного воздействия на человека.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Не оказывает прямого токсического или психоактивного воздействия на человека.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Терфенилы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Терфенилы</b><br>Содержание: неизвестно<br>Влияние: Обладают потенциальной биологической активностью.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>неизвестно</b><span>Обладают потенциальной биологической активностью.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th></tr>
+<tr><td class="name">иботеновая кислота</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">муцимол</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусказон</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Пантерный мухомор <code class="id">APAN</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.4 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>70%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>80%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>18</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 18 вердиктов)</div>
+  <div class="chip">реальных <b>15</b> · спорных <b>3</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th><th>частота</th></tr>
+<tr><td class="name">Иботеновая кислота</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое действие и вызывает галлюцинации.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое действие и вызывает галлюцинации.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое и галлюциногенное действие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое и галлюциногенное действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Вызывает нейротоксичность и галлюцинации.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает нейротоксичность и галлюцинации.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Обладает нейротоксическим действием.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает нейротоксическим действием.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое и возбуждающее действие на центральную нервную систему.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое и возбуждающее действие на центральную нервную систему.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Мусцимол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает выраженные психоактивные и седативные эффекты.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает выраженные психоактивные и седативные эффекты.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает мощное психоактивное и седативное воздействие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает мощное психоактивное и седативное воздействие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Оказывает выраженное психоактивное и седативное действие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает выраженное психоактивное и седативное действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает психоактивные и галлюциногенные эффекты.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает психоактивные и галлюциногенные эффекты.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает выраженные психоактивные, галлюциногенные и седативные эффекты.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вызывает выраженные психоактивные, галлюциногенные и седативные эффекты.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Мускарин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует мускариновые ацетилхолиновые рецепторы, вызывая холинергические симптомы.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует мускариновые ацетилхолиновые рецепторы, вызывая холинергические симптомы.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">Буфотенин</td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Буфотенин</b><br>Содержание: неизвестно<br>Влияние: Обладает галлюциногенным эффектом.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает галлюциногенным эффектом.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Буфотенин</b><br>Содержание: неизвестно<br>Влияние: Обладает галлюциногенным эффектом.<br>Судья: спорно · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Обладает галлюциногенным эффектом.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Буфотенин</b><br>Содержание: неизвестно<br>Влияние: Оказывает галлюциногенное воздействие на центральную нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает галлюциногенное воздействие на центральную нервную систему.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Алкалоиды группы изоксазолов</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Алкалоиды группы изоксазолов</b><br>Содержание: неизвестно<br>Влияние: Влияют на центральную нервную систему.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Влияют на центральную нервную систему.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th></tr>
+<tr><td class="name">иботеновая кислота</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">муцимол</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусказон</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Бледная поганка <code class="id">APHA</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>6.4 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>55%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>55%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>27</b></div>
+  <div class="chip">Галлюцинации: <b>7%</b> (2 из 27 вердиктов)</div>
+  <div class="chip">реальных <b>24</b> · спорных <b>1</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th><th>частота</th></tr>
+<tr><td class="name">Фаллоидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Нарушает нормальное функционирование актинового цитоскелета.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Нарушает нормальное функционирование актинового цитоскелета.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: 0.1% от сухого веса<br>Влияние: Обладает высокой цитотоксичностью.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>0.1% от сухого веса</b><span>Обладает высокой цитотоксичностью.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актином, вызывая желудочно-кишечные расстройства.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Связывается с актином, вызывая желудочно-кишечные расстройства.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>фаллоидин</b><br>Содержание: неизвестно<br>Влияние: препятствует полимеризации актина, вызывая желудочно-кишечные расстройства.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>препятствует полимеризации актина, вызывая желудочно-кишечные расстройства.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Блокирует полимеризацию актина в клетках.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Блокирует полимеризацию актина в клетках.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">α-аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: неизвестно<br>Влияние: Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: 0.1% от сухого веса<br>Влияние: Вызывает необратимое разрушение клеток печени.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>0.1% от сухого веса</b><span>Вызывает необратимое разрушение клеток печени.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: неизвестно<br>Влияние: Ингибирует РНК-полимеразу II, вызывая тяжелое поражение печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует РНК-полимеразу II, вызывая тяжелое поражение печени.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: 0.1-0.5 мг/г (сухого веса)<br>Влияние: Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-0.5 мг/г (сухого веса)</b><span>Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">β-аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Приводит к тяжелой печеночной недостаточности.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к тяжелой печеночной недостаточности.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: 0.1% от сухого веса<br>Влияние: Приводит к тяжелой печеночной недостаточности.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>0.1% от сухого веса</b><span>Приводит к тяжелой печеночной недостаточности.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет синтез РНК, что ведет к разрушению клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Подавляет синтез РНК, что ведет к разрушению клеток печени.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Вызывает тяжелое поражение печени и почек.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает тяжелое поражение печени и почек.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">γ-аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Оказывает сильное гепатотоксическое действие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает сильное гепатотоксическое действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Оказывает токсическое действие на печеночную ткань.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Оказывает токсическое действие на печеночную ткань.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Приводит к печеночной недостаточности через блокировку РНК-полимеразы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к печеночной недостаточности через блокировку РНК-полимеразы.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Оказывает сильное гепатотоксическое действие.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает сильное гепатотоксическое действие.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">Фаллацидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Воздействует на структуру актиновых микрофиламентов.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Воздействует на структуру актиновых микрофиламентов.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Является высокотоксичным пептидом.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Является высокотоксичным пептидом.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Взаимодействует с белками цитоскелета, вызывая токсический эффект.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Взаимодействует с белками цитоскелета, вызывая токсический эффект.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Нарушает структурную целостность цитоскелета.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Нарушает структурную целостность цитоскелета.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">альфа-аманитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>альфа-аманитин</b><br>Содержание: 0.1-0.3% от сухого веса<br>Влияние: блокирует синтез РНК, вызывая тяжелое поражение печени.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-0.3% от сухого веса</b><span>блокирует синтез РНК, вызывая тяжелое поражение печени.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">бета-аманитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>бета-аманитин</b><br>Содержание: неизвестно<br>Влияние: приводит к летальной печеночной недостаточности.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>приводит к летальной печеночной недостаточности.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">гамма-аманитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>гамма-аманитин</b><br>Содержание: неизвестно<br>Влияние: вызывает системную интоксикацию и разрушение клеток печени.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>вызывает системную интоксикацию и разрушение клеток печени.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Фаллакинин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллакинин</b><br>Содержание: неизвестно<br>Влияние: Вносит вклад в общую токсичность гриба.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Вносит вклад в общую токсичность гриба.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Фаллолудин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллолудин</b><br>Содержание: неизвестно<br>Влияние: Оказывает токсическое воздействие на клеточный цитоскелет.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает токсическое воздействие на клеточный цитоскелет.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">фаллоцидин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>фаллоцидин</b><br>Содержание: неизвестно<br>Влияние: нарушает структуру цитоскелета клеток.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>нарушает структуру цитоскелета клеток.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th></tr>
+<tr><td class="name">α-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-аманитин и γ-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark ok">✓</td></tr><tr><td class="name">фаллоидин</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Лимонный мухомор <code class="id">ACIT</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>1.2 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>15%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>0%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>22</b></div>
+  <div class="chip">Галлюцинации: <b>27%</b> (6 из 22 вердиктов)</div>
+  <div class="chip">реальных <b>10</b> · спорных <b>6</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th><th>частота</th></tr>
+<tr><td class="name">Аминокислоты</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Участвуют в обмене веществ и синтезе белков.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Участвуют в обмене веществ и синтезе белков.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Являются важными элементами питания и метаболизма.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются важными элементами питания и метаболизма.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: являются строительным материалом для белков.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>являются строительным материалом для белков.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Иботеновая кислота</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Вызывает возбуждение центральной нервной системы.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает возбуждение центральной нервной системы.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Обладает нейротоксическим действием.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает нейротоксическим действием.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: оказывает нейротоксическое действие на центральную нервную систему.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>оказывает нейротоксическое действие на центральную нервную систему.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Мускарин</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: стимулирует парасимпатическую нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>стимулирует парасимпатическую нервную систему.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Мусцимол</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Оказывает психоактивное действие через ГАМК-рецепторы.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает психоактивное действие через ГАМК-рецепторы.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает психоактивные эффекты и седацию.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает психоактивные эффекты и седацию.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: вызывает галлюцинации и психоактивные эффекты.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>вызывает галлюцинации и психоактивные эффекты.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Алкалоиды (неуточненные)</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Алкалоиды (неуточненные)</b><br>Содержание: неизвестно<br>Влияние: Могут оказывать слабое токсическое действие на желудочно-кишечный тракт.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Могут оказывать слабое токсическое действие на желудочно-кишечный тракт.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Аманитины</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аманитины</b><br>Содержание: неизвестно<br>Влияние: вызывают тяжелое поражение печени и почек.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>вызывают тяжелое поражение печени и почек.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Белки</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются строительным материалом для клеток организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются строительным материалом для клеток организма.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Каротиноиды</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Каротиноиды</b><br>Содержание: неизвестно<br>Влияние: служат природными пигментами.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>служат природными пигментами.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Минеральные вещества</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества</b><br>Содержание: неизвестно<br>Влияние: Необходимы для поддержания гомеостаза.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходимы для поддержания гомеостаза.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Органические кислоты</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Органические кислоты</b><br>Содержание: неизвестно<br>Влияние: участвуют в метаболических процессах организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>участвуют в метаболических процессах организма.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Полисахариды</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды</b><br>Содержание: неизвестно<br>Влияние: Могут оказывать иммуномодулирующее действие.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Могут оказывать иммуномодулирующее действие.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Терпеновые соединения</td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Терпеновые соединения</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают характерный лимонный аромат плодового тела.<br>Судья: спорно · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают характерный лимонный аромат плодового тела.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Терпеноиды</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Терпеноиды</b><br>Содержание: неизвестно<br>Влияние: Могут проявлять биологическую активность.<br>Судья: спорно · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>неизвестно</b><span>Могут проявлять биологическую активность.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Углеводы</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: Служат основным источником энергии.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служат основным источником энергии.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-11</th><th class="runhd">run-12</th><th class="runhd">run-13</th><th class="runhd">run-14</th><th class="runhd">run-15</th></tr>
+<tr><td class="name">буфотенин (5-гидрокси-N,N-диметилтриптамин)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">буфотенин-N-оксид</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Мухомор серо-розовый <code class="id">ARUB</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.2 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>37%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>5%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>22</b></div>
+  <div class="chip">Галлюцинации: <b>27%</b> (6 из 22 вердиктов)</div>
+  <div class="chip">реальных <b>7</b> · спорных <b>9</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-31</th><th class="runhd">run-32</th><th class="runhd">run-33</th><th class="runhd">run-34</th><th class="runhd">run-35</th><th>частота</th></tr>
+<tr><td class="name">Иботеновая кислота</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое действие на центральную нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое действие на центральную нервную систему.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Оказывает нейротоксическое воздействие на организм.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает нейротоксическое воздействие на организм.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Воздействует на центральную нервную систему как возбуждающий нейромедиатор.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Воздействует на центральную нервную систему как возбуждающий нейромедиатор.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: вызывает перевозбуждение центральной нервной системы.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>вызывает перевозбуждение центральной нервной системы.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Обладает нейротоксическим и возбуждающим действием.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает нейротоксическим и возбуждающим действием.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Мусцимол</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает психоактивные эффекты и седацию.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает психоактивные эффекты и седацию.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Вызывает психоактивные эффекты и седацию.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает психоактивные эффекты и седацию.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Оказывает психоактивное и седативное действие.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает психоактивное и седативное действие.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: оказывает психоактивное и седативное действие.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>оказывает психоактивное и седативное действие.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Оказывает психоактивное воздействие на центральную нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает психоактивное воздействие на центральную нервную систему.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Белки</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются строительным материалом для клеток организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются строительным материалом для клеток организма.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: служат источником аминокислот для организма.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>служат источником аминокислот для организма.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Терфенилы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Терфенилы</b><br>Содержание: неизвестно<br>Влияние: Могут проявлять токсическое воздействие на организм.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>неизвестно</b><span>Могут проявлять токсическое воздействие на организм.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Терфенилы</b><br>Содержание: неизвестно<br>Влияние: Могут оказывать умеренное токсическое воздействие на организм.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>неизвестно</b><span>Могут оказывать умеренное токсическое воздействие на организм.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Углеводы</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: Служат основным источником энергии.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служат основным источником энергии.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: обеспечивают организм энергией.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>обеспечивают организм энергией.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Агаритин</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Агаритин</b><br>Содержание: неизвестно<br>Влияние: Обладает потенциальной канцерогенной активностью.<br>Судья: галлюцинация · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает потенциальной канцерогенной активностью.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Аминокислоты</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Являются важными питательными компонентами.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются важными питательными компонентами.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Минеральные вещества</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества</b><br>Содержание: неизвестно<br>Влияние: поддерживают метаболические процессы в организме.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>поддерживают метаболические процессы в организме.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Мускарин</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует парасимпатическую нервную систему.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует парасимпатическую нервную систему.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Полисахариды</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды</b><br>Содержание: неизвестно<br>Влияние: могут оказывать иммуномодулирующее действие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>могут оказывать иммуномодулирующее действие.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Терфенильные производные</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Терфенильные производные</b><br>Содержание: неизвестно<br>Влияние: Могут вызывать желудочно-кишечные расстройства при употреблении в сыром виде.<br>Судья: галлюцинация · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>Могут вызывать желудочно-кишечные расстройства при употреблении в сыром виде.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-31</th><th class="runhd">run-32</th><th class="runhd">run-33</th><th class="runhd">run-34</th><th class="runhd">run-35</th></tr>
+<tr><td class="name">гемолитический белок (rubescenslysin)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Цезарский гриб <code class="id">ACAE</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.8 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>27%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>28%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>32</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 32 вердиктов)</div>
+  <div class="chip">реальных <b>30</b> · спорных <b>2</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-31</th><th class="runhd">run-32</th><th class="runhd">run-33</th><th class="runhd">run-34</th><th class="runhd">run-35</th><th>частота</th></tr>
+<tr><td class="name">Белки</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: 3% от сухого веса<br>Влияние: Служат строительным материалом для клеток.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>3% от сухого веса</b><span>Служат строительным материалом для клеток.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: 3% от свежего веса<br>Влияние: Являются строительным материалом для клеток организма.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>3% от свежего веса</b><span>Являются строительным материалом для клеток организма.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают организм необходимыми аминокислотами.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают организм необходимыми аминокислотами.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются строительным материалом для клеток.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются строительным материалом для клеток.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">Витамины группы B</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Участвуют в процессах метаболизма и работе нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Участвуют в процессах метаболизма и работе нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Поддерживают нормальный обмен веществ и работу нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают нормальный обмен веществ и работу нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Способствуют поддержанию нормальной работы нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Способствуют поддержанию нормальной работы нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Поддерживают нормальное функционирование нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают нормальное функционирование нервной системы.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">Минеральные вещества</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества</b><br>Содержание: неизвестно<br>Влияние: Поддерживают жизненно важные физиологические функции.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают жизненно важные физиологические функции.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества (калий, фосфор)</b><br>Содержание: неизвестно<br>Влияние: Необходимы для поддержания водно-электролитного баланса.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Необходимы для поддержания водно-электролитного баланса.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества</b><br>Содержание: неизвестно<br>Влияние: Необходимы для поддержания водно-электролитного баланса.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходимы для поддержания водно-электролитного баланса.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Углеводы</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: 6% от сухого веса<br>Влияние: Являются основным источником энергии.<br>Судья: реальное · концентрация занижена · влияние частично<br></div><div class="inner"><b>6% от сухого веса</b><span>Являются основным источником энергии.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: 8% от свежего веса<br>Влияние: Служат основным источником энергии.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>8% от свежего веса</b><span>Служат основным источником энергии.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают организм энергией.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают организм энергией.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Эргостерол</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D2 при воздействии ультрафиолета.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D2 при воздействии ультрафиолета.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Является предшественником витамина D.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Является предшественником витамина D.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Способствует синтезу витамина D в организме.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Способствует синтезу витамина D в организме.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Аминокислоты</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают синтез белков.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают синтез белков.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Являются строительным материалом для клеток организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются строительным материалом для клеток организма.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Калий</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Калий</b><br>Содержание: неизвестно<br>Влияние: Необходим для поддержания водного и электролитного баланса.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходим для поддержания водного и электролитного баланса.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Калий</b><br>Содержание: неизвестно<br>Влияние: Поддерживает работу сердечно-сосудистой системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживает работу сердечно-сосудистой системы.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Каротиноиды</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Каротиноиды</b><br>Содержание: неизвестно<br>Влияние: Выполняют функцию антиоксидантов.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Выполняют функцию антиоксидантов.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Каротиноиды</b><br>Содержание: неизвестно<br>Влияние: Обладают антиоксидантными свойствами.<br>Судья: спорно · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Обладают антиоксидантными свойствами.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Полисахариды</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды</b><br>Содержание: неизвестно<br>Влияние: Могут способствовать укреплению иммунной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Могут способствовать укреплению иммунной системы.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды</b><br>Содержание: неизвестно<br>Влияние: Участвуют в регуляции иммунного ответа.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Участвуют в регуляции иммунного ответа.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Фосфор</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фосфор</b><br>Содержание: неизвестно<br>Влияние: Важен для здоровья костей и клеточных мембран.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Важен для здоровья костей и клеточных мембран.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фосфор</b><br>Содержание: неизвестно<br>Влияние: Необходим для метаболизма и здоровья костей.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходим для метаболизма и здоровья костей.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Бета-глюканы</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Бета-глюканы</b><br>Содержание: неизвестно<br>Влияние: Обладают иммуномодулирующим действием.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладают иммуномодулирующим действием.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Витамины</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины</b><br>Содержание: неизвестно<br>Влияние: Регулируют обменные процессы в организме.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Регулируют обменные процессы в организме.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Вода</b><br>Содержание: 90% от свежего веса<br>Влияние: Обеспечивает гидратацию организма.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>90% от свежего веса</b><span>Обеспечивает гидратацию организма.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Липиды</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Липиды</b><br>Содержание: 1% от сухого веса<br>Влияние: Участвуют в построении клеточных мембран.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>1% от сухого веса</b><span>Участвуют в построении клеточных мембран.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Хитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Стимулирует работу пищеварительной системы.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулирует работу пищеварительной системы.</span></div></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-31</th><th class="runhd">run-32</th><th class="runhd">run-33</th><th class="runhd">run-34</th><th class="runhd">run-35</th></tr>
+<tr><td class="name">токсины (аматоксины, фаллотоксины, изоксазолы, мускарин)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Мухомор вонючий <code class="id">AVIO</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.6 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>34%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>34%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>26</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 26 вердиктов)</div>
+  <div class="chip">реальных <b>21</b> · спорных <b>5</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-51</th><th class="runhd">run-52</th><th class="runhd">run-53</th><th class="runhd">run-54</th><th class="runhd">run-55</th><th>частота</th></tr>
+<tr><td class="name">Фаллоидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Разрушает структуру актина в клетках.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Разрушает структуру актина в клетках.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Нарушает полимеризацию актина в клетках.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Нарушает полимеризацию актина в клетках.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Нарушает структуру цитоскелета путем связывания с актином.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Нарушает структуру цитоскелета путем связывания с актином.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Блокирует деполимеризацию актина в клетках.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Блокирует деполимеризацию актина в клетках.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Вызывает острое раздражение желудочно-кишечного тракта.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает острое раздражение желудочно-кишечного тракта.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Фаллацидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Нарушает работу актиновых микрофиламентов.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Нарушает работу актиновых микрофиламентов.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Воздействует на структуру цитоскелета через актин.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Воздействует на структуру цитоскелета через актин.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Оказывает цитотоксическое воздействие на клетки организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает цитотоксическое воздействие на клетки организма.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Оказывает токсическое действие на слизистые оболочки.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает токсическое действие на слизистые оболочки.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">α-аманитин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: неизвестно<br>Влияние: Ингибирует РНК-полимеразу II, вызывая некроз клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует РНК-полимеразу II, вызывая некроз клеток печени.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: неизвестно<br>Влияние: Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-аманитин</b><br>Содержание: неизвестно<br>Влияние: Вызывает тяжелое поражение печени и почек.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает тяжелое поражение печени и почек.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">β-аманитин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Вызывает тяжелое поражение печени и почек.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает тяжелое поражение печени и почек.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Приводит к тяжелому поражению печени и почек.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к тяжелому поражению печени и почек.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-аманитин</b><br>Содержание: неизвестно<br>Влияние: Приводит к необратимому разрушению клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к необратимому разрушению клеток печени.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">γ-аманитин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Обладает высокой печеночной токсичностью.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает высокой печеночной токсичностью.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Оказывает выраженное гепатотоксическое действие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает выраженное гепатотоксическое действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-аманитин</b><br>Содержание: неизвестно<br>Влияние: Обладает высокой гепатотоксичностью.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладает высокой гепатотоксичностью.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Альфа-аманитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Альфа-аманитин</b><br>Содержание: неизвестно<br>Влияние: Ингибирует синтез РНК в клетках печени, вызывая их гибель.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует синтез РНК в клетках печени, вызывая их гибель.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Аманитин альфа</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аманитин альфа</b><br>Содержание: неизвестно<br>Влияние: Вызывает тяжелое поражение печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает тяжелое поражение печени.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Аманитин бета</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аманитин бета</b><br>Содержание: неизвестно<br>Влияние: Ингибирует синтез РНК в клетках.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Ингибирует синтез РНК в клетках.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Аманитин гамма</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аманитин гамма</b><br>Содержание: неизвестно<br>Влияние: Приводит к печеночной недостаточности.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к печеночной недостаточности.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Бета-аманитин</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Бета-аманитин</b><br>Содержание: неизвестно<br>Влияние: Приводит к тяжелому поражению печеночных клеток.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Приводит к тяжелому поражению печеночных клеток.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Фаллозин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллозин</b><br>Содержание: неизвестно<br>Влияние: Оказывает цитотоксическое действие на клетки.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Оказывает цитотоксическое действие на клетки.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Фаллоиндолин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоиндолин</b><br>Содержание: неизвестно<br>Влияние: Оказывает токсическое воздействие на актиновые филаменты.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Оказывает токсическое воздействие на актиновые филаменты.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Фаллоцидин</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоцидин</b><br>Содержание: неизвестно<br>Влияние: Вызывает повреждение клеток печени.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Вызывает повреждение клеток печени.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-51</th><th class="runhd">run-52</th><th class="runhd">run-53</th><th class="runhd">run-54</th><th class="runhd">run-55</th></tr>
+<tr><td class="name">α-аманитин (главный аматоксин)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">фаллотоксины (фаллоидин и др.)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">виротоксины (вироидин, вироизин, дезоксивироидин, алавироидин и др.)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Опёнок осенний <code class="id">AMEL</code></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.8 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>53%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>52%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено веществ: <b>30</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 30 вердиктов)</div>
+  <div class="chip">реальных <b>28</b> · спорных <b>2</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Вещество</th><th class="runhd">run-51</th><th class="runhd">run-52</th><th class="runhd">run-53</th><th class="runhd">run-54</th><th class="runhd">run-55</th><th>частота</th></tr>
+<tr><td class="name">Белки</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются источником аминокислот для организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются источником аминокислот для организма.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются источником необходимых аминокислот.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются источником необходимых аминокислот.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются важным источником аминокислот.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются важным источником аминокислот.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Являются важным источником аминокислот.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Являются важным источником аминокислот.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: служат источником аминокислот для организма.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>служат источником аминокислот для организма.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Полисахариды (бета-глюканы)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды (бета-глюканы)</b><br>Содержание: неизвестно<br>Влияние: Оказывают иммуномодулирующее действие.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Оказывают иммуномодулирующее действие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды (β-глюканы)</b><br>Содержание: неизвестно<br>Влияние: Стимулируют иммунную систему человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулируют иммунную систему человека.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды (β-глюканы)</b><br>Содержание: неизвестно<br>Влияние: Стимулируют иммунную систему человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулируют иммунную систему человека.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают организм энергией.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают организм энергией.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Полисахариды (бета-глюканы)</b><br>Содержание: неизвестно<br>Влияние: стимулируют иммунную систему человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>стимулируют иммунную систему человека.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D2.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D2.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D2.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D2.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D2.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служит предшественником витамина D2.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: является предшественником витамина D.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>является предшественником витамина D.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Витамины группы B</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Участвуют в процессах метаболизма и работе нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Участвуют в процессах метаболизма и работе нервной системы.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Поддерживают нормальное функционирование нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают нормальное функционирование нервной системы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Витамины группы B</b><br>Содержание: неизвестно<br>Влияние: Поддерживают нормальную работу нервной системы.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают нормальную работу нервной системы.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Минеральные вещества (калий, фосфор, магний)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества (калий, фосфор, магний)</b><br>Содержание: неизвестно<br>Влияние: Необходимы для поддержания водно-электролитного баланса.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходимы для поддержания водно-электролитного баланса.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества (калий, фосфор, магний)</b><br>Содержание: неизвестно<br>Влияние: Поддерживают метаболические процессы и водно-солевой баланс.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Поддерживают метаболические процессы и водно-солевой баланс.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Минеральные вещества</b><br>Содержание: неизвестно<br>Влияние: Участвуют в регуляции обмена веществ.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Участвуют в регуляции обмена веществ.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Фенольные соединения</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фенольные соединения</b><br>Содержание: неизвестно<br>Влияние: Обладают антиоксидантным действием.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладают антиоксидантным действием.</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Фенольные соединения</b><br>Содержание: неизвестно<br>Влияние: Обладают антиоксидантными свойствами.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обладают антиоксидантными свойствами.</span></div></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Фенольные соединения</b><br>Содержание: неизвестно<br>Влияние: обладают антиоксидантными свойствами.<br>Судья: спорно · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>обладают антиоксидантными свойствами.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Аминокислоты</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: Обеспечивают строительный материал для тканей.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Обеспечивают строительный материал для тканей.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Аминокислоты</b><br>Содержание: неизвестно<br>Влияние: необходимы для поддержания метаболических процессов.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>необходимы для поддержания метаболических процессов.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Углеводы</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: Служат основным источником энергии.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Служат основным источником энергии.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Углеводы</b><br>Содержание: неизвестно<br>Влияние: служат основным источником энергии.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>служат основным источником энергии.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">β-глюканы</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Стимулируют иммунную систему человека.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>неизвестно</b><span>Стимулируют иммунную систему человека.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Жирные кислоты</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Жирные кислоты</b><br>Содержание: неизвестно<br>Влияние: Необходимы для построения клеточных мембран.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>неизвестно</b><span>Необходимы для построения клеточных мембран.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталон (основное)</th><th class="runhd">run-51</th><th class="runhd">run-52</th><th class="runhd">run-53</th><th class="runhd">run-54</th><th class="runhd">run-55</th></tr>
+<tr><td class="name">термолабильные желудочно-кишечные ирританты (белковой природы)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">меллеолиды (сесквитерпеноидные антибиотики: эфиры орселлиновой кислоты и протоиллудановых спиртов, часть хлорирована)</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div><h2>Ответы моделей (raw)</h2><details class="raw"><summary>Красный мухомор · run-11 · 8.92 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает галлюцинации и измененные состояния сознания.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает нейротоксическим действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Беталаны&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают характерную красную окраску шляпки.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терфенилы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладают потенциальной биологической активностью.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-11 · 3.44 c · 3 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita pantherina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое действие и вызывает галлюцинации.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает выраженные психоактивные и седативные эффекты.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-11 · 8.34 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita phalloides&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к тяжелой печеночной недостаточности.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает сильное гепатотоксическое действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Нарушает нормальное функционирование актинового цитоскелета.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Воздействует на структуру актиновых микрофиламентов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллолудин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает токсическое воздействие на клеточный цитоскелет.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-11 · 10.96 c · 5 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita citrina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Участвуют в обмене веществ и синтезе белков.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служат основным источником энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются строительным материалом для клеток организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходимы для поддержания гомеостаза.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Красный мухомор · run-12 · 14.44 c · 5 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое и психоактивное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает галлюцинации и измененное состояние сознания.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует мускариновые рецепторы парасимпатической системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2 в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вариегатическая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Не оказывает прямого психоактивного влияния на человека.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-12 · 5.71 c · 4 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita pantherina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое и галлюциногенное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает мощное психоактивное и седативное воздействие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Буфотенин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает галлюциногенным эффектом.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Алкалоиды группы изоксазолов&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Влияют на центральную нервную систему.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-12 · 6.24 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita phalloides&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;0.1% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Вызывает необратимое разрушение клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;0.1% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Приводит к тяжелой печеночной недостаточности.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает токсическое действие на печеночную ткань.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;0.1% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Обладает высокой цитотоксичностью.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Является высокотоксичным пептидом.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллакинин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вносит вклад в общую токсичность гриба.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-12 · 5.64 c · 2 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita citrina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Алкалоиды (неуточненные)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут оказывать слабое токсическое действие на желудочно-кишечный тракт.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терпеновые соединения&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают характерный лимонный аромат плодового тела.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Красный мухомор · run-13 · 11.64 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;0.05% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Вызывает нейротоксическое возбуждение центральной нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;0.01% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Оказывает выраженное психоактивное и седативное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует мускариновые рецепторы парасимпатической нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;1% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2 при облучении ультрафиолетом.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Пигменты (варегин)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Не оказывает прямого токсического или психоактивного воздействия на человека.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-13 · 5.55 c · 4 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita pantherina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает нейротоксичность и галлюцинации.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает выраженное психоактивное и седативное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Буфотенин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает галлюциногенным эффектом.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Бледная поганка · run-13 · 7.5 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita phalloides&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует РНК-полимеразу II, вызывая тяжелое поражение печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет синтез РНК, что ведет к разрушению клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к печеночной недостаточности через блокировку РНК-полимеразы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актином, вызывая желудочно-кишечные расстройства.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Взаимодействует с белками цитоскелета, вызывая токсический эффект.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-13 · 9.26 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita citrina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает психоактивное действие через ГАМК-рецепторы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает возбуждение центральной нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терпеноиды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут проявлять биологическую активность.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Полисахариды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут оказывать иммуномодулирующее действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются важными элементами питания и метаболизма.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Красный мухомор · run-14 · 9.89 c · 4 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает психоактивные эффекты и галлюцинации.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Действует как нейротоксин и предшественник мусцимола.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Беталамины&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Придают грибу характерную красную окраску.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-14 · 5.45 c · 4 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita pantherina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает нейротоксическим действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает психоактивные и галлюциногенные эффекты.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Буфотенин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает галлюциногенное воздействие на центральную нервную систему.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-14 · 7.18 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita phalloides&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;альфа-аманитин&quot;,
+      &quot;содержание&quot;: &quot;0.1-0.3% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;блокирует синтез РНК, вызывая тяжелое поражение печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;бета-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;приводит к летальной печеночной недостаточности.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;гамма-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;вызывает системную интоксикацию и разрушение клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;препятствует полимеризации актина, вызывая желудочно-кишечные расстройства.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;фаллоцидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;нарушает структуру цитоскелета клеток.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-14 · 5.54 c · 3 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita citrina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает нейротоксическим действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает психоактивные эффекты и седацию.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Красный мухомор · run-15 · 14.24 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita muscaria&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает возбуждение центральной нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает галлюциногенное и седативное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускафлавин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Не оказывает прямого физиологического влияния на человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вариегатическая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Не оказывает прямого физиологического влияния на человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;1-2% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Является предшественником витамина D2.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-15 · 4.43 c · 3 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita pantherina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое и возбуждающее действие на центральную нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает выраженные психоактивные, галлюциногенные и седативные эффекты.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует мускариновые ацетилхолиновые рецепторы, вызывая холинергические симптомы.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-15 · 5.37 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita phalloides&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;0.1-0.5 мг/г (сухого веса)&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает тяжелое поражение печени и почек.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает сильное гепатотоксическое действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Блокирует полимеризацию актина в клетках.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Нарушает структурную целостность цитоскелета.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-15 · 21.04 c · 7 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita citrina&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;оказывает нейротоксическое действие на центральную нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;вызывает галлюцинации и психоактивные эффекты.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аманитины&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;вызывают тяжелое поражение печени и почек.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Органические кислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;участвуют в метаболических процессах организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;являются строительным материалом для белков.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Каротиноиды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;служат природными пигментами.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-31 · 10.85 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita rubescens&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое действие на центральную нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает психоактивные эффекты и седацию.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терфенилы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут проявлять токсическое воздействие на организм.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются важными питательными компонентами.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служат основным источником энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются строительным материалом для клеток организма.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-31 · 9.1 c · 7 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita caesarea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;90% от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивает гидратацию организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;3% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Служат строительным материалом для клеток.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;6% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Являются основным источником энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Липиды&quot;,
+      &quot;содержание&quot;: &quot;1% от сухого веса&quot;,
+      &quot;влияние&quot;: &quot;Участвуют в построении клеточных мембран.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Регулируют обменные процессы в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают жизненно важные физиологические функции.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают синтез белков.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-32 · 9.14 c · 3 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita rubescens (мухомор серо-розовый)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает нейротоксическое воздействие на организм.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает психоактивные эффекты и седацию.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Терфенильные производные&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут вызывать желудочно-кишечные расстройства при употреблении в сыром виде.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-32 · 10.35 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita caesarea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;3% от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Являются строительным материалом для клеток организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;8% от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Служат основным источником энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Полисахариды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут способствовать укреплению иммунной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Участвуют в процессах метаболизма и работе нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Калий&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходим для поддержания водного и электролитного баланса.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фосфор&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Важен для здоровья костей и клеточных мембран.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-33 · 7.13 c · 4 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita rubescens&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует парасимпатическую нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Воздействует на центральную нервную систему как возбуждающий нейромедиатор.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает психоактивное и седативное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Агаритин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает потенциальной канцерогенной активностью.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-33 · 7.87 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita caesarea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2 при воздействии ультрафиолета.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Бета-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладают иммуномодулирующим действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Каротиноиды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Выполняют функцию антиоксидантов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются строительным материалом для клеток организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают нормальный обмен веществ и работу нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества (калий, фосфор)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходимы для поддержания водно-электролитного баланса.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-34 · 11.33 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita rubescens&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;вызывает перевозбуждение центральной нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;оказывает психоактивное и седативное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;служат источником аминокислот для организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;обеспечивают организм энергией.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Полисахариды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;могут оказывать иммуномодулирующее действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;поддерживают метаболические процессы в организме.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-34 · 13.51 c · 6 веществ</summary><pre>{&quot;гриб&quot;: &quot;Amanita caesarea&quot;, &quot;состав&quot;: [{&quot;вещество&quot;: &quot;Полисахариды&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Участвуют в регуляции иммунного ответа.&quot;}, {&quot;вещество&quot;: &quot;Белки&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Обеспечивают организм необходимыми аминокислотами.&quot;}, {&quot;вещество&quot;: &quot;Витамины группы B&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Способствуют поддержанию нормальной работы нервной системы.&quot;}, {&quot;вещество&quot;: &quot;Минеральные вещества&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Необходимы для поддержания водно-электролитного баланса.&quot;}, {&quot;вещество&quot;: &quot;Эргостерол&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Является предшественником витамина D.&quot;}, {&quot;вещество&quot;: &quot;Каротиноиды&quot;, &quot;содержание&quot;: &quot;неизвестно&quot;, &quot;влияние&quot;: &quot;Обладают антиоксидантными свойствами.&quot;}]}</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-35 · 10.94 c · 3 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita rubescens&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Терфенилы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Могут оказывать умеренное токсическое воздействие на организм.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает психоактивное воздействие на центральную нервную систему.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает нейротоксическим и возбуждающим действием.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-35 · 7.95 c · 7 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita caesarea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Способствует синтезу витамина D в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются строительным материалом для клеток.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают организм энергией.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулирует работу пищеварительной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Калий&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживает работу сердечно-сосудистой системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фосфор&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходим для метаболизма и здоровья костей.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают нормальное функционирование нервной системы.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-51 · 9.79 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita virosa&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Аманитин альфа&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает тяжелое поражение печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аманитин бета&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует синтез РНК в клетках.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аманитин гамма&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к печеночной недостаточности.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Разрушает структуру актина в клетках.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Нарушает работу актиновых микрофиламентов.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-51 · 7.16 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Armillaria mellea (Опёнок осенний)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Полисахариды (бета-глюканы)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывают иммуномодулирующее действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются источником аминокислот для организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Участвуют в процессах метаболизма и работе нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества (калий, фосфор, магний)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходимы для поддержания водно-электролитного баланса.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают строительный материал для тканей.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-52 · 9.89 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita virosa&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует РНК-полимеразу II, вызывая некроз клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает тяжелое поражение печени и почек.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает высокой печеночной токсичностью.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Нарушает полимеризацию актина в клетках.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Воздействует на структуру цитоскелета через актин.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоиндолин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает токсическое воздействие на актиновые филаменты.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-52 · 7.75 c · 6 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Armillaria mellea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Полисахариды (β-глюканы)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулируют иммунную систему человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются источником необходимых аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служат основным источником энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фенольные соединения&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладают антиоксидантным действием.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества (калий, фосфор, магний)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают метаболические процессы и водно-солевой баланс.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-53 · 11.16 c · 4 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Amanita virosa&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Альфа-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует синтез РНК в клетках печени, вызывая их гибель.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Бета-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к тяжелому поражению печеночных клеток.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Нарушает структуру цитоскелета путем связывания с актином.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает цитотоксическое воздействие на клетки организма.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-53 · 13.14 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Armillaria mellea&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Полисахариды (β-глюканы)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулируют иммунную систему человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются важным источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фенольные соединения&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладают антиоксидантными свойствами.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают нормальное функционирование нервной системы.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-54 · 12.19 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita virosa&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Ингибирует РНК-полимеразу II, вызывая гибель клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к тяжелому поражению печени и почек.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает выраженное гепатотоксическое действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Блокирует деполимеризацию актина в клетках.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоцидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает повреждение клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллозин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает цитотоксическое действие на клетки.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-54 · 6.86 c · 7 веществ</summary><pre>```json
+{
+  &quot;гриб&quot;: &quot;Armillaria mellea (Опёнок осенний)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стимулируют иммунную систему человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D2.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Являются важным источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Витамины группы B&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживают нормальную работу нервной системы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Полисахариды&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обеспечивают организм энергией.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Минеральные вещества&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Участвуют в регуляции обмена веществ.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Жирные кислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Необходимы для построения клеточных мембран.&quot;
+    }
+  ]
+}
+```</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-55 · 8.58 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Amanita virosa&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает тяжелое поражение печени и почек.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Приводит к необратимому разрушению клеток печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Обладает высокой гепатотоксичностью.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вызывает острое раздражение желудочно-кишечного тракта.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Оказывает токсическое действие на слизистые оболочки.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-55 · 8.33 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Armillaria mellea (Опёнок осенний)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Полисахариды (бета-глюканы)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;стимулируют иммунную систему человека.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;является предшественником витамина D.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фенольные соединения&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;обладают антиоксидантными свойствами.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;служат источником аминокислот для организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Аминокислоты&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;необходимы для поддержания метаболических процессов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Углеводы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;служат основным источником энергии.&quot;
+    }
+  ]
+}</pre></details>
+<footer>построено build_mush_report.py · 2026-11-18 04:30 UTC · данные: run-*/session.json, run-*/verdicts.json</footer>
+</main>
+</html>

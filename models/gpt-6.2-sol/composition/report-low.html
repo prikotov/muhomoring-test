@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Состав мухоморов — openai/gpt-6.2-sol, think low: 2 прогонов</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+<a class="backlink" href="../../../report.html">← Сводный отчёт</a>
+<h1>Состав мухоморов — openai/gpt-6.2-sol, think low: 2 прогонов</h1>
+<p class="proto">клетка = вопрос «перечисли основные и характерные соединения гриба» (recall-генерация, промпты v4; один прогон = все 8 клеток); архивы серий v1–v3 с другими промптами в отчётах не участвуют. Цвет клетки = вердикт судьи (glm-5.3-flash low против эталона), серая = вещество не перечислено в этом прогоне; стабильность = средний Jaccard наборов веществ между прогонами</p>
+<div class="chip">Модель: <b>openai/gpt-6.2-sol</b><br><small>think low · прогонов: 2 (в таблице гриба — где его клетка спрашивалась)</small></div><div class="chip">Балл судьи (средний): <b>3.7 / 10</b><br><small>по оценённым клеткам</small></div><div class="chip">Галлюцинации: <b>77 / 118</b><br><small>доля вердиктов «галлюцинация»</small></div><div class="chip">Стабильность состава: <b>73%</b><br><small>средний попарный Jaccard веществ между прогонами</small></div><div class="chip">Стабильность реальных: <b>88%</b><br><small>Jaccard по веществам, признанным судьёй</small></div><div class="chip">JSON-разбор: <b>100%</b><br><small>(16 из 16 клеток)</small></div><div class="chip">Время: <b>83 c</b><br><small>токены: 3294 вх / 6807 вых</small></div><div class="chip">Эталон: <b>v13</b><br><small>судья видит справку целиком</small></div>
+
+<h2>Методика</h2>
+<div class="method">
+<h3>Запуск модели</h3>
+<p>Одна клетка = один независимый запрос к ollama
+<code>POST api.deepseek.com (через pi)/api/chat</code>, stream=false. Истории между клетками
+нет — клетки изолированы, каждый вопрос несёт system-рамку теста. Параметры
+генерации — дефолтные ollama (temperature и прочее не переопределяются),
+seed не фиксируется; уровень размышлений передаётся полем <code>think</code>
+(уровень размышлений этого отчёта: <b>low</b>).</p>
+<pre class="prompt-sample">{
+ &quot;model&quot;: &quot;openai/gpt-6.2-sol&quot;,
+ &quot;stream&quot;: false,
+ &quot;keep_alive&quot;: &quot;n/a (API stateless)&quot;,
+ &quot;think&quot;: &quot;low&quot;,
+ &quot;messages&quot;: [
+  {
+   &quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;&lt;SYSTEM-ПРОМПТ — целиком ниже&gt;&quot;
+  },
+  {
+   &quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;Перечисли основные химические соединения в составе плодовых тел гриба «красный мухомор» (Amanita muscaria).&quot;
+  }
+ ]
+}</pre>
+<ul>
+<li>внутри прогона <code>keep_alive</code> = n/a (API stateless) — веса держатся
+загруженными;</li>
+<li>модель выгружается перед первым и после каждого прогона
+(<code>keep_alive: 0</code>) — изоляция прогонов, KV-кэш между сериями не
+переживает;</li>
+<li>серия: 5 прогонов на уровень размышлений; уровни не смешиваются;</li>
+<li>ответ должен быть строго JSON; при усечённом/дегенеративном ответе парсер
+достаёт целые фрагменты-объекты (пометка «ремонт», json_ok=false).</li>
+</ul>
+<h3>System-промпт (одинаков во всех запросах)</h3>
+<pre class="prompt-sample">Ты проходишь тест на знание химического состава грибов. Отвечай строго в JSON: {&quot;гриб&quot;: &quot;...&quot;, &quot;состав&quot;: [{&quot;вещество&quot;: &quot;...&quot;, &quot;содержание&quot;: &quot;...&quot;, &quot;влияние&quot;: &quot;...&quot;}]}. В «содержание» укажи число с единицей измерения (% от свежего веса, % от сухого веса, мг/кг, мг/г или на плодовое тело) — если не знаешь, напиши «неизвестно». В «влияние» — одно короткое предложение о действии соединения на человека. Перечисли основные химические соединения гриба. Никакого текста вне JSON.</pre>
+<h3>Пример user-сообщения — Красный мухомор</h3>
+<pre class="prompt-sample">Перечисли основные химические соединения в составе плодовых тел гриба «красный мухомор» (Amanita muscaria).</pre>
+<details class="raw"><summary>Пример ответа модели на эту клетку</summary><pre>{
+  &quot;гриб&quot;: &quot;Красный мухомор (Amanita muscaria)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует глутаматные рецепторы и может вызывать тошноту и возбуждение.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует ГАМК-A-рецепторы и может вызывать сонливость, спутанность сознания и нарушения восприятия.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Присутствует в следовых количествах и при достаточной дозе вызывает слюнотечение и потливость.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусказон&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;
+… (обрезано)</pre></details>
+<h3>Судья</h3>
+<p>Каждый ответ сверяется судьёй — <code>glm-5.3-flash</code>, thinking <code>low</code>,
+транспорт <code>pi</code> (провайдер zai). Судья получает эталонную справку
+состава гриба — запись этого гриба из <a class="report-link" target="_blank" rel="noopener" href="../../../ethalon.json">ethalon.json</a>, целиком файл не
+передаётся — и разобранный состав ответа; по каждому веществу
+выносит вердикт «реальное / спорно / галлюцинация», оценивает концентрацию
+(в норме / завышена / занижена) и влияние на человека, перечисляет пропущенные
+эталонно важные вещества и ставит балл 0–10. Ответы длиннее 100 веществ
+(дегенеративный перебор) режутся до первых 100 с пометкой. Вердикт строго
+JSON: невалидная схема — одна повторная попытка, иначе клетка исключается из
+метрик. Переиспользование вердиктов — по хэшам входов эталона: изменение
+входа конкретного гриба переоценивает только его клетки.</p>
+<details class="raw"><summary>Пример вердикта судьи</summary><pre>{
+ &quot;вещества&quot;: [
+  {
+   &quot;название&quot;: &quot;Иботеновая кислота&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Мусцимол&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Мускарин&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Мусказон&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Хитин&quot;,
+   &quot;статус&quot;: &quot;галлюцинация&quot;,
+   &quot;концентрация&quot;: &quot;нет данных&quot;,
+   &quot;влияние&quot;: &quot;нет данных&quot;
+  },
+  {
+   &quot;название&quot;: &quot;β-глюканы&quot;,
+   &quot;статус&quot;: &quot;галлюцинация&quot;,
+   &quot;концентрация&quot;: &quot;нет данных&quot;,
+   &quot;влияние&quot;: &quot;нет данных&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Эргостерол&quot;,
+   &quot;статус&quot;: &quot;галлюцинация&quot;,
+   &quot;концентрация&quot;: &quot;нет данных&quot;,
+   &quot;влияние&quot;: &quot;нет данных&quot;
+  }
+ ],
+ &quot;пропущено_важное&quot;: [],
+ &quot;балл&quot;: 4,
+ &quot;комментарий&quot;: &quot;Модель знает реальные действующие вещества (изоксазолы, мускарин), но в
+… (обрезано)</pre></details>
+<details class="raw"><summary>Полный промпт судьи (system + критерии)</summary>
+<pre>Ты — судья теста на знание химического состава грибов. Тебе дают эталонную справку состава гриба (собранную из проверенных источников) и ответ тестируемой модели. Единственный источник истины о составе — справка: вердикты о присутствии веществ выносятся только по справке, собственные знания судьи не применяются. Твоя задача — строгий и честный вердикт строго в JSON. Никакого текста вне JSON.
+
+Задача: установи для каждого вещества из ответа модели, входит ли оно в переданный тебе эталонный состав. Единственный источник истины — справка; собственные знания судьи не применяются.
+
+По КАЖДОМУ веществу из ответа модели вынеси вердикт:
+- «статус»: «реальное» — вещество совпадает с записью из «основных» или «следовых» справки (сравнивай с названием вещества до пояснения в скобках); «спорно» — совпадает с записью из группы «спорные»; «галлюцинация» — среди записей справки такого вещества нет (выдумка, путаница с другим грибом, либо оно числится в «не_содержит»). Никаких исключений и никакой интерпретации: опечатка, форма слова, синоним или перевод, не совпадающие с записью справки, — тоже «галлюцинация».
+- «концентрация»: «в норме» — значение правдоподобно по порядку величины и единицам (проценты свежего/сухого веса, мг/кг и т.п.; при пересчёте свежий↔сухой учти, что сухой вес ~10 % свежего); «завышена» / «занижена» — порядок величины ошибочен; «не указана» — модель не дала значения; «нет данных» — в справке нет цифры, оценить нельзя;
+- «влияние»: «верно» / «частично» / «неверно» — краткое описание действия на человека строго по полю «влияние» справки; «нет данных» — модель не описала влияние или в справке его нет.
+
+Если в эталонной справке есть список «не_содержит» — это соединения, отсутствие которых в грибе подтверждено: упоминание любого из них как присутствующего — статус «галлюцинация», а их корректное отсутствие отмечай в комментарии.
+Затем: «пропущено_важное» — СУЩЕСТВЕННЫЕ эталонные вещества, которых в ответе нет (основные токсины и характерные компоненты; следовые пигменты и прочую мелочь не перечисляй). Пустой список — если всё важное названо.
+«балл» — 0–10: полнота и точность относительно эталона (галлюцинации снижают сильнее пропусков).
+«комментарий» — 1–2 предложения: главный характер ответа (знает / путает / фантазирует).
+
+Формат ответа строго:
+{&quot;вещества&quot;: [{&quot;название&quot;: &quot;&lt;как назвала модель&gt;&quot;, &quot;статус&quot;: &quot;реальное|спорно|галлюцинация&quot;, &quot;концентрация&quot;: &quot;в норме|завышена|занижена|не указана|нет данных&quot;, &quot;влияние&quot;: &quot;верно|частично|неверно|нет данных&quot;}], &quot;пропущено_важное&quot;: [&quot;...&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;...&quot;}
+
+Ответ absent: если ответ модели пуст или отсутствует — верни {&quot;вещества&quot;: [], &quot;пропущено_важное&quot;: [&quot;все основные&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;ответ отсутствует&quot;}.
+</pre></details>
+</div>
+<div class="mush">
+<h3>Красный мухомор <span class="latin">(Amanita muscaria)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>60%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>75%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>16</b></div>
+  <div class="chip">Галлюцинации: <b>56%</b> (9 из 16 вердиктов)</div>
+  <div class="chip">реальных <b>7</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">β-глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды действуют как пищевые волокна.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды действуют как пищевые волокна.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Иботеновая кислота</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Активирует глутаматные рецепторы и может вызывать тошноту и возбуждение.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Активирует глутаматные рецепторы и может вызывать тошноту и возбуждение.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Иботеновая кислота активирует глутаматные рецепторы и может вызывать возбуждение и спутанность сознания.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Иботеновая кислота активирует глутаматные рецепторы и может вызывать возбуждение и спутанн</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Мускарин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Присутствует в следовых количествах и при достаточной дозе вызывает слюнотечение и потливость.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Присутствует в следовых количествах и при достаточной дозе вызывает слюнотечение и потливо</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мускарин</b><br>Содержание: неизвестно<br>Влияние: Мускарин присутствует в следовых количествах и может усиливать слюноотделение и потливость.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Мускарин присутствует в следовых количествах и может усиливать слюноотделение и потливость</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Мусцимол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Активирует ГАМК-A-рецепторы и может вызывать сонливость, спутанность сознания и нарушения восприятия.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Активирует ГАМК-A-рецепторы и может вызывать сонливость, спутанность сознания и нарушения </span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Мусцимол активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и координации.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Мусцимол активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и к</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Этот полисахарид клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот полисахарид клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Хитин из клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Хитин из клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Сам не является витамином D₂, но превращается в него под действием ультрафиолета.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Сам не является витамином D₂, но превращается в него под действием ультрафиолета.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Образующийся из эргостерола под действием ультрафиолета витамин D₂ участвует в обмене кальция.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Образующийся из эргостерола под действием ультрафиолета витамин D₂ участвует в обмене каль</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вода</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: около 90 % от свежего веса<br>Влияние: Вода восполняет жидкость в организме.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>около 90 % от свежего веса</b><span>Вода восполняет жидкость в организме.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Маннитол</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: В больших количествах маннитол может вызвать вздутие и диарею.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В больших количествах маннитол может вызвать вздутие и диарею.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Мусказон</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусказон</b><br>Содержание: неизвестно<br>Влияние: Его действие на человека изучено недостаточно.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Его действие на человека изучено недостаточно.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Трегалоза</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: В тонкой кишке трегалоза расщепляется до глюкозы.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В тонкой кишке трегалоза расщепляется до глюкозы.</span></div></td><td class="freq">1/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">иботеновая кислота</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусцимол</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусказон</td><td class="mark ok">✓</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Пантерный мухомор <span class="latin">(Amanita pantherina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>33%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>8</b></div>
+  <div class="chip">Галлюцинации: <b>50%</b> (4 из 8 вердиктов)</div>
+  <div class="chip">реальных <b>4</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">Иботеновая кислота</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судороги.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судо</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Иботеновая кислота</b><br>Содержание: неизвестно<br>Влияние: Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судороги.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судо</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Мусцимол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Активирует рецепторы ГАМК-A и может вызывать сонливость, нарушение координации и изменения восприятия.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Активирует рецепторы ГАМК-A и может вызывать сонливость, нарушение координации и изменения</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Мусцимол</b><br>Содержание: неизвестно<br>Влияние: Активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и координации.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и координаци</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">β-глюканы</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Действуют как пищевые волокна и частично ферментируются кишечной микробиотой.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Действуют как пищевые волокна и частично ферментируются кишечной микробиотой.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Вода</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Поддерживает водный баланс организма.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Поддерживает водный баланс организма.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Хитин</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Этот компонент клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот компонент клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Сам по себе не обладает активностью витамина D, но под действием ультрафиолета превращается в витамин D₂.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Сам по себе не обладает активностью витамина D, но под действием ультрафиолета превращаетс</span></div></td><td class="freq">1/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">иботеновая кислота</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусцимол</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">мусказон</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Бледная поганка <span class="latin">(Amanita phalloides)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.5 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>78%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>16</b></div>
+  <div class="chip">Галлюцинации: <b>38%</b> (6 из 16 вердиктов)</div>
+  <div class="chip">реальных <b>10</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">α-Аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">β-Аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет синтез матричной РНК и повреждает печень и почки.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Подавляет синтез матричной РНК и повреждает печень и почки.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет синтез РНК и способствует тяжёлому поражению печени.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Подавляет синтез РНК и способствует тяжёлому поражению печени.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">β-Глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-Глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды клеточных стенок грибов действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды клеточных стенок грибов действуют как пищевые волокна.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-Глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды клеточных стенок действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды клеточных стенок действуют как пищевые волокна.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">γ-Аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет РНК-полимеразу II и gópносит вклад в токсичность гриба.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Подавляет РНК-полимеразу II и gópносит вклад в токсичность гриба.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет РНК-полимеразу II, нарушая работу клеток.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Подавляет РНК-полимеразу II, нарушая работу клеток.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Фаллацидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Стабилизирует актиновые нити, но плохо всасывается в кишечнике.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Стабилизирует актиновые нити, но плохо всасывается в кишечнике.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Стабилизирует актиновые нити, но плохо всасывается из кишечника.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Стабилизирует актиновые нити, но плохо всасывается из кишечника.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Фаллоидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актиновыми нитями, но плохо всасывается в кишечнике.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Связывается с актиновыми нитями, но плохо всасывается в кишечнике.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актином, но плохо всасывается из кишечника.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Связывается с актином, но плохо всасывается из кишечника.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Этот структурный полисахарид грибных клеток плохо переваривается человеком.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот структурный полисахарид грибных клеток плохо переваривается человеком.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Этот компонент клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот компонент клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вирозин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вирозин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актиновыми нитями, но его вклад в отравление человека не установлен.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Связывается с актиновыми нитями, но его вклад в отравление человека не установлен.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Под действием ультрафиолета превращается в витамин D₂.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Под действием ультрафиолета превращается в витамин D₂.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">α-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">γ-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">фаллоидин</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Лимонный мухомор <span class="latin">(Amanita citrina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>3.5 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>80%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>50%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>9</b></div>
+  <div class="chip">Галлюцинации: <b>67%</b> (6 из 9 вердиктов)</div>
+  <div class="chip">реальных <b>3</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">β-глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Грибные β-глюканы действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Грибные β-глюканы действуют как пищевые волокна.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды клеточных стенок действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды клеточных стенок действуют как пищевые волокна.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Буфотенин (5-гидрокси-N,N-диметилтриптамин)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Буфотенин (5-гидрокси-N,N-диметилтриптамин)</b><br>Содержание: неизвестно<br>Влияние: Буфотенин действует на серотониновые рецепторы и может изменять восприятие.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Буфотенин действует на серотониновые рецепторы и может изменять восприятие.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Буфотенин (5-гидрокси-N,N-диметилтриптамин)</b><br>Содержание: неизвестно<br>Влияние: Буфотенин действует на серотониновые рецепторы и может изменять восприятие.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Буфотенин действует на серотониновые рецепторы и может изменять восприятие.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Вода участвует в поддержании водного баланса организма.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Вода участвует в поддержании водного баланса организма.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Вода участвует в поддержании водного баланса организма.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Вода участвует в поддержании водного баланса организма.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Хитин клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Хитин клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Хитин клеточных стенок гриба переваривается человеком лишь частично.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Хитин клеточных стенок гриба переваривается человеком лишь частично.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Под действием ультрафиолета эргостерол превращается в витамин D₂, который помогает усваивать кальций.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Под действием ультрафиолета эргостерол превращается в витамин D₂, который помогает усваива</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">буфотенин (5-гидрокси-N,N-диметилтриптамин)</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">буфотенин-N-оксид</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Мухомор серо-розовый <span class="latin">(Amanita rubescens)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.5 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>100%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>16</b></div>
+  <div class="chip">Галлюцинации: <b>88%</b> (14 из 16 вердиктов)</div>
+  <div class="chip">реальных <b>2</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">β-глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Действуют как пищевые волокна.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Служат пищевыми волокнами.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Служат пищевыми волокнами.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Белки</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: При переваривании служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При переваривании служат источником аминокислот.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: При переваривании служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При переваривании служат источником аминокислот.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Восполняет жидкость в организме.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Восполняет жидкость в организме.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Пополняет запасы жидкости в организме.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Пополняет запасы жидкости в организме.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Маннитол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: При высоком потреблении может вызывать вздутие и послабление стула.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При высоком потреблении может вызывать вздутие и послабление стула.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: В больших количествах может вызывать вздутие и послабление стула.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В больших количествах может вызывать вздутие и послабление стула.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Рубесценслизин (термолабильный белок-гемолизин)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Рубесценслизин (термолабильный белок-гемолизин)</b><br>Содержание: неизвестно<br>Влияние: Способен разрушать эритроциты человека в лабораторных условиях.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Способен разрушать эритроциты человека в лабораторных условиях.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Рубесценслизин</b><br>Содержание: неизвестно<br>Влияние: Этот термолабильный белок разрушает эритроциты человека в лабораторных условиях.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Этот термолабильный белок разрушает эритроциты человека в лабораторных условиях.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Трегалоза</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: В кишечнике расщепляется ферментом трегалазой до глюкозы.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В кишечнике расщепляется ферментом трегалазой до глюкозы.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: В тонком кишечнике расщепляется до глюкозы.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В тонком кишечнике расщепляется до глюкозы.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Плохо переваривается и входит в состав пищевых волокон.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Плохо переваривается и входит в состав пищевых волокон.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Почти не переваривается и действует как пищевое волокно.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Почти не переваривается и действует как пищевое волокно.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: При ультрафиолетовом облучении гриба превращается в витамин D₂, который способствует усвоению кальция.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При ультрафиолетовом облучении гриба превращается в витамин D₂, который способствует усвое</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Под действием ультрафиолета превращается в витамин D₂.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Под действием ультрафиолета превращается в витамин D₂.</span></div></td><td class="freq">2/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">гемолитический белок (rubescenslysin)</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Цезарский гриб <span class="latin">(Amanita caesarea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>1.5 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>100%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>20</b></div>
+  <div class="chip">Галлюцинации: <b>90%</b> (18 из 20 вердиктов)</div>
+  <div class="chip">реальных <b>2</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">β-глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Некоторые из них ферментируются кишечной микробиотой.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Некоторые из них ферментируются кишечной микробиотой.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Грибные β-глюканы относятся к пищевым волокнам.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Грибные β-глюканы относятся к пищевым волокнам.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Белки</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: Служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Служат источником аминокислот.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: При переваривании белки служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При переваривании белки служат источником аминокислот.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: около 90 % от свежего веса<br>Влияние: Пополняет запасы жидкости в организме.<br>Судья: галлюцинация · концентрация в норме · влияние нет данных<br></div><div class="inner"><b>около 90 % от свежего веса</b><span>Пополняет запасы жидкости в организме.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Вода из пищи участвует в поддержании водного баланса.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Вода из пищи участвует в поддержании водного баланса.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Линолевая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Линолевая кислота</b><br>Содержание: неизвестно<br>Влияние: Поступает с пищей как незаменимая жирная кислота омега-6.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Поступает с пищей как незаменимая жирная кислота омега-6.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Линолевая кислота</b><br>Содержание: неизвестно<br>Влияние: Линолевая кислота — незаменимая жирная кислота семейства омега-6.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Линолевая кислота — незаменимая жирная кислота семейства омега-6.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Маннитол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: В больших количествах может вызывать вздутие и послабление стула.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>В больших количествах может вызывать вздутие и послабление стула.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: При употреблении в больших количествах маннитол может оказывать слабительное действие.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При употреблении в больших количествах маннитол может оказывать слабительное действие.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Олеиновая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Олеиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Используется организмом как источник энергии и компонент клеточных липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Используется организмом как источник энергии и компонент клеточных липидов.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Олеиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Организм использует олеиновую кислоту как источник энергии и компонент мембранных липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Организм использует олеиновую кислоту как источник энергии и компонент мембранных липидов.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Пальмитиновая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Пальмитиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Используется организмом как источник энергии и компонент клеточных липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Используется организмом как источник энергии и компонент клеточных липидов.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Пальмитиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Организм использует пальмитиновую кислоту как источник энергии и компонент липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Организм использует пальмитиновую кислоту как источник энергии и компонент липидов.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Трегалоза</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: При пищеварении расщепляется до глюкозы.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При пищеварении расщепляется до глюкозы.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: Фермент трегалаза расщепляет трегалозу до глюкозы.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Фермент трегалаза расщепляет трегалозу до глюкозы.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Действует как плохо перевариваемое пищевое волокно.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Действует как плохо перевариваемое пищевое волокно.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Хитин клеточных стенок грибов переваривается лишь частично.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Хитин клеточных стенок грибов переваривается лишь частично.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: При ультрафиолетовом облучении гриба служит предшественником витамина D₂.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>При ультрафиолетовом облучении гриба служит предшественником витамина D₂.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: При УФ-облучении гриба эргостерол превращается в витамин D₂, который способствует усвоению кальция.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>При УФ-облучении гриба эргостерол превращается в витамин D₂, который способствует усвоению</span></div></td><td class="freq">2/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">яблочная кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">аскорбиновая кислота (витамин C)</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">лимонная кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">α-кетоглутаровая кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">фумаровая кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">шикимовая кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">янтарная кислота</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">эргостерол (провитамин D2)</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Мухомор вонючий <span class="latin">(Amanita virosa)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>30%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>75%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>13</b></div>
+  <div class="chip">Галлюцинации: <b>46%</b> (6 из 13 вердиктов)</div>
+  <div class="chip">реальных <b>7</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">α-Аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Блокирует РНК-полимеразу II и может вызвать острую печёночную недостаточность.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Блокирует РНК-полимеразу II и может вызвать острую печёночную недостаточность.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">β-Аманитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет синтез РНК и повреждает клетки печени.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Подавляет синтез РНК и повреждает клетки печени.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Аманитин</b><br>Содержание: неизвестно<br>Влияние: Подавляет синтез РНК и способствует тяжёлому поражению печени.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Подавляет синтез РНК и способствует тяжёлому поражению печени.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Фаллоидин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актином, но плохо всасывается из кишечника.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Связывается с актином, но плохо всасывается из кишечника.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Фаллоидин</b><br>Содержание: неизвестно<br>Влияние: Связывается с актином, но плохо всасывается при употреблении гриба.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Связывается с актином, но плохо всасывается при употреблении гриба.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">β-Глюканы</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>β-Глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды действуют как пищевые волокна.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды действуют как пищевые волокна.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Вирозин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вирозин</b><br>Содержание: неизвестно<br>Влияние: Стабилизирует актиновые нити, но его вклад в отравление человека неясен.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Стабилизирует актиновые нити, но его вклад в отравление человека неясен.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Вироизин</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Вироизин</b><br>Содержание: неизвестно<br>Влияние: Стабилизирует актиновые нити, но его вклад в отравление человека не установлен.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Стабилизирует актиновые нити, но его вклад в отравление человека не установлен.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: неизвестно<br>Влияние: Сама по себе не вызывает отравления.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Сама по себе не вызывает отравления.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Фаллацидин</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Фаллацидин</b><br>Содержание: неизвестно<br>Влияние: Стабилизирует актиновые нити, но плохо всасывается из кишечника.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Стабилизирует актиновые нити, но плохо всасывается из кишечника.</span></div></td><td class="freq">1/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Этот компонент клеточных стенок гриба плохо переваривается человеком.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот компонент клеточных стенок гриба плохо переваривается человеком.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: При облучении ультрафиолетом превращается в витамин D₂.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При облучении ультрафиолетом превращается в витамин D₂.</span></div></td><td class="cell na"></td><td class="freq">1/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">α-аманитин (главный аматоксин)</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-аманитин</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">фаллотоксины (фаллоидин и др.)</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">виротоксины (вироидин, вироизин, дезоксивироидин, алавироидин и др.)</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Опёнок осенний <span class="latin">(Armillaria mellea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.5 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>100%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>20</b></div>
+  <div class="chip">Галлюцинации: <b>70%</b> (14 из 20 вердиктов)</div>
+  <div class="chip">реальных <b>6</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th>частота</th></tr>
+<tr><td class="name">β-глюканы</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Действуют как пищевые волокна, часть которых ферментируется кишечной микробиотой.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Действуют как пищевые волокна, часть которых ферментируется кишечной микробиотой.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-глюканы</b><br>Содержание: неизвестно<br>Влияние: Эти полисахариды входят в состав пищевых волокон.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Эти полисахариды входят в состав пищевых волокон.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Белки</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: При переваривании служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При переваривании служат источником аминокислот.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Белки</b><br>Содержание: неизвестно<br>Влияние: При переваривании белки служат источником аминокислот.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При переваривании белки служат источником аминокислот.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Вода</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: ≈90 % от свежего веса<br>Влияние: Пополняет запасы воды в организме.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>≈90 % от свежего веса</b><span>Пополняет запасы воды в организме.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Вода</b><br>Содержание: около 90 % от свежего веса<br>Влияние: Вода из пищи помогает поддерживать водный баланс.<br>Судья: галлюцинация · концентрация в норме · влияние нет данных<br></div><div class="inner"><b>около 90 % от свежего веса</b><span>Вода из пищи помогает поддерживать водный баланс.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Линолевая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Линолевая кислота</b><br>Содержание: неизвестно<br>Влияние: Служит источником незаменимой жирной кислоты омега-6.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Служит источником незаменимой жирной кислоты омега-6.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Линолевая кислота</b><br>Содержание: неизвестно<br>Влияние: Это незаменимая жирная кислота семейства омега‑6.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Это незаменимая жирная кислота семейства омега‑6.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Маннитол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: При достаточном потреблении может вызывать вздутие и послабление стула.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>При достаточном потреблении может вызывать вздутие и послабление стула.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Маннитол</b><br>Содержание: неизвестно<br>Влияние: Этот сахарный спирт в больших количествах может вызывать вздутие и послабление стула.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Этот сахарный спирт в больших количествах может вызывать вздутие и послабление стула.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Олеиновая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Олеиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Используется организмом как источник энергии и компонент клеточных мембран.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Используется организмом как источник энергии и компонент клеточных мембран.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Олеиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Эта мононенасыщенная жирная кислота используется организмом как источник энергии.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эта мононенасыщенная жирная кислота используется организмом как источник энергии.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Пальмитиновая кислота</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Пальмитиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Используется организмом как источник энергии и компонент липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Используется организмом как источник энергии и компонент липидов.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Пальмитиновая кислота</b><br>Содержание: неизвестно<br>Влияние: Эта насыщенная жирная кислота используется организмом для получения энергии и синтеза липидов.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Эта насыщенная жирная кислота используется организмом для получения энергии и синтеза липи</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Трегалоза</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: В тонком кишечнике расщепляется ферментом трегалазой до глюкозы.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>В тонком кишечнике расщепляется ферментом трегалазой до глюкозы.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Трегалоза</b><br>Содержание: неизвестно<br>Влияние: В тонкой кишке фермент трегалаза расщепляет её до глюкозы.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>В тонкой кишке фермент трегалаза расщепляет её до глюкозы.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Хитин</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Относится к пищевым волокнам и плохо переваривается человеком.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Относится к пищевым волокнам и плохо переваривается человеком.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Хитин</b><br>Содержание: неизвестно<br>Влияние: Хитин грибных клеточных стенок лишь частично расщепляется при пищеварении.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Хитин грибных клеточных стенок лишь частично расщепляется при пищеварении.</span></div></td><td class="freq">2/2</td></tr><tr><td class="name">Эргостерол</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Служит предшественником витамина D₂, который образуется в грибе под действием ультрафиолета.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Служит предшественником витамина D₂, который образуется в грибе под действием ультрафиолет</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Эргостерол</b><br>Содержание: неизвестно<br>Влияние: Под действием ультрафиолета эргостерол в грибах превращается в витамин D₂, который помогает усваивать кальций.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Под действием ультрафиолета эргостерол в грибах превращается в витамин D₂, который помогае</span></div></td><td class="freq">2/2</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th></tr>
+<tr><td class="name">термолабильные желудочно-кишечные ирританты (белковой природы)</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">меллеолиды (сесквитерпеноидные антибиотики: эфиры орселлиновой кислоты и протоиллудановых спиртов, часть хлорирована)</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div><h2>Ответы моделей (raw)</h2><details class="raw"><summary>Красный мухомор · run-01 · 4.45 c · 7 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Красный мухомор (Amanita muscaria)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует глутаматные рецепторы и может вызывать тошноту и возбуждение.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует ГАМК-A-рецепторы и может вызывать сонливость, спутанность сознания и нарушения восприятия.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Присутствует в следовых количествах и при достаточной дозе вызывает слюнотечение и потливость.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусказон&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Его действие на человека изучено недостаточно.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот полисахарид клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Сам не является витамином D₂, но превращается в него под действием ультрафиолета.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-01 · 2.57 c · 2 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Пантерный мухомор (Amanita pantherina)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судороги.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует рецепторы ГАМК-A и может вызывать сонливость, нарушение координации и изменения восприятия.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-01 · 5.25 c · 9 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Бледная поганка (Amanita phalloides)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет синтез матричной РНК и повреждает печень и почки.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет РНК-полимеразу II и gópносит вклад в токсичность гриба.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актиновыми нитями, но плохо всасывается в кишечнике.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стабилизирует актиновые нити, но плохо всасывается в кишечнике.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вирозин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актиновыми нитями, но его вклад в отравление человека не установлен.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот структурный полисахарид грибных клеток плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды клеточных стенок грибов действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Под действием ультрафиолета превращается в витамин D₂.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-01 · 3.98 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Лимонный мухомор (Amanita citrina, мухомор поганковидный)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вода участвует в поддержании водного баланса организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Хитин клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Грибные β-глюканы действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Под действием ультрафиолета эргостерол превращается в витамин D₂, который помогает усваивать кальций.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Буфотенин (5-гидрокси-N,N-диметилтриптамин)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Буфотенин действует на серотониновые рецепторы и может изменять восприятие.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-01 · 4.94 c · 8 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Мухомор серо-розовый (Amanita rubescens)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Восполняет жидкость в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При переваривании служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Рубесценслизин (термолабильный белок-гемолизин)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Способен разрушать эритроциты человека в лабораторных условиях.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Плохо переваривается и входит в состав пищевых волокон.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В кишечнике расщепляется ферментом трегалазой до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При высоком потреблении может вызывать вздутие и послабление стула.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При ультрафиолетовом облучении гриба превращается в витамин D₂, который способствует усвоению кальция.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-01 · 7.81 c · 10 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Цезарский гриб (Amanita caesarea)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;около 90 % от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Пополняет запасы жидкости в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При пищеварении расщепляется до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В больших количествах может вызывать вздутие и послабление стула.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Действует как плохо перевариваемое пищевое волокно.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Некоторые из них ферментируются кишечной микробиотой.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Линолевая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поступает с пищей как незаменимая жирная кислота омега-6.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Олеиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Используется организмом как источник энергии и компонент клеточных липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Пальмитиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Используется организмом как источник энергии и компонент клеточных липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При ультрафиолетовом облучении гриба служит предшественником витамина D₂.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-01 · 4.2 c · 8 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Мухомор вонючий (Amanita virosa)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Блокирует РНК-полимеразу II и может вызвать острую печёночную недостаточность.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет синтез РНК и повреждает клетки печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актином, но плохо всасывается из кишечника.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вирозин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стабилизирует актиновые нити, но его вклад в отравление человека неясен.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Сама по себе не вызывает отравления.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот компонент клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При облучении ультрафиолетом превращается в витамин D₂.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-01 · 9.21 c · 10 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Опёнок осенний (Armillaria mellea)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;≈90 % от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Пополняет запасы воды в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При переваривании служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Действуют как пищевые волокна, часть которых ферментируется кишечной микробиотой.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Относится к пищевым волокнам и плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В тонком кишечнике расщепляется ферментом трегалазой до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При достаточном потреблении может вызывать вздутие и послабление стула.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Линолевая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит источником незаменимой жирной кислоты омега-6.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Олеиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Используется организмом как источник энергии и компонент клеточных мембран.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Пальмитиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Используется организмом как источник энергии и компонент липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служит предшественником витамина D₂, который образуется в грибе под действием ультрафиолета.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Красный мухомор · run-02 · 7.86 c · 9 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Красный мухомор (Amanita muscaria)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;около 90 % от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Вода восполняет жидкость в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Хитин из клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В тонкой кишке трегалоза расщепляется до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В больших количествах маннитол может вызвать вздутие и диарею.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Образующийся из эргостерола под действием ультрафиолета витамин D₂ участвует в обмене кальция.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Иботеновая кислота активирует глутаматные рецепторы и может вызывать возбуждение и спутанность сознания.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Мусцимол активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и координации.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мускарин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Мускарин присутствует в следовых количествах и может усиливать слюноотделение и потливость.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Пантерный мухомор · run-02 · 3.59 c · 6 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Пантерный мухомор (Amanita pantherina)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Иботеновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует глутаматные рецепторы и может вызывать возбуждение, спутанность сознания и судороги.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Мусцимол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Активирует ГАМК-А-рецепторы и может вызывать сонливость, нарушения восприятия и координации.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Поддерживает водный баланс организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот компонент клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Действуют как пищевые волокна и частично ферментируются кишечной микробиотой.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Сам по себе не обладает активностью витамина D, но под действием ультрафиолета превращается в витамин D₂.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Бледная поганка · run-02 · 3.76 c · 7 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Бледная поганка (Amanita phalloides)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет синтез РНК и способствует тяжёлому поражению печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;γ-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет РНК-полимеразу II, нарушая работу клеток.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актином, но плохо всасывается из кишечника.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стабилизирует актиновые нити, но плохо всасывается из кишечника.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот компонент клеточных стенок гриба плохо переваривается человеком.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды клеточных стенок действуют как пищевые волокна.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Лимонный мухомор · run-02 · 5.0 c · 4 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Лимонный мухомор, или мухомор поганковидный (Amanita citrina)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вода участвует в поддержании водного баланса организма.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Хитин клеточных стенок гриба переваривается человеком лишь частично.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды клеточных стенок действуют как пищевые волокна.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Буфотенин (5-гидрокси-N,N-диметилтриптамин)&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Буфотенин действует на серотониновые рецепторы и может изменять восприятие.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор серо-розовый · run-02 · 6.69 c · 8 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Мухомор серо-розовый (Amanita rubescens)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Пополняет запасы жидкости в организме.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Почти не переваривается и действует как пищевое волокно.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Служат пищевыми волокнами.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В больших количествах может вызывать вздутие и послабление стула.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В тонком кишечнике расщепляется до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При переваривании служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Под действием ультрафиолета превращается в витамин D₂.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Рубесценслизин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот термолабильный белок разрушает эритроциты человека в лабораторных условиях.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Цезарский гриб · run-02 · 5.02 c · 10 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Цезарский гриб (Amanita caesarea)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Вода из пищи участвует в поддержании водного баланса.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При переваривании белки служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Хитин клеточных стенок грибов переваривается лишь частично.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Грибные β-глюканы относятся к пищевым волокнам.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Фермент трегалаза расщепляет трегалозу до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При употреблении в больших количествах маннитол может оказывать слабительное действие.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Линолевая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Линолевая кислота — незаменимая жирная кислота семейства омега-6.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Олеиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Организм использует олеиновую кислоту как источник энергии и компонент мембранных липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Пальмитиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Организм использует пальмитиновую кислоту как источник энергии и компонент липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При УФ-облучении гриба эргостерол превращается в витамин D₂, который способствует усвоению кальция.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Мухомор вонючий · run-02 · 3.38 c · 5 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Мухомор вонючий (Amanita virosa)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;α-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет РНК-полимеразу II и может вызвать острую печёночную недостаточность.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-Аманитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Подавляет синтез РНК и способствует тяжёлому поражению печени.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллоидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Связывается с актином, но плохо всасывается при употреблении гриба.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Фаллацидин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стабилизирует актиновые нити, но плохо всасывается из кишечника.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Вироизин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Стабилизирует актиновые нити, но его вклад в отравление человека не установлен.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Опёнок осенний · run-02 · 5.29 c · 10 веществ</summary><pre>{
+  &quot;гриб&quot;: &quot;Опёнок осенний (Armillaria mellea)&quot;,
+  &quot;состав&quot;: [
+    {
+      &quot;вещество&quot;: &quot;Вода&quot;,
+      &quot;содержание&quot;: &quot;около 90 % от свежего веса&quot;,
+      &quot;влияние&quot;: &quot;Вода из пищи помогает поддерживать водный баланс.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Белки&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;При переваривании белки служат источником аминокислот.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;β-глюканы&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эти полисахариды входят в состав пищевых волокон.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Хитин&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Хитин грибных клеточных стенок лишь частично расщепляется при пищеварении.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Трегалоза&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;В тонкой кишке фермент трегалаза расщепляет её до глюкозы.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Маннитол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Этот сахарный спирт в больших количествах может вызывать вздутие и послабление стула.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Линолевая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Это незаменимая жирная кислота семейства омега‑6.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Олеиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эта мононенасыщенная жирная кислота используется организмом как источник энергии.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Пальмитиновая кислота&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Эта насыщенная жирная кислота используется организмом для получения энергии и синтеза липидов.&quot;
+    },
+    {
+      &quot;вещество&quot;: &quot;Эргостерол&quot;,
+      &quot;содержание&quot;: &quot;неизвестно&quot;,
+      &quot;влияние&quot;: &quot;Под действием ультрафиолета эргостерол в грибах превращается в витамин D₂, который помогает усваивать кальций.&quot;
+    }
+  ]
+}</pre></details>
+<footer>построено build_mush_report.py · 2026-11-21 16:05 UTC · данные: run-*/session.json, run-*/verdicts.json</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

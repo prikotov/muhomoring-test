@@ -1,0 +1,311 @@
+{
+  "model": "gemma4:26b",
+  "run": 3,
+  "started_at": "2026-11-20T10:08:39.521123+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 7.0,
+    "prompt_tokens": 1358,
+    "output_tokens": 1038,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\"mushroom\": \"Amanita muscaria\", \"composition\": [{\"compound\": \"Ibotenic acid\", \"amount\": \"unknown\", \"effect\": \"It acts as a neurotoxin that causes excitation of the central nervous system.\"}, {\"compound\": \"Muscimol\", \"amount\": \"unknown\", \"effect\": \"It acts as a potent psychoactive agonist of GABA receptors.\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"It stimulates the parasympathetic nervous system by acting on muscarinic acetylcholine receptors.\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "It acts as a neurotoxin that causes excitation of the central nervous system."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "It acts as a potent psychoactive agonist of GABA receptors."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "It stimulates the parasympathetic nervous system by acting on muscarinic acetylcholine receptors."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 4.09,
+      "eval_count": 114,
+      "prompt_eval_count": 170,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\"mushroom\": \"Amanita pantherina\", \"composition\": [{\"compound\": \"Ibotenic acid\", \"amount\": \"unknown\", \"effect\": \"Acts as a potent neurotoxin by stimulating glutamate receptors.\"}, {\"compound\": \"Muscimol\", \"amount\": \"unknown\", \"effect\": \"Produces psychoactive and sedative effects by acting as a GABA receptor agonist.\"}, {\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"Stimulates the parasympathetic nervous system causing sweating and salivation.\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Acts as a potent neurotoxin by stimulating glutamate receptors."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "Produces psychoactive and sedative effects by acting as a GABA receptor agonist."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Stimulates the parasympathetic nervous system causing sweating and salivation."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 0.35,
+      "eval_count": 109,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\"mushroom\": \"Amanita phalloides\", \"composition\": [{\"compound\": \"α-amanitin\", \"amount\": \"0.1% of dry weight\", \"effect\": \"Inhibits RNA polymerase II, leading to liver failure.\"}, {\"compound\": \"β-amanitin\", \"amount\": \"0.1% of dry weight\", \"effect\": \"Inhibits RNA synthesis in cells.\"}, {\"compound\": \"α-hemolysin\", \"amount\": \"unknown\", \"effect\": \"Causes hemolysis and cellular damage.\"}, {\"compound\": \"β-hemolysin\", \"amount\": \"unknown\", \"effect\": \"Destroys red blood cell membranes.\"}, {\"compound\": \"phalloidin\", \"amount\": \"unknown\", \"effect\": \"Inhibits actin polymerization in cells.\"}]}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "0.1% of dry weight",
+          "влияние": "Inhibits RNA polymerase II, leading to liver failure."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "0.1% of dry weight",
+          "влияние": "Inhibits RNA synthesis in cells."
+        },
+        {
+          "вещество": "α-hemolysin",
+          "содержание": "unknown",
+          "влияние": "Causes hemolysis and cellular damage."
+        },
+        {
+          "вещество": "β-hemolysin",
+          "содержание": "unknown",
+          "влияние": "Destroys red blood cell membranes."
+        },
+        {
+          "вещество": "phalloidin",
+          "содержание": "unknown",
+          "влияние": "Inhibits actin polymerization in cells."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 0.52,
+      "eval_count": 167,
+      "prompt_eval_count": 170,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita citrina\",\n  \"composition\": [\n    {\n      \"compound\": \"unknown toxins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"The specific toxic principles are not fully characterized but are believed to cause gastrointestinal distress.\"\n    },\n    {\n      \"compound\": \"carbohydrates\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Provides a source of energy for human metabolism.\"\n    },\n    {\n      \"compound\": \"proteins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Essential for building and repairing tissues in humans.\"\n    },\n    {\n      \"compound\": \"water\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Maintains hydration and cellular function.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "unknown toxins",
+          "содержание": "unknown",
+          "влияние": "The specific toxic principles are not fully characterized but are believed to cause gastrointestinal distress."
+        },
+        {
+          "вещество": "carbohydrates",
+          "содержание": "unknown",
+          "влияние": "Provides a source of energy for human metabolism."
+        },
+        {
+          "вещество": "proteins",
+          "содержание": "unknown",
+          "влияние": "Essential for building and repairing tissues in humans."
+        },
+        {
+          "вещество": "water",
+          "содержание": "unknown",
+          "влияние": "Maintains hydration and cellular function."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 0.54,
+      "eval_count": 182,
+      "prompt_eval_count": 170,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\"mushroom\": \"Amanita rubescens\", \"composition\": [{\"compound\": \"Muscarine\", \"amount\": \"unknown\", \"effect\": \"It stimulates the parasympathetic nervous system.\"}, {\"compound\": \"Terphenyls\", \"amount\": \"unknown\", \"effect\": \"These compounds may exhibit antimicrobial properties.\"}, {\"compound\": \"Polysaccharides\", \"amount\": \"unknown\", \"effect\": \"They may help modulate immune system responses.\"}]}",
+      "composition": [
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "It stimulates the parasympathetic nervous system."
+        },
+        {
+          "вещество": "Terphenyls",
+          "содержание": "unknown",
+          "влияние": "These compounds may exhibit antimicrobial properties."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "unknown",
+          "влияние": "They may help modulate immune system responses."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 0.31,
+      "eval_count": 92,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\"mushroom\": \"Amanita caesarea\", \"composition\": [{\"compound\": \"Carotenoids\", \"amount\": \"unknown\", \"effect\": \"They act as antioxidants in the human body.\"}, {\"compound\": \"Polysaccharides\", \"amount\": \"unknown\", \"effect\": \"They may help support the immune system.\"}, {\"compound\": \"Proteins\", \"amount\": \"unknown\", \"effect\": \"They provide essential amino acids for bodily functions.\"}, {\"compound\": \"Vitamin B complex\", \"amount\": \"unknown\", \"effect\": \"They support metabolic processes and nerve function.\"}, {\"compound\": \"Amino acids\", \"amount\": \"unknown\", \"effect\": \"They serve as building blocks for proteins in humans.\"}]}",
+      "composition": [
+        {
+          "вещество": "Carotenoids",
+          "содержание": "unknown",
+          "влияние": "They act as antioxidants in the human body."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "unknown",
+          "влияние": "They may help support the immune system."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "unknown",
+          "влияние": "They provide essential amino acids for bodily functions."
+        },
+        {
+          "вещество": "Vitamin B complex",
+          "содержание": "unknown",
+          "влияние": "They support metabolic processes and nerve function."
+        },
+        {
+          "вещество": "Amino acids",
+          "содержание": "unknown",
+          "влияние": "They serve as building blocks for proteins in humans."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 0.43,
+      "eval_count": 147,
+      "prompt_eval_count": 171,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\"mushroom\": \"Amanita virosa\", \"composition\": [{\"compound\": \"α-amanitin\", \"amount\": \"unknown\", \"effect\": \"Inhibits RNA polymerase II leading to liver failure.\"}, {\"compound\": \"β-amanitin\", \"amount\": \"unknown\", \"effect\": \"Causes severe damage to the liver and kidneys.\"}, {\"compound\": \"α-amanitin-related cyclic peptides\", \"amount\": \"unknown\", \"effect\": \"Disrupts protein synthesis in human cells.\"}]}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II leading to liver failure."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "unknown",
+          "влияние": "Causes severe damage to the liver and kidneys."
+        },
+        {
+          "вещество": "α-amanitin-related cyclic peptides",
+          "содержание": "unknown",
+          "влияние": "Disrupts protein synthesis in human cells."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 0.33,
+      "eval_count": 105,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\"mushroom\": \"Armillaria mellea\", \"composition\": [{\"compound\": \"Polysaccharides\", \"amount\": \"unknown\", \"effect\": \"They may support immune system function.\"}, {\"compound\": \"Armillarin\", \"amount\": \"unknown\", \"effect\": \"It exhibits potential antimicrobial properties.\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"It serves as a precursor for Vitamin D synthesis in the body.\"}, {\"compound\": \"Phenolic compounds\", \"amount\": \"unknown\", \"effect\": \"They act as antioxidants in human cells.\"}]}",
+      "composition": [
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "unknown",
+          "влияние": "They may support immune system function."
+        },
+        {
+          "вещество": "Armillarin",
+          "содержание": "unknown",
+          "влияние": "It exhibits potential antimicrobial properties."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "It serves as a precursor for Vitamin D synthesis in the body."
+        },
+        {
+          "вещество": "Phenolic compounds",
+          "содержание": "unknown",
+          "влияние": "They act as antioxidants in human cells."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 0.38,
+      "eval_count": 122,
+      "prompt_eval_count": 170,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "model": "orcarouter/Qwen3.8-27B-Uncensored:latest",
+  "run": 2,
+  "started_at": "2026-11-20T12:49:52.218459+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 28.6,
+    "prompt_tokens": 1345,
+    "output_tokens": 2035,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita muscaria\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"0.1-0.7% of dry weight\",\n      \"effect\": \"Acts as a glutamate receptor agonist causing confusion and seizures.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"1-10% of dry weight\",\n      \"effect\": \"Binds to GABA-A receptors producing sedation and hallucinations.\"\n    },\n    {\n      \"compound\": \"Muscarine\",\n      \"amount\": \"0-0.3% of dry weight\",\n      \"effect\": \"Activates muscarinic receptors leading to increased salivation and sweating.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.1-0.7% of dry weight",
+          "влияние": "Acts as a glutamate receptor agonist causing confusion and seizures."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "1-10% of dry weight",
+          "влияние": "Binds to GABA-A receptors producing sedation and hallucinations."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "0-0.3% of dry weight",
+          "влияние": "Activates muscarinic receptors leading to increased salivation and sweating."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 4.8,
+      "eval_count": 185,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\"mushroom\": \"Amanita pantherina\", \"composition\": [\n  {\"compound\": \"Ibotenic acid\", \"amount\": \"2-3 mg/g dry weight\", \"effect\": \"Acts as an agonist at glutamate receptors, causing seizures and muscle spasms.\"},\n  {\"compound\": \"Muscimol\", \"amount\": \"1-2 mg/g dry weight\", \"effect\": \"Functions as a GABA-A receptor agonist, leading to sedation and hypnosis.\"},\n  {\"compound\": \"Pantherin\", \"amount\": \"unknown\", \"effect\": \"Contributes to neurotoxic effects, including visual disturbances and hallucinations.\"},\n  {\"compound\": \"Muscine\", \"amount\": \"unknown\", \"effect\": \"Acts as a GABA receptor agonist, similar to muscimol.\"},\n  {\"compound\": \"Water\", \"amount\": \"~85% of fresh weight\", \"effect\": \"Serves as the primary solvent for chemical reactions in the mushroom.\"}\n]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "2-3 mg/g dry weight",
+          "влияние": "Acts as an agonist at glutamate receptors, causing seizures and muscle spasms."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "1-2 mg/g dry weight",
+          "влияние": "Functions as a GABA-A receptor agonist, leading to sedation and hypnosis."
+        },
+        {
+          "вещество": "Pantherin",
+          "содержание": "unknown",
+          "влияние": "Contributes to neurotoxic effects, including visual disturbances and hallucinations."
+        },
+        {
+          "вещество": "Muscine",
+          "содержание": "unknown",
+          "влияние": "Acts as a GABA receptor agonist, similar to muscimol."
+        },
+        {
+          "вещество": "Water",
+          "содержание": "~85% of fresh weight",
+          "влияние": "Serves as the primary solvent for chemical reactions in the mushroom."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 2.85,
+      "eval_count": 220,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita phalloides\",\n\"composition\": [\n{\n\"compound\": \"alpha-Amanitin\",\n\"amount\": \"1-5 mg/g\",\n\"effect\": \"Inhibits RNA polymerase II, causing severe liver and kidney failure.\"\n},\n{\n\"compound\": \"beta-Amanitin\",\n\"amount\": \"0.5-2 mg/g\",\n\"effect\": \"Inhibits RNA synthesis, contributing to hepatotoxicity.\"\n},\n{\n\"compound\": \"phalloidin\",\n\"amount\": \"0.5-1 mg/g\",\n\"effect\": \"Binds to actin, causing gastrointestinal cramping and diarrhea.\"\n},\n{\n\"compound\": \"phallatoxin\",\n\"amount\": \"0.5-1 mg/g\",\n\"effect\": \"Binds to actin, disrupting cell motility and causing severe gut irritation.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "alpha-Amanitin",
+          "содержание": "1-5 mg/g",
+          "влияние": "Inhibits RNA polymerase II, causing severe liver and kidney failure."
+        },
+        {
+          "вещество": "beta-Amanitin",
+          "содержание": "0.5-2 mg/g",
+          "влияние": "Inhibits RNA synthesis, contributing to hepatotoxicity."
+        },
+        {
+          "вещество": "phalloidin",
+          "содержание": "0.5-1 mg/g",
+          "влияние": "Binds to actin, causing gastrointestinal cramping and diarrhea."
+        },
+        {
+          "вещество": "phallatoxin",
+          "содержание": "0.5-1 mg/g",
+          "влияние": "Binds to actin, disrupting cell motility and causing severe gut irritation."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 2.67,
+      "eval_count": 206,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita citrina\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"0.05 - 0.5% (dry weight)\",\n      \"effect\": \"An excitatory neurotransmitter that causes muscle spasms and convulsions by overstimulating the nervous system.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"0.05 - 0.5% (dry weight)\",\n      \"effect\": \"A sedative and anticonvulsant that produces hallucinations and drowsiness by acting as a GABA receptor agonist.\"\n    },\n    {\n      \"compound\": \"Proteins\",\n      \"amount\": \"20 - 30% (dry weight)\",\n      \"effect\": \"Provides essential amino acids for nutrition but can cause digestive discomfort if the mushroom is not fully cooked.\"\n    },\n    {\n      \"compound\": \"Carbohydrates\",\n      \"amount\": \"10 - 15% (dry weight)\",\n      \"effect\": \"Serves as an energy source, contributing to the overall caloric value of the edible mushroom.\"\n    },\n    {\n      \"compound\": \"Lipids\",\n      \"amount\": \"1 - 2% (dry weight)\",\n      \"effect\": \"Contributes to the structural integrity of cell membranes and provides fatty acids.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.05 - 0.5% (dry weight)",
+          "влияние": "An excitatory neurotransmitter that causes muscle spasms and convulsions by overstimulating the nervous system."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.05 - 0.5% (dry weight)",
+          "влияние": "A sedative and anticonvulsant that produces hallucinations and drowsiness by acting as a GABA receptor agonist."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "20 - 30% (dry weight)",
+          "влияние": "Provides essential amino acids for nutrition but can cause digestive discomfort if the mushroom is not fully cooked."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "10 - 15% (dry weight)",
+          "влияние": "Serves as an energy source, contributing to the overall caloric value of the edible mushroom."
+        },
+        {
+          "вещество": "Lipids",
+          "содержание": "1 - 2% (dry weight)",
+          "влияние": "Contributes to the structural integrity of cell membranes and provides fatty acids."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 4.21,
+      "eval_count": 329,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita rubescens\",\n  \"composition\": [\n    {\n      \"compound\": \"Muscarine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Acts as an acetylcholine receptor agonist causing salivation, sweating, and bradycardia.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Excites glutamate receptors in the brain, potentially leading to convulsions and hallucinations.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Acts as a GABA receptor agonist, producing sedation and anticonvulsant effects.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Acts as an acetylcholine receptor agonist causing salivation, sweating, and bradycardia."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Excites glutamate receptors in the brain, potentially leading to convulsions and hallucinations."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "Acts as a GABA receptor agonist, producing sedation and anticonvulsant effects."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 2.37,
+      "eval_count": 181,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita caesarea\",\n  \"composition\": [\n    {\n      \"compound\": \"Protein\",\n      \"amount\": \"20-30% of dry weight\",\n      \"effect\": \"Provides essential amino acids for nutritional value.\"\n    },\n    {\n      \"compound\": \"Carbohydrates\",\n      \"amount\": \"25-30% of dry weight\",\n      \"effect\": \"Serve as an energy source when consumed.\"\n    },\n    {\n      \"compound\": \"Cholesterol\",\n      \"amount\": \"0.2-0.4% of dry weight\",\n      \"effect\": \"Contributes to the lipid profile of the mushroom, potentially raising serum cholesterol levels.\"\n    },\n    {\n      \"compound\": \"Ascorbic Acid (Vitamin C)\",\n      \"amount\": \"0.1-0.3% of fresh weight\",\n      \"effect\": \"Acts as an antioxidant and supports immune function.\"\n    },\n    {\n      \"compound\": \"Pectin\",\n      \"amount\": \"1-2% of dry weight\",\n      \"effect\": \"Contributes to the gel-like texture and may aid digestion as a fiber component.\"\n    },\n    {\n      \"compound\": \"Minerals (Potassium, Sodium, Calcium)\",\n      \"amount\": \"0.5-2% of dry weight\",\n      \"effect\": \"Essential for electrolyte balance and various physiological functions.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Protein",
+          "содержание": "20-30% of dry weight",
+          "влияние": "Provides essential amino acids for nutritional value."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "25-30% of dry weight",
+          "влияние": "Serve as an energy source when consumed."
+        },
+        {
+          "вещество": "Cholesterol",
+          "содержание": "0.2-0.4% of dry weight",
+          "влияние": "Contributes to the lipid profile of the mushroom, potentially raising serum cholesterol levels."
+        },
+        {
+          "вещество": "Ascorbic Acid (Vitamin C)",
+          "содержание": "0.1-0.3% of fresh weight",
+          "влияние": "Acts as an antioxidant and supports immune function."
+        },
+        {
+          "вещество": "Pectin",
+          "содержание": "1-2% of dry weight",
+          "влияние": "Contributes to the gel-like texture and may aid digestion as a fiber component."
+        },
+        {
+          "вещество": "Minerals (Potassium, Sodium, Calcium)",
+          "содержание": "0.5-2% of dry weight",
+          "влияние": "Essential for electrolyte balance and various physiological functions."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 4.29,
+      "eval_count": 335,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita virosa\",\n\"composition\": [\n{\n\"compound\": \"Amatoxins\",\n\"amount\": \"0.1-0.5% dry weight\",\n\"effect\": \"Inhibit RNA polymerase II, causing severe liver and kidney damage that can be fatal.\"\n},\n{\n\"compound\": \"Virotoxins\",\n\"amount\": \"0.05-0.1% dry weight\",\n\"effect\": \"Contribute to hepatotoxicity and cytotoxicity.\"\n},\n{\n\"compound\": \"Ibotenic acid\",\n\"amount\": \"unknown\",\n\"effect\": \"Acts as an excitatory neurotransmitter agonist, potentially causing neurological symptoms.\"\n},\n{\n\"compound\": \"Muscarine\",\n\"amount\": \"trace amounts\",\n\"effect\": \"Can cause cholinergic symptoms such as sweating and salivation, though less prominent than in other species.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Amatoxins",
+          "содержание": "0.1-0.5% dry weight",
+          "влияние": "Inhibit RNA polymerase II, causing severe liver and kidney damage that can be fatal."
+        },
+        {
+          "вещество": "Virotoxins",
+          "содержание": "0.05-0.1% dry weight",
+          "влияние": "Contribute to hepatotoxicity and cytotoxicity."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Acts as an excitatory neurotransmitter agonist, potentially causing neurological symptoms."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "trace amounts",
+          "влияние": "Can cause cholinergic symptoms such as sweating and salivation, though less prominent than in other species."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 2.76,
+      "eval_count": 212,
+      "prompt_eval_count": 167,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Armillaria mellea\",\n  \"composition\": [\n    {\n      \"compound\": \"Chitin\",\n      \"amount\": \"3-5% of dry weight\",\n      \"effect\": \"Indigestible polysaccharide that contributes to structural integrity and may cause mild digestive discomfort in sensitive individuals.\"\n    },\n    {\n      \"compound\": \"Lentitol\",\n      \"amount\": \"1-3% of dry weight\",\n      \"effect\": \"A beta-glucan that stimulates the immune system and has potential anti-tumor properties.\"\n    },\n    {\n      \"compound\": \"Armillarisin A\",\n      \"amount\": \"0.1-1.0 mg/kg\",\n      \"effect\": \"A diterpenoid that acts as a competitive inhibitor of acetylcholinesterase, potentially causing cholinergic symptoms.\"\n    },\n    {\n      \"compound\": \"Armillarisin C\",\n      \"amount\": \"0.05-0.5 mg/kg\",\n      \"effect\": \"A steroidal glycoalkaloid with cytotoxic properties against cancer cell lines.\"\n    },\n    {\n      \"compound\": \"Protein\",\n      \"amount\": \"20-30% of dry weight\",\n      \"effect\": \"Provides essential amino acids for human nutrition, though raw consumption may be difficult to digest.\"\n    },\n    {\n      \"compound\": \"Free Amino Acids\",\n      \"amount\": \"1-2% of dry weight\",\n      \"effect\": \"Contributes to the umami flavor profile and provides nutritional value.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Chitin",
+          "содержание": "3-5% of dry weight",
+          "влияние": "Indigestible polysaccharide that contributes to structural integrity and may cause mild digestive discomfort in sensitive individuals."
+        },
+        {
+          "вещество": "Lentitol",
+          "содержание": "1-3% of dry weight",
+          "влияние": "A beta-glucan that stimulates the immune system and has potential anti-tumor properties."
+        },
+        {
+          "вещество": "Armillarisin A",
+          "содержание": "0.1-1.0 mg/kg",
+          "влияние": "A diterpenoid that acts as a competitive inhibitor of acetylcholinesterase, potentially causing cholinergic symptoms."
+        },
+        {
+          "вещество": "Armillarisin C",
+          "содержание": "0.05-0.5 mg/kg",
+          "влияние": "A steroidal glycoalkaloid with cytotoxic properties against cancer cell lines."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "20-30% of dry weight",
+          "влияние": "Provides essential amino acids for human nutrition, though raw consumption may be difficult to digest."
+        },
+        {
+          "вещество": "Free Amino Acids",
+          "содержание": "1-2% of dry weight",
+          "влияние": "Contributes to the umami flavor profile and provides nutritional value."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 4.7,
+      "eval_count": 367,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

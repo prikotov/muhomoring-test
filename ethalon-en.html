@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference mushroom compositions and sources</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+
+<h1>Reference mushroom compositions and sources</h1>
+<p class="proto">English version of the reference composition (ethalon-en.json, v7) used by the judge; prepared for an English-language experiment — models asked about composition in English, answers compared with the Russian-language run. Structure and facts mirror the Russian reference. Русская версия: ethalon-ru.html.</p>
+<div class="chip">Language: <b>EN</b></div><div class="chip">Русская версия: <a class="report-link" target="_blank" rel="noopener" href="ethalon-ru.html">ethalon-ru.html</a></div>
+<h2>Reference compositions and sources</h2>
+<div class="eth">
+<p class="intro">The reference is the ground-truth composition the judge (glm-5.3-flash, thinking low) compares every model answer against. Assembled from peer-reviewed literature (Michelot & Melendez-Howell 2003, Wieland 1983/1986, Carboué & Lopez 2021) and wiki articles traced to primary sources; weakly supported items are marked disputed and penalised more softly. Groups: <b>main</b> — counted as omissions, <b>trace</b> — completeness credit, <b>disputed</b> — presence contested by literature.</p>
+<h3>Reference sources</h3><table class="sx"><tr><th style="width:44%">Source</th><th>What it contributed</th></tr>
+<tr><td><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot D., Melendez-Howell L.M. &quot;Amanita muscaria: Chemistry, Biology, Toxicology, and Ethnomycology&quot; // Mycological Research 107, 2003, 131–146</a></td><td>The landmark chemistry review of the fly agaric: isoxazoles (ibotenic acid → muscimol), trace muscarine, stizolobic/stizolobinic acids, choline and acetylcholine, disputed bufotenin, amavadine</td></tr>
+<tr><td><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">Carboué Q., Lopez M. &quot;Amanita muscaria: Ecology, Chemistry, Myths&quot; // Encyclopedia 1(3), MDPI, 2021, 905–914</a></td><td>Full text and Table 1: muscarine 0.02% dry weight, ibotenic acid ~1% dry (up to 70 mg per fruit body), muscimol 0.09% dry (~6 mg); disputed tropane alkaloids; lethal dose ~15 caps; traces of amatoxins in some specimens (disputed)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso H. &quot;The pigments of fly agaric&quot; (1979) + pigment discussion in Michelot 2003</a></td><td>Cap pigments of A. muscaria: muscaflavin (yellow), muscaaurins (orange), muscapurpurin (red-violet) — betalain-type from betalamic acid; the older pulvinic-acid attribution was revised</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland T. &quot;The toxic peptides from Amanita mushrooms&quot; (Int. J. Pept. Protein Res. 22, 1983) + &quot;Peptides of Poisonous Amanita Mushrooms&quot; (Springer, 1986)</a></td><td>Peptide taxonomy of Phalloideae: 9 amatoxins + 7 phallotoxins (octapeptides) + 6 virotoxins (heptapeptides, named after A. virosa); tryptathionine ring; RNA-polymerase-II mechanism; antamanide</td></tr>
+<tr><td>en.wikipedia: Amatoxin; Amanita muscaria / pantherina / citrina / rubescens / caesarea / virosa; Armillaria mellea (retrieved 2026-11-17/18) <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">Amatoxin</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">Amanita muscaria</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">Amanita pantherina</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">Amanita citrina</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">Amanita rubescens</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">Amanita caesarea</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">Amanita virosa</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">Armillaria mellea</a></td><td>Aggregator traced to primary sources: α-amanitin LD50 0.1 mg/kg; toxicity of A. pantherina attributed to ibotenic acid; bufotenin/5-MeO-DMT/serotonin in A. citrina (chromatography), trace α-amanitin in A. citrina (Cambridge study); hemolytic protein and rubescenslysin of the blusher; organic acids of A. caesarea ~6 g/kg and Cd/Pb bioaccumulation; 6 virotoxins and radish smell of A. virosa; melleolides and bioluminescence of Armillaria</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Dorfer+Gressler+Hoffmeister+diversity+bioactivity+Armillaria+sesquiterpene+aryl+ester" target="_blank" rel="noopener">Dörfer J., Gressler S., Hoffmeister D. // Mycological Progress 18, 2019 + Pfütze et al. 2024</a></td><td>Armillaria melleolides: ~60 derivatives (2019) → &gt;80 (2024); sesquiterpene aryl esters of orsellinic acid, some chlorinated</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux D.G. &quot;Medical Toxicology of Natural Substances&quot;, Wiley, 2008</a></td><td>Toxicology of A. pantherina / A. muscaria: isoxazoles of both species, the &quot;ibotenic/pantherina-muscaria syndrome&quot;</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Voynova+Toxicological+and+Pharmacological+Profile+of+Amanita+muscaria+Pharmacia" target="_blank" rel="noopener">Voynova M. et al. &quot;Toxicological and Pharmacological Profile of Amanita muscaria&quot; // Pharmacia 67, 2020 + Savickaitė et al. 2025</a></td><td>Pharmacological profile of the fly agaric: muscimol — GABA_A agonist, ibotenic acid — NMDA; confirmation of choline, acetylcholine, muscarone, betaine and trace tropanes</td></tr>
+<tr><td><a class="srclink" href="https://ru.wikipedia.org/wiki/%D0%9C%D1%83%D1%85%D0%BE%D0%BC%D0%BE%D1%80_%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D1%8B%D0%B9" target="_blank" rel="noopener">ru.wikipedia &quot;Мухомор красный&quot; (retrieved 2026-11-17)</a></td><td>Drying decarboxylates ibotenic acid &quot;but not completely&quot;; muscazone is a UV-degradation product of ibotenic acid with weak activity; muscarine &quot;too low to play a role in the symptoms&quot;</td></tr>
+<tr><td>Vishnevsky M.V. &quot;Fly Agaric: Microdosing&quot; — Samarkand: BIO-Press, 2024 (544 p., ISBN 978-5-907522-10-7)</td><td>Compounds of A. muscaria previously absent from the reference: MTgC (β-carboline, MAO inhibitor), heteroauxin (IAA), ergothioneine, hydroxypyrrolidinone, hercynine, muscaridine; confirmation of isoxazoles, stizolobic acids, muscazone, pigments, mannitol/trehalose. A positional monograph by a known mycologist (PhD) — entries marked low confidence</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1002/anie.202001870" target="_blank" rel="noopener">Obermaier S., Müller M. «Ibotenic Acid Biosynthesis in the Fly Agaric Is Initiated by Glutamate Hydroxylation» // Angew. Chem. Int. Ed. 59, 2020</a></td><td>Ibotenic acid biosynthesis: from glutamate, ibo gene cluster, decarboxylase → muscimol at ~20% yield</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1515/znc-2007-11-1201" target="_blank" rel="noopener">Stintzing F., Schliemann W. «Pigments of fly agaric (Amanita muscaria)» // Z. Naturforsch. C 62, 2007</a></td><td>Cap pigments — a modern revision of <a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a></td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Kuehnelt+Goessler+Irgolic+arsenocholine+mushroom+Amanita+muscaria" target="_blank" rel="noopener">Kuehnelt D., Goessler W., Irgolic K.J. «Arsenocholine in the Mushroom Amanita muscaria» // Applied Organometallic Chemistry 11, 1997</a></td><td>Arsenocholine (arsenic-containing choline analogue) — a compound previously absent from the reference</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Lipka+Falandysz+accumulation+metallic+elements+Amanita+muscaria" target="_blank" rel="noopener">Lipka K., Falandysz J. «Accumulation of metallic elements by Amanita muscaria» // J. Environ. Sci. Health B</a></td><td>Metal bioaccumulation (supports amavadine/vanadium and metals in the reference)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=bufotenine+concentrations+carpophores+Amanita+citrina" target="_blank" rel="noopener">Stijve T. «Bufotenine Concentrations in Carpophores of Amanita citrina» // Trav. Chim. Aliment. Hyg. 70, 1979</a></td><td>Direct quantification of bufotenin in A. citrina fruit bodies</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1080/00275514.1983.12023789" target="_blank" rel="noopener">«Chromatographic and Taxonomic Evaluation of Amanita citrina» // Mycologia 75(6), 1983</a></td><td>Chromatographic profile of A. citrina (indole alkaloids)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Shinozaki+Ishida+stizolobic+acid+competitive+antagonist+quisqualate" target="_blank" rel="noopener">Shinozaki H., Ishida M. «Stizolobic acid, a competitive antagonist of the quisqualate-type receptor» // Brain Research 451, 1988</a></td><td>Pharmacology of stizolobic acid (quisqualate receptor antagonist)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=occurrence+muscarine+muscimol+various+fungi+Coolia" target="_blank" rel="noopener">Stiive T. «The occurrence of muscarine and muscimol in various fungi» // Coolia 25, 1982</a></td><td>Distribution of muscarine and muscimol across fungal species</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1080/02791072.2010.10400712" target="_blank" rel="noopener">Feeney K. «Revisiting Wasson&#x27;s Soma» // J. Psychoactive Drugs 42, 2010</a></td><td>Preparation effects (drying etc.) on fly agaric chemistry — supports ibotenic decarboxylation</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.3390/toxins17050247" target="_blank" rel="noopener">Zhang Y.-Z. et al. «Toxin Profiling of Amanita citrina and A. sinocitrina: First Report of Bufotenine Detection» // Toxins 17(5):247, 2025</a> <a class="srclink" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12115419" target="_blank" rel="noopener">PMC full text</a></td><td>Bufotenin in A. citrina: 2.90 ± 0.27 g/kg dry; LC-MS/MS screening of 11 toxins (muscarine, amanitins, phallotoxins, isoxazoles, psilocybin/psilocin) — none detected; earlier: 1.6–7.5 mg/g (Wieland 1968)</td></tr>
+<tr><td><a class="srclink" href="https://www.samorini.it/doc1/alt_aut/sz/stijve-bufotenine-concentrations-in-carpophores-of-amanita-citrina.pdf" target="_blank" rel="noopener">Stijve T. «Bufotenine Concentrations in Carpophores of Amanita citrina» // Trav. Chim. Aliment. Hyg. 70, 1979</a></td><td>~45 mg/kg free base in European specimens of A. citrina</td></tr>
+<tr><td><a class="srclink" href="https://pubmed.ncbi.nlm.nih.gov/17317341" target="_blank" rel="noopener">Tsujikawa K. et al. «Determination of muscimol and ibotenic acid in Amanita mushrooms by LC-MS/MS» // Forensic Science International 169, 2007</a></td><td>Quantification of muscimol and ibotenic acid in A. muscaria / A. pantherina (LC-MS/MS); reference ranges in A. muscaria: ibotenic 0.29–6.6 mg/g dry, muscimol 0.07–2.4 mg/g dry</td></tr>
+</table>
+<h3>Fly agaric (Amanita muscaria)</h3>
+<p class="note">Muscarine as the main toxin is a myth; the actual active compounds are the isoxazoles (ibotenic acid → muscimol on drying). Amatoxins/phallotoxins only in disputed traces.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">isoxazoles</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ibotenic_acid" target="_blank" rel="noopener">ibotenic acid</a></td><td class="cont">~1% of dry weight (MDPI 2021, Table 1; up to 70 mg per 50–70 g fresh fruit body); ~0.1% of fresh weight</td><td class="eff">neurotoxin, agonist of NMDA/AMPA glutamate receptors: excitation, seizures, ataxia; kills neurons in experiments</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; Obermaier &amp; Müller 2020 (biosynthesis: ibo cluster from glutamate via tricholomic acid)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscimol" target="_blank" rel="noopener">muscimol</a></td><td class="cont">an order of magnitude less than ibotenic acid (~6 mg per fruit body, ~0.09% dry weight); increases on drying via decarboxylation of ibotenic acid</td><td class="eff">potent GABA_A receptor agonist: sedation, drowsiness, hypnotic effect</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscazone" target="_blank" rel="noopener">muscazone</a></td><td class="cont">trace amounts (in European specimens)</td><td class="eff">UV-degradation product of ibotenic acid; minor pharmacological activity, weaker than muscimol</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">alkaloids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscarine" target="_blank" rel="noopener">muscarine</a></td><td class="cont">trace ~0.0002–0.0003% of fresh weight (0.02% dry)</td><td class="eff">muscarinic acetylcholine agonist in theory, but the concentration is far too low for cholinergic poisoning — clinically insignificant</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1 (0.02% dry); <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscarone" target="_blank" rel="noopener">muscarone</a></td><td class="cont">trace amounts</td><td class="eff">muscarinic agonist (more active than muscarine)</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaridine" target="_blank" rel="noopener">muscaridine</a></td><td class="cont">present</td><td class="eff">non-cyclic isomer of muscarine; cholinomimetic</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">cholines</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Choline" target="_blank" rel="noopener">choline</a></td><td class="cont">present (vitamin-like substance)</td><td class="eff">weak cholinomimetics; historically confused with muscarine</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Acetylcholine" target="_blank" rel="noopener">acetylcholine</a></td><td class="cont">present (neurotransmitter)</td><td class="eff">weak cholinomimetics; historically confused with muscarine</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">non-protein amino acids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Stizolobic_acid" target="_blank" rel="noopener">stizolobic acid</a></td><td class="cont">trace amounts</td><td class="eff">non-protein amino acids (first isolated from Stizolobium hassjoo); human effects poorly studied</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Stizolobic_acid" target="_blank" rel="noopener">stizolobinic acid</a></td><td class="cont">trace amounts</td><td class="eff">non-protein amino acids (first isolated from Stizolobium hassjoo); human effects poorly studied</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">pigments (betalains)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaflavin" target="_blank" rel="noopener">muscaflavin</a></td><td class="cont">yellow pigment</td><td class="eff">betalain-type pigments derived from betalamic acid; no toxic effect on humans</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaurin" target="_blank" rel="noopener">muscaaurins</a></td><td class="cont">orange pigments</td><td class="eff">betalain-type pigments derived from betalamic acid; no toxic effect on humans</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscapurpurin" target="_blank" rel="noopener">muscapurpurin</a></td><td class="cont">red-violet pigment</td><td class="eff">betalain-type pigments derived from betalamic acid; no toxic effect on humans</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">vanadium complexes</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amavadine" target="_blank" rel="noopener">amavadine</a></td><td class="cont">bioaccumulates vanadium up to 400× background levels</td><td class="eff"><i>vanadium complex.</i> no established effect on humans</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (up to 0.1% dry in the lower stipe); <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">lipids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=1,3-diolein" target="_blank" rel="noopener">1,3-diolein</a></td><td class="cont">lipid component</td><td class="eff">attracts insects (basis of the fly-killing use); not considered for humans</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">β-carbolines</td></tr>
+<tr><td class="name-c">MTgC</td><td class="cont">present (nitrogen heterocycle)</td><td class="eff"><i>methyletetrahydrocarbolinecarboxylic acid, β-carboline.</i> MAO inhibitor — may potentiate muscimol</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">indole compounds</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Indole-3-acetic_acid" target="_blank" rel="noopener">heteroauxin</a></td><td class="cont">constantly present (on the tryptophan synthesis pathway)</td><td class="eff"><i>indole-3-acetic acid, IAA.</i> plant growth hormone; no established effect on humans</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">amino acids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ergothioneine" target="_blank" rel="noopener">ergothioneine</a></td><td class="cont">present</td><td class="eff">natural antioxidant (vitamin-like amino acid)</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">nitrogen heterocycles</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=hydroxypyrrolidinone" target="_blank" rel="noopener">hydroxypyrrolidinone</a></td><td class="cont">present (nitrogen heterocycle)</td><td class="eff">antibacterial/antifungal activity within the complex; no established effect on humans</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=hercynine" target="_blank" rel="noopener">hercynine</a></td><td class="cont">present (nitrogen heterocycle)</td><td class="eff">no established effect on humans</td><td class="src-c">Vishnevsky 2024, ch. 1</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">organoarsenic compounds</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Kuehnelt+arsenocholine+Amanita+muscaria" target="_blank" rel="noopener">arsenocholine</a></td><td class="cont">trace amounts; found in mushrooms from arsenic-smelter regions (Austria); homoarsenocholine also detected</td><td class="eff">organ arsenic compound; ecological bioaccumulation in polluted areas, not a species trait</td><td class="src-c">Kuehnelt et al. 1997; Vishnevsky 2024</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="grouphd"><td colspan="5">disputed</td></tr>
+<tr class="classhd"><td colspan="5">tryptamines (indole alkaloids)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Bufotenin" target="_blank" rel="noopener">bufotenin</a></td><td class="cont">older studies reported trace amounts; recent reviews have not confirmed reliable detection</td><td class="eff">serotonergic (5-HT) alkaloid</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a> (older studies); <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (disputed)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr class="classhd"><td colspan="5">alkaloids (tropane)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Tropane_alkaloid" target="_blank" rel="noopener">tropane alkaloids</a></td><td class="cont">traces, if present at all</td><td class="eff"><i>hyoscyamine, scopolamine, atropine.</i> anticholinergics; presence in A. muscaria is disputed — some studies find traces, others reject it</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> («presence is unclear»)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr class="classhd"><td colspan="5">amatoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">amatoxins</a></td><td class="cont">trace amounts reported in isolated specimens</td><td class="eff"><i>traces.</i> disputed; clinically insignificant</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (isolated specimens; disputed)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">α-amanitin</a></td><td class="cont">traces in individual samples; varies across populations and analyses</td><td class="eff">RNA polymerase II inhibitors — concentrations negligible, no poisonings reported</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a> (isolated reports of trace amatoxins)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">β-amanitin</a></td><td class="cont">traces in individual samples; varies across populations and analyses</td><td class="eff">RNA polymerase II inhibitors — concentrations negligible, no poisonings reported</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a> (isolated reports of trace amatoxins)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr class="classhd"><td colspan="5">phallotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phallotoxins</a></td><td class="cont">trace amounts reported in isolated specimens</td><td class="eff"><i>traces.</i> disputed; clinically insignificant</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (isolated specimens; disputed)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+</table>
+<h3>Panther cap (Amanita pantherina)</h3>
+<p class="note">The pantherina syndrome is isoxazole-based: muscimol DOMINATES in A. pantherina (sedative phase), which is why it is considered more toxic than A. muscaria. Section Validae. Bufotenin — not confirmed.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">isoxazoles</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ibotenic_acid" target="_blank" rel="noopener">ibotenic acid</a></td><td class="cont">present; the ratio is reversed vs A. muscaria — here muscimol dominates (in A. muscaria ibotenic acid is higher: 0.29–6.6 mg/g dry vs 0.07–2.4 mg/g muscimol)</td><td class="eff">NMDA-glutamate receptor agonist: excitation, ataxia, hallucinations — the excitatory phase of the pantherina syndrome</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a>; Obermaier &amp; Müller 2020 (ibo cluster confirmed in A. pantherina); Tsujikawa 2007 (LC-MS/MS); <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (muscimol &gt; ibotenic acid)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscimol" target="_blank" rel="noopener">muscimol</a></td><td class="cont">DOMINANT over ibotenic acid — muscimol is the chief compound of A. pantherina (MDPI 2021; Vishnevsky 2024); for comparison, A. muscaria contains 0.07–2.4 mg/g dry muscimol</td><td class="eff">GABA_A agonist: somnolence and coma-like state — the basis of the pantherina syndrome (vs the excitatory fly agaric)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscazone" target="_blank" rel="noopener">muscazone</a></td><td class="cont">trace amounts</td><td class="eff">weak activity (weaker than muscimol)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">alkaloids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscarine" target="_blank" rel="noopener">muscarine</a></td><td class="cont">trace amounts</td><td class="eff">clinically insignificant</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaridine" target="_blank" rel="noopener">muscaridine</a></td><td class="cont">present</td><td class="eff">non-cyclic isomer of muscarine; cholinomimetic</td><td class="src-c">Vishnevsky 2024 (ch. 1, for both A. muscaria and A. pantherina)</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">cholines</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Choline" target="_blank" rel="noopener">choline</a></td><td class="cont">trace amounts</td><td class="eff">weak cholinomimetic</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="classhd"><td colspan="5">non-protein amino acids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Stizolobic_acid" target="_blank" rel="noopener">stizolobic acid</a></td><td class="cont">present</td><td class="eff">stimulant; ~5× more potent than stizolobinic acid; quisqualate receptor antagonist</td><td class="src-c">Vishnevsky 2024 (ch. 1, for both species)</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Stizolobic_acid" target="_blank" rel="noopener">stizolobinic acid</a></td><td class="cont">present</td><td class="eff">like stizolobic acid but ~5× weaker</td><td class="src-c">Vishnevsky 2024 (ch. 1, for both species)</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="grouphd"><td colspan="5">disputed</td></tr>
+<tr class="classhd"><td colspan="5">tryptamines (indole alkaloids)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Bufotenin" target="_blank" rel="noopener">bufotenin</a></td><td class="cont">attributed only by isolated old sources</td><td class="eff">serotonergic alkaloid</td><td class="src-c">not confirmed by the verified sources (en-wiki does not mention it)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+</table>
+<h3>Death cap (Amanita phalloides)</h3>
+<p class="note">Poisoning is the phalloides syndrome driven by amatoxins (RNA-polymerase-II inhibitors, heat-stable).</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">amatoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">α-amanitin</a></td><td class="cont">minimum lethal dose ~0.1 mg/kg (7–10 mg in an adult ≈ one fruit body); units of mg per gram of dry weight</td><td class="eff"><i>chief amatoxin.</i> selective RNA-polymerase-II inhibitor: shutdown of mRNA synthesis → hepatocyte/kidney lysis; false recovery phase, high untreated mortality; heat-stable (cooking/drying do not help)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">β-amanitin</a></td><td class="cont">present, β comparable to α</td><td class="eff">amatoxins of the same class; β-amanitin also inhibits RNA polymerase III</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">γ-amanitin</a></td><td class="cont">present, β comparable to α</td><td class="eff">amatoxins of the same class; β-amanitin also inhibits RNA polymerase III</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">phallotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phalloidin</a></td><td class="cont">present; phallotoxins outnumber amatoxins in the fruit body</td><td class="eff">hepatotoxic on injection (actin stabilisation), but poorly absorbed from the GI tract — minor contribution to poisoning</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a> (part of the phallotoxins)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">phallotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phalloin</a></td><td class="cont">smaller phallotoxin fractions</td><td class="eff">like phalloidin (octapeptides binding actin)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phallacin</a></td><td class="cont">smaller phallotoxin fractions</td><td class="eff">like phalloidin (octapeptides binding actin)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phallacidin</a></td><td class="cont">smaller phallotoxin fractions</td><td class="eff">like phalloidin (octapeptides binding actin)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phallisacin</a></td><td class="cont">smaller phallotoxin fractions</td><td class="eff">like phalloidin (octapeptides binding actin)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">virotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">virotoxins</a></td><td class="cont">small amounts (heptapeptides)</td><td class="eff">phallotoxin-like, hepatotoxic only on parenteral administration</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">proteins (hemolysins)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=phallolysin" target="_blank" rel="noopener">phallolysin</a></td><td class="cont">hemolytic protein</td><td class="eff">hemolysis of red blood cells in vitro; destroyed by heating and in the GI tract</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_phalloides" target="_blank" rel="noopener">en-wiki Amanita phalloides</a> / Amatoxin</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">cyclic decapeptides</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Antamanide" target="_blank" rel="noopener">antamanide</a></td><td class="cont">cyclic decapeptide isolated from A. phalloides</td><td class="eff">attenuates α-amanitin in experiments; no practical use as an antidote</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+</table>
+<h3>False death cap (Amanita citrina)</h3>
+<p class="note">Slightly toxic (possible nausea, discomfort), NOT deadly; the main danger is confusion with the death cap.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">tryptamines (indole alkaloids)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Bufotenin" target="_blank" rel="noopener">bufotenin</a></td><td class="cont">mg-per-gram levels of dry weight: 1.6–7.5 mg/g (Wieland 1968); 2.90 ± 0.27 g/kg dry (Zhang 2025, specimen from China); ~45 mg/kg free base (Stijve 1979, European specimens)</td><td class="eff"><i>5-hydroxy-N,N-dimethyltryptamine.</i> serotonergic agonist (5-HT receptors) — the main active compound of this species; at mushroom amounts the likely source of possible nausea/discomfort</td><td class="src-c">Zhang 2025 (Toxins 17:247, LC-MS/MS); Stijve 1979; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Bufotenin" target="_blank" rel="noopener">bufotenin N-oxide</a></td><td class="cont">small amounts alongside bufotenin</td><td class="eff">same serotonergic direction</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">sterols</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ergosterol" target="_blank" rel="noopener">ergosterol</a></td><td class="cont">present</td><td class="eff"><i>provitamin D2.</i> harmless; the standard fungal sterol</td><td class="src-c">universal sterol of basidiomycetes (Wikipedia Ergosterol); in the ACAE reference — <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">organic acids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Organic_acid" target="_blank" rel="noopener">organic acids</a></td><td class="cont">present</td><td class="eff"><i>malic, citric, succinic, etc..</i> harmless — common metabolites of fungal tissues</td><td class="src-c">general basidiomycete chemistry; acid profile described for the genus (in the ACAE reference — <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a>, ~6 g/kg)</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">tryptamines (indole alkaloids)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Serotonin" target="_blank" rel="noopener">serotonin</a></td><td class="cont">trace amounts</td><td class="eff">components of the indole profile, not main toxins</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Serotonin" target="_blank" rel="noopener">N-methylserotonin</a></td><td class="cont">trace amounts</td><td class="eff">components of the indole profile, not main toxins</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/5-MeO-DMT" target="_blank" rel="noopener">5-MeO-DMT</a></td><td class="cont">trace amounts (detected by chromatography)</td><td class="eff">tryptamine alkaloids; insignificant at mushroom amounts</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c">DMT</td><td class="cont">trace amounts (detected by chromatography)</td><td class="eff">tryptamine alkaloids; insignificant at mushroom amounts</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">disputed</td></tr>
+<tr class="classhd"><td colspan="5">amatoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">α-amanitin</a></td><td class="cont">trace amounts (Cambridge study); not detected in all populations and analyses</td><td class="eff">RNA-polymerase-II inhibitor in principle — but the concentration is negligible</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a> (Cambridge study, trace amounts)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+</table>
+<h3>Blusher (Amanita rubescens) — conditionally edible, control group <span class="badge">control group</span></h3>
+<p class="note">Conditionally edible: requires boiling; flesh blushes pink on cutting.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">proteins (hemolysins)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">hemolytic protein</a></td><td class="cont">present in the raw fruit body, destroyed by cooking</td><td class="eff"><i>rubescenslysin.</i> raw mushroom damages red blood cells: GI upset and risk of hemolytic anaemia when eaten raw in quantity; cooking fully neutralises it</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">lectins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Lectin" target="_blank" rel="noopener">lectins</a></td><td class="cont">trace/small amounts</td><td class="eff"><i>agglutinins.</i> of laboratory interest (specific carbohydrate binding); no established toxicity to humans</td><td class="src-c">biochemical literature; not confirmed by the verified reviews</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">phallotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phalloidin</a></td><td class="cont">trace amounts</td><td class="eff"><i>traces.</i> not absorbed from the GI tract — clinically insignificant</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a> (mentioned for edible Amanita species)</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">disputed</td></tr>
+<tr class="classhd"><td colspan="5">alkaloids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Muscarine" target="_blank" rel="noopener">muscarine</a></td><td class="cont">trace amounts, if present</td><td class="eff">clinically insignificant</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a> (not mentioned)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+<tr class="classhd"><td colspan="5">isoxazoles</td></tr>
+<tr><td class="name-c">isoxazoles</td><td class="cont">not described for this species</td><td class="eff"><i>ibotenic acid, muscimol.</i> mentions usually stem from confusion with section Validae relatives</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a> (not mentioned)</td><td><span class="conf conf-dis">disputed</span></td></tr>
+</table>
+<h3>Caesar&#x27;s mushroom (Amanita caesarea) — edible, control group <span class="badge">control group</span></h3>
+<p class="note">Control group: no toxins (confirmed by verified sources), edible even raw — considered a delicacy; contains organic acids and ergosterol, accumulates cadmium/lead from soil. Attributing poisons to it is a gross model error.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">organic acids</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Malic_acid" target="_blank" rel="noopener">malic acid</a></td><td class="cont">dominant</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ascorbic_acid" target="_blank" rel="noopener">ascorbic acid</a></td><td class="cont">present</td><td class="eff"><i>vitamin C.</i> harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Citric_acid" target="_blank" rel="noopener">citric acid</a></td><td class="cont">present</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=ketoglutaric acid" target="_blank" rel="noopener">ketoglutaric acid</a></td><td class="cont">present</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Fumaric_acid" target="_blank" rel="noopener">fumaric acid</a></td><td class="cont">present</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Shikimic_acid" target="_blank" rel="noopener">shikimic acid</a></td><td class="cont">present</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Succinic_acid" target="_blank" rel="noopener">succinic acid</a></td><td class="cont">traces</td><td class="eff">harmless — ordinary dietary acids</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 g/kg; malic and ascorbic dominate)</td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">sterols</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ergosterol" target="_blank" rel="noopener">ergosterol</a></td><td class="cont">present</td><td class="eff"><i>provitamin D2.</i> harmless; standard fungal sterol</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">metals</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Heavy_metals" target="_blank" rel="noopener">heavy metals</a></td><td class="cont">species-specific bioaccumulation, depends on soil</td><td class="eff"><i>cadmium, lead.</i> an ecological property of the collection site, not of the species; potential harm from regular consumption in polluted areas</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (Cd ~4× the EU limit, Pb also above)</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">pigments</td></tr>
+<tr><td class="name-c">orange-red cap pigments</td><td class="cont">present</td><td class="eff">harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (specific compounds not identified)</td><td><span class="conf conf-lo">low</span></td></tr>
+</table>
+<h3>Destroying angel (Amanita virosa) — deadly poisonous</h3>
+<p class="note">Deadly poisonous (section Phalloideae): one cap can kill an adult; radish smell. Poisoning is identical to the death cap.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">amatoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">α-amanitin</a></td><td class="cont">lethal dose ~0.1 mg/kg (7–10 mg in an adult ≈ one cap); comparable to A. phalloides</td><td class="eff"><i>chief amatoxin.</i> selective RNA-polymerase-II inhibitor; targets liver and kidneys; the same phalloides syndrome; heat-stable</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">β-amanitin</a></td><td class="cont">present alongside α-amanitin</td><td class="eff">amatoxin of the same mechanism</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">phallotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">phallotoxins</a></td><td class="cont">present</td><td class="eff"><i>phalloidin etc..</i> hepatotoxic in pure form, but not absorbed from the GI tract — minor contribution to poisoning</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">virotoxins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">virotoxins</a></td><td class="cont">six monocyclic heptapeptides — the characteristic group of this species</td><td class="eff"><i>viroisin, viroidin, deoxoviroisin, alaviroidin etc..</i> phallotoxin-like: no acute toxicity when ingested</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+</table>
+<h3>Honey fungus (Armillaria mellea) — conditionally edible, control group <span class="badge">control group</span></h3>
+<p class="note">Conditionally edible: requires mandatory boiling with the water discarded. Deadly &quot;honey-fungus&quot; poisonings are false honey fungi (Hypholoma etc.) or undercooking.</p>
+<table class="sx eth-t"><tr><th>Compound</th><th>Content</th><th>Brief description and effect on humans</th><th>Source</th><th>Confidence</th></tr>
+<tr class="grouphd"><td colspan="5">main</td></tr>
+<tr class="classhd"><td colspan="5">proteins (heat-labile irritants)</td></tr>
+<tr><td class="name-c">heat-labile gastrointestinal irritants</td><td class="cont">present in raw fruit bodies, reduced by parboiling</td><td class="eff"><i>proteinaceous.</i> raw or undercooked — nausea, vomiting, diarrhoea; after mandatory boiling (discard the water) it is edible; specimens from some trees (e.g. horse chestnut) are worse</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">sesquiterpenoids (melleolides)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=melleolide" target="_blank" rel="noopener">melleolides</a></td><td class="cont">present as fungal metabolites; the largest metabolite family of Armillaria — over 80 characterised derivatives</td><td class="eff"><i>sesquiterpene antibiotics: orsellinic-acid esters of protoilludane alcohols, some chlorinated.</i> cytotoxic in pure form (studied as antitumor/antibacterial agents); no significant role at normal consumption</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Dorfer+Gressler+Hoffmeister+diversity+bioactivity+Armillaria+sesquiterpene+aryl+ester" target="_blank" rel="noopener">Dörfer 2019</a> (~60); <a class="srclink" href="https://scholar.google.com/scholar?q=Pfutze+depicting+chemical+diversity+bioactive+melleolides+Armillaria+ostoyae" target="_blank" rel="noopener">Pfütze 2024</a> (&gt;80)</td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="grouphd"><td colspan="5">trace</td></tr>
+<tr class="classhd"><td colspan="5">tryptamines (indole alkaloids)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Tryptamine" target="_blank" rel="noopener">tryptamine</a></td><td class="cont">trace amounts</td><td class="eff">ordinary biogenic amines, insignificant at mushroom amounts</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Tryptophan" target="_blank" rel="noopener">L-tryptophan</a></td><td class="cont">trace amounts</td><td class="eff">ordinary biogenic amines, insignificant at mushroom amounts</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Serotonin" target="_blank" rel="noopener">serotonin</a></td><td class="cont">trace amounts</td><td class="eff">ordinary biogenic amines, insignificant at mushroom amounts</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">triterpenes</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Triterpene" target="_blank" rel="noopener">triterpenes</a></td><td class="cont">trace amounts</td><td class="eff"><i>friedelin etc..</i> no significant effect</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">polysaccharides</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Beta-glucan" target="_blank" rel="noopener">β-glucans</a></td><td class="cont">immunomodulating polysaccharides</td><td class="eff">dietary carbohydrates and fibre, harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Glycogen" target="_blank" rel="noopener">glycogen</a></td><td class="cont">the bulk of the dry matter</td><td class="eff">dietary carbohydrates and fibre, harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Chitin" target="_blank" rel="noopener">chitin</a></td><td class="cont">the bulk of the dry matter</td><td class="eff">dietary carbohydrates and fibre, harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">sugars and sugar alcohols</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Trehalose" target="_blank" rel="noopener">trehalose</a></td><td class="cont">the bulk of the dry matter</td><td class="eff">dietary carbohydrates and fibre, harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Mannitol" target="_blank" rel="noopener">mannitol</a></td><td class="cont">the bulk of the dry matter</td><td class="eff">dietary carbohydrates and fibre, harmless</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">high</span></td></tr>
+<tr class="classhd"><td colspan="5">photogenic pigments</td></tr>
+<tr><td class="name-c">light-emitting compounds of the mycelium</td><td class="cont">in actively growing mycelium and rhizomorphs (fruit bodies do not glow)</td><td class="eff"><i>hispidin → luciferin pathway.</i> bioluminescence (&quot;foxfire&quot;) — a species trait, not a toxicity</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">medium</span></td></tr>
+<tr class="classhd"><td colspan="5">metals</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Heavy_metals" target="_blank" rel="noopener">heavy metals</a></td><td class="cont">depends on the substrate (wood, soil)</td><td class="eff"><i>cadmium etc..</i> ecological accumulation, not a species trait</td><td class="src-c">not confirmed by the verified sources (common claim in popular literature)</td><td><span class="conf conf-lo">low</span></td></tr>
+<tr class="grouphd"><td colspan="5">disputed</td></tr>
+<tr class="classhd"><td colspan="5">lectins</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Lectin" target="_blank" rel="noopener">lectins</a></td><td class="cont">described in the biochemical literature, not confirmed by the reference</td><td class="eff"><i>hemagglutinins.</i> no established toxicity to humans</td><td class="src-c">biochemical literature; not confirmed by the verified sources</td><td><span class="conf conf-dis">disputed</span></td></tr>
+</table>
+</div>
+<footer>built by build_mush_report.py</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

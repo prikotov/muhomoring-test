@@ -1,0 +1,365 @@
+{
+  "model": "openai/gpt-6.2-sol",
+  "run": 1,
+  "started_at": "2026-11-21T04:49:02.195685+00:00",
+  "base_url": "api.deepseek.com (через pi)",
+  "protocol": "pi (anthropic-messages, openrouter api)",
+  "provider": "openrouter",
+  "keep_alive": "n/a (API stateless)",
+  "think": "low",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 30.5,
+    "prompt_tokens": 1434,
+    "output_tokens": 1990,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"mushroom\": \"Fly agaric (Amanita muscaria)\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitation.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordination.\"\n    },\n    {\n      \"compound\": \"Muscazone\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Its effects in humans are not well characterized.\"\n    },\n    {\n      \"compound\": \"Muscarine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This compound occurs in trace amounts and can cause sweating and salivation at sufficient doses.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitation."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordination."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "Its effects in humans are not well characterized."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "This compound occurs in trace amounts and can cause sweating and salivation at sufficient doses."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 3.05,
+      "eval_count": 198,
+      "prompt_eval_count": 180,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n  \"mushroom\": \"Panther cap (Amanita pantherina)\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It activates glutamate receptors and can cause agitation, confusion, and impaired coordination.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It activates GABA-A receptors and can cause drowsiness, altered perception, and loss of consciousness.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "It activates glutamate receptors and can cause agitation, confusion, and impaired coordination."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "It activates GABA-A receptors and can cause drowsiness, altered perception, and loss of consciousness."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 2,
+      "thinking_len": 0,
+      "duration_s": 3.38,
+      "eval_count": 120,
+      "prompt_eval_count": 180,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n  \"mushroom\": \"Death cap (Amanita phalloides)\",\n  \"composition\": [\n    {\n      \"compound\": \"α-Amanitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It inhibits RNA polymerase II and can cause fatal liver failure.\"\n    },\n    {\n      \"compound\": \"β-Amanitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It inhibits RNA polymerase II and contributes to severe liver injury.\"\n    },\n    {\n      \"compound\": \"γ-Amanitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It inhibits RNA polymerase II, but its individual contribution to human poisoning is not well established.\"\n    },\n    {\n      \"compound\": \"Phalloidin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It stabilizes actin filaments but is poorly absorbed from the human gut.\"\n    },\n    {\n      \"compound\": \"Phallacidin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It stabilizes actin filaments but contributes little to systemic poisoning after ingestion because it is poorly absorbed.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "α-Amanitin",
+          "содержание": "unknown",
+          "влияние": "It inhibits RNA polymerase II and can cause fatal liver failure."
+        },
+        {
+          "вещество": "β-Amanitin",
+          "содержание": "unknown",
+          "влияние": "It inhibits RNA polymerase II and contributes to severe liver injury."
+        },
+        {
+          "вещество": "γ-Amanitin",
+          "содержание": "unknown",
+          "влияние": "It inhibits RNA polymerase II, but its individual contribution to human poisoning is not well established."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "unknown",
+          "влияние": "It stabilizes actin filaments but is poorly absorbed from the human gut."
+        },
+        {
+          "вещество": "Phallacidin",
+          "содержание": "unknown",
+          "влияние": "It stabilizes actin filaments but contributes little to systemic poisoning after ingestion because it is poorly absorbed."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 4.71,
+      "eval_count": 242,
+      "prompt_eval_count": 179,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"mushroom\": \"False death cap (Amanita citrina)\",\n  \"composition\": [\n    {\n      \"compound\": \"Bufotenine (5-hydroxy-N,N-dimethyltryptamine)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This serotonin-receptor agonist can cause perceptual changes and nausea, depending on the dose and route of exposure.\"\n    },\n    {\n      \"compound\": \"5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"At sufficient exposure, it can cause intense, short-lived alterations in perception and consciousness.\"\n    },\n    {\n      \"compound\": \"N,N-Dimethyltryptamine (DMT)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It can cause brief, intense hallucinations when it reaches the bloodstream in sufficient amounts.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Bufotenine (5-hydroxy-N,N-dimethyltryptamine)",
+          "содержание": "unknown",
+          "влияние": "This serotonin-receptor agonist can cause perceptual changes and nausea, depending on the dose and route of exposure."
+        },
+        {
+          "вещество": "5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)",
+          "содержание": "unknown",
+          "влияние": "At sufficient exposure, it can cause intense, short-lived alterations in perception and consciousness."
+        },
+        {
+          "вещество": "N,N-Dimethyltryptamine (DMT)",
+          "содержание": "unknown",
+          "влияние": "It can cause brief, intense hallucinations when it reaches the bloodstream in sufficient amounts."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 3.36,
+      "eval_count": 198,
+      "prompt_eval_count": 179,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"mushroom\": \"Blusher (Amanita rubescens)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Water contributes to hydration.\"\n    },\n    {\n      \"compound\": \"Chitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Chitin is a structural polysaccharide that humans digest poorly.\"\n    },\n    {\n      \"compound\": \"Beta-glucans\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Beta-glucans act as dietary fiber.\"\n    },\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Trehalose is normally broken down into glucose in the small intestine.\"\n    },\n    {\n      \"compound\": \"Mannitol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Mannitol can cause bloating or diarrhea in sufficient amounts.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Ergosterol can be converted by ultraviolet light into vitamin D2, which supports calcium absorption.\"\n    },\n    {\n      \"compound\": \"Rubescenslysin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This heat-sensitive protein can rupture human red blood cells in laboratory tests.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "unknown",
+          "влияние": "Water contributes to hydration."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "unknown",
+          "влияние": "Chitin is a structural polysaccharide that humans digest poorly."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "Beta-glucans act as dietary fiber."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "Trehalose is normally broken down into glucose in the small intestine."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "Mannitol can cause bloating or diarrhea in sufficient amounts."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "Ergosterol can be converted by ultraviolet light into vitamin D2, which supports calcium absorption."
+        },
+        {
+          "вещество": "Rubescenslysin",
+          "содержание": "unknown",
+          "влияние": "This heat-sensitive protein can rupture human red blood cells in laboratory tests."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 0,
+      "duration_s": 4.05,
+      "eval_count": 294,
+      "prompt_eval_count": 179,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n  \"mushroom\": \"Caesar's mushroom (Amanita caesarea)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Water contributes to hydration.\"\n    },\n    {\n      \"compound\": \"Proteins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Digestible proteins supply amino acids for tissue maintenance.\"\n    },\n    {\n      \"compound\": \"Beta-glucans\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Mushroom beta-glucans contribute dietary fiber.\"\n    },\n    {\n      \"compound\": \"Chitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Chitin is a structural fiber that humans digest poorly.\"\n    },\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"The intestinal enzyme trehalase breaks trehalose down into glucose.\"\n    },\n    {\n      \"compound\": \"Mannitol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Mannitol can cause bloating in people sensitive to sugar alcohols.\"\n    },\n    {\n      \"compound\": \"Linoleic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Linoleic acid is an essential omega-6 fatty acid.\"\n    },\n    {\n      \"compound\": \"Oleic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Oleic acid supplies energy as a monounsaturated fat.\"\n    },\n    {\n      \"compound\": \"Palmitic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Palmitic acid supplies energy as a saturated fat.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"UV exposure can convert ergosterol in the mushroom into vitamin D2, which supports calcium absorption.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "unknown",
+          "влияние": "Water contributes to hydration."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "unknown",
+          "влияние": "Digestible proteins supply amino acids for tissue maintenance."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "Mushroom beta-glucans contribute dietary fiber."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "unknown",
+          "влияние": "Chitin is a structural fiber that humans digest poorly."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "The intestinal enzyme trehalase breaks trehalose down into glucose."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "Mannitol can cause bloating in people sensitive to sugar alcohols."
+        },
+        {
+          "вещество": "Linoleic acid",
+          "содержание": "unknown",
+          "влияние": "Linoleic acid is an essential omega-6 fatty acid."
+        },
+        {
+          "вещество": "Oleic acid",
+          "содержание": "unknown",
+          "влияние": "Oleic acid supplies energy as a monounsaturated fat."
+        },
+        {
+          "вещество": "Palmitic acid",
+          "содержание": "unknown",
+          "влияние": "Palmitic acid supplies energy as a saturated fat."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "UV exposure can convert ergosterol in the mushroom into vitamin D2, which supports calcium absorption."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 10,
+      "thinking_len": 0,
+      "duration_s": 4.29,
+      "eval_count": 404,
+      "prompt_eval_count": 180,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n  \"mushroom\": \"Destroying angel (Amanita virosa)\",\n  \"composition\": [\n    {\n      \"compound\": \"α-Amanitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It inhibits RNA polymerase II and can cause fatal liver failure.\"\n    },\n    {\n      \"compound\": \"β-Amanitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It inhibits RNA polymerase II and contributes to severe liver injury.\"\n    },\n    {\n      \"compound\": \"Phalloidin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It binds to filamentous actin but is poorly absorbed from the human gut.\"\n    },\n    {\n      \"compound\": \"Viroisin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"It stabilizes actin filaments, but its contribution to human poisoning is unclear.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "α-Amanitin",
+          "содержание": "unknown",
+          "влияние": "It inhibits RNA polymerase II and can cause fatal liver failure."
+        },
+        {
+          "вещество": "β-Amanitin",
+          "содержание": "unknown",
+          "влияние": "It inhibits RNA polymerase II and contributes to severe liver injury."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "unknown",
+          "влияние": "It binds to filamentous actin but is poorly absorbed from the human gut."
+        },
+        {
+          "вещество": "Viroisin",
+          "содержание": "unknown",
+          "влияние": "It stabilizes actin filaments, but its contribution to human poisoning is unclear."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 4.11,
+      "eval_count": 192,
+      "prompt_eval_count": 178,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Honey fungus (Armillaria mellea)\",\n  \"composition\": [\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"The intestinal enzyme trehalase breaks this sugar down into glucose.\"\n    },\n    {\n      \"compound\": \"Mannitol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This sugar alcohol can cause bloating or diarrhea in sufficient amounts.\"\n    },\n    {\n      \"compound\": \"Beta-glucans\",\n      \"amount\": \"unknown\",\n      \"effect\": \"These cell-wall polysaccharides act as dietary fiber.\"\n    },\n    {\n      \"compound\": \"Chitin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This structural polysaccharide contributes largely indigestible fiber.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"UV exposure can convert this fungal sterol into vitamin D2, which supports calcium absorption.\"\n    },\n    {\n      \"compound\": \"Linoleic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This essential omega-6 fatty acid helps maintain cell membranes.\"\n    },\n    {\n      \"compound\": \"Oleic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This monounsaturated fatty acid provides energy and is incorporated into cell lipids.\"\n    },\n    {\n      \"compound\": \"Palmitic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"This saturated fatty acid provides energy and is incorporated into cell lipids.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "The intestinal enzyme trehalase breaks this sugar down into glucose."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "This sugar alcohol can cause bloating or diarrhea in sufficient amounts."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "These cell-wall polysaccharides act as dietary fiber."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "unknown",
+          "влияние": "This structural polysaccharide contributes largely indigestible fiber."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "UV exposure can convert this fungal sterol into vitamin D2, which supports calcium absorption."
+        },
+        {
+          "вещество": "Linoleic acid",
+          "содержание": "unknown",
+          "влияние": "This essential omega-6 fatty acid helps maintain cell membranes."
+        },
+        {
+          "вещество": "Oleic acid",
+          "содержание": "unknown",
+          "влияние": "This monounsaturated fatty acid provides energy and is incorporated into cell lipids."
+        },
+        {
+          "вещество": "Palmitic acid",
+          "содержание": "unknown",
+          "влияние": "This saturated fatty acid provides energy and is incorporated into cell lipids."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 8,
+      "thinking_len": 0,
+      "duration_s": 3.57,
+      "eval_count": 342,
+      "prompt_eval_count": 179,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ]
+}

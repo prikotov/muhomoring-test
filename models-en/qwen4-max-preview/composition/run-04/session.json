@@ -1,0 +1,700 @@
+{
+  "model": "qwen4-max-preview",
+  "run": 4,
+  "started_at": "2026-11-21T03:51:57.019432+00:00",
+  "base_url": "api.deepseek.com (через pi)",
+  "protocol": "pi (anthropic-messages, qwen-token-plan-individual api)",
+  "provider": "qwen-token-plan-individual",
+  "keep_alive": "n/a (API stateless)",
+  "think": "low",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 205.3,
+    "prompt_tokens": 1585,
+    "output_tokens": 10746,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita muscaria (fly agaric), fruiting bodies\",\n  \"composition\": [\n    {\"compound\": \"Water\", \"amount\": \"88-92 % of fresh weight\", \"effect\": \"Provides hydration but carries the dissolved toxins of the mushroom.\"},\n    {\"compound\": \"Ibotenic acid\", \"amount\": \"0.03-0.1 % of dry weight\", \"effect\": \"Glutamate-receptor agonist causing nausea, confusion, agitation and neurotoxic excitation.\"},\n    {\"compound\": \"Muscimol\", \"amount\": \"0.02-0.04 % of dry weight\", \"effect\": \"Potent GABA-A agonist producing sedation, delirium, hallucinations and dreamlike sleep.\"},\n    {\"compound\": \"Muscazone\", \"amount\": \"0.001-0.01 % of dry weight\", \"effect\": \"Minor photodegradation product of ibotenic acid with weak psychoactive activity.\"},\n    {\"compound\": \"Muscarine\", \"amount\": \"0.0002 % of fresh weight\", \"effect\": \"Muscarinic agonist that at these trace levels rarely causes sweating, salivation or bradycardia.\"},\n    {\"compound\": \"Stizolobic and stizolobinic acids\", \"amount\": \"0.1-0.3 % of dry weight\", \"effect\": \"Pigment precursors with no established toxic effect in humans.\"},\n    {\"compound\": \"Bufotenine (reported, disputed)\", \"amount\": \"unknown\", \"effect\": \"Claimed serotonergic hallucinogen, but its presence in this species is unconfirmed.\"},\n    {\"compound\": \"Amavadin (vanadium complex)\", \"amount\": \"0.0001-0.0005 % of dry weight\", \"effect\": \"Vanadium-accumulating complex of uncertain low toxicity to humans.\"},\n    {\"compound\": \"Trehalose and mannitol\", \"amount\": \"5-10 % of dry weight\", \"effect\": \"Fungal sugars and polyols that are nutritious but may cause mild digestive upset.\"},\n    {\"compound\": \"Chitin and beta-glucans\", \"amount\": \"10-20 % of dry weight\", \"effect\": \"Indigestible cell-wall polysaccharides that can irritate the gastrointestinal tract.\"},\n    {\"compound\": \"Betaine and choline\", \"amount\": \"0.1-0.5 % of dry weight\", \"effect\": \"Osmolytes and methyl donors with negligible acute effect at these doses.\"},\n    {\"compound\": \"Protein (including lectins)\", \"amount\": \"15-25 % of dry weight\", \"effect\": \"Nutritional protein, though raw hemolysins/lectins are destroyed by cooking.\"},\n    {\"compound\": \"Alpha-amanitin / phallotoxins\", \"amount\": \"unknown\", \"effect\": \"Generally absent or only trace; if present they would cause severe hepatotoxicity.\"}\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88-92 % of fresh weight",
+          "влияние": "Provides hydration but carries the dissolved toxins of the mushroom."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.03-0.1 % of dry weight",
+          "влияние": "Glutamate-receptor agonist causing nausea, confusion, agitation and neurotoxic excitation."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.02-0.04 % of dry weight",
+          "влияние": "Potent GABA-A agonist producing sedation, delirium, hallucinations and dreamlike sleep."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "0.001-0.01 % of dry weight",
+          "влияние": "Minor photodegradation product of ibotenic acid with weak psychoactive activity."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "0.0002 % of fresh weight",
+          "влияние": "Muscarinic agonist that at these trace levels rarely causes sweating, salivation or bradycardia."
+        },
+        {
+          "вещество": "Stizolobic and stizolobinic acids",
+          "содержание": "0.1-0.3 % of dry weight",
+          "влияние": "Pigment precursors with no established toxic effect in humans."
+        },
+        {
+          "вещество": "Bufotenine (reported, disputed)",
+          "содержание": "unknown",
+          "влияние": "Claimed serotonergic hallucinogen, but its presence in this species is unconfirmed."
+        },
+        {
+          "вещество": "Amavadin (vanadium complex)",
+          "содержание": "0.0001-0.0005 % of dry weight",
+          "влияние": "Vanadium-accumulating complex of uncertain low toxicity to humans."
+        },
+        {
+          "вещество": "Trehalose and mannitol",
+          "содержание": "5-10 % of dry weight",
+          "влияние": "Fungal sugars and polyols that are nutritious but may cause mild digestive upset."
+        },
+        {
+          "вещество": "Chitin and beta-glucans",
+          "содержание": "10-20 % of dry weight",
+          "влияние": "Indigestible cell-wall polysaccharides that can irritate the gastrointestinal tract."
+        },
+        {
+          "вещество": "Betaine and choline",
+          "содержание": "0.1-0.5 % of dry weight",
+          "влияние": "Osmolytes and methyl donors with negligible acute effect at these doses."
+        },
+        {
+          "вещество": "Protein (including lectins)",
+          "содержание": "15-25 % of dry weight",
+          "влияние": "Nutritional protein, though raw hemolysins/lectins are destroyed by cooking."
+        },
+        {
+          "вещество": "Alpha-amanitin / phallotoxins",
+          "содержание": "unknown",
+          "влияние": "Generally absent or only trace; if present they would cause severe hepatotoxicity."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 13,
+      "thinking_len": 435,
+      "duration_s": 22.41,
+      "eval_count": 1110,
+      "prompt_eval_count": 198,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita pantherina (panther cap)\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"0.05% of dry weight\",\n      \"effect\": \"A glutamate-receptor (NMDA) agonist that causes confusion, agitation, delirium and excitatory neurotoxicity.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"0.03% of dry weight\",\n      \"effect\": \"A potent GABA-A agonist producing sedation, hallucinations, ataxia and dream-like delirium.\"\n    },\n    {\n      \"compound\": \"Muscazone\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A minor photo-degradation product of ibotenic acid with weak psychoactive and sedative activity.\"\n    },\n    {\n      \"compound\": \"Muscarine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Present only in traces; a muscarinic acetylcholine agonist that would cause sweating, salivation and bradycardia at higher doses.\"\n    },\n    {\n      \"compound\": \"Stizolobic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A non-protein amino acid pigment precursor with glutamate-related activity and no established human toxicity.\"\n    },\n    {\n      \"compound\": \"Stizolobinic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A related non-protein amino acid contributing to cap pigments, with no significant known effect on humans.\"\n    },\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"90% of fresh weight\",\n      \"effect\": \"The main bulk constituent, essential for hydration and biologically inert.\"\n    },\n    {\n      \"compound\": \"Trehalose and mannitol\",\n      \"amount\": \"5% of dry weight\",\n      \"effect\": \"Fungal storage carbohydrates and polyols that are largely harmless, though mannitol can act as a mild osmotic laxative.\"\n    },\n    {\n      \"compound\": \"Chitin and beta-glucans\",\n      \"amount\": \"10% of dry weight\",\n      \"effect\": \"Indigestible cell-wall polysaccharides acting as dietary fibre with possible immunomodulatory activity.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.05% of dry weight",
+          "влияние": "A glutamate-receptor (NMDA) agonist that causes confusion, agitation, delirium and excitatory neurotoxicity."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.03% of dry weight",
+          "влияние": "A potent GABA-A agonist producing sedation, hallucinations, ataxia and dream-like delirium."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "A minor photo-degradation product of ibotenic acid with weak psychoactive and sedative activity."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Present only in traces; a muscarinic acetylcholine agonist that would cause sweating, salivation and bradycardia at higher doses."
+        },
+        {
+          "вещество": "Stizolobic acid",
+          "содержание": "unknown",
+          "влияние": "A non-protein amino acid pigment precursor with glutamate-related activity and no established human toxicity."
+        },
+        {
+          "вещество": "Stizolobinic acid",
+          "содержание": "unknown",
+          "влияние": "A related non-protein amino acid contributing to cap pigments, with no significant known effect on humans."
+        },
+        {
+          "вещество": "Water",
+          "содержание": "90% of fresh weight",
+          "влияние": "The main bulk constituent, essential for hydration and biologically inert."
+        },
+        {
+          "вещество": "Trehalose and mannitol",
+          "содержание": "5% of dry weight",
+          "влияние": "Fungal storage carbohydrates and polyols that are largely harmless, though mannitol can act as a mild osmotic laxative."
+        },
+        {
+          "вещество": "Chitin and beta-glucans",
+          "содержание": "10% of dry weight",
+          "влияние": "Indigestible cell-wall polysaccharides acting as dietary fibre with possible immunomodulatory activity."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 9,
+      "thinking_len": 482,
+      "duration_s": 18.19,
+      "eval_count": 1029,
+      "prompt_eval_count": 199,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita phalloides (death cap)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88 % of fresh weight\",\n      \"effect\": \"Provides hydration but carries the dissolved toxins of the mushroom.\"\n    },\n    {\n      \"compound\": \"alpha-Amanitin (amatoxin)\",\n      \"amount\": \"0.3 mg/g dry weight\",\n      \"effect\": \"Inhibits RNA polymerase II, causing fatal liver and kidney cell necrosis.\"\n    },\n    {\n      \"compound\": \"beta-Amanitin (amatoxin)\",\n      \"amount\": \"0.1 mg/g dry weight\",\n      \"effect\": \"Blocks mRNA synthesis and contributes to delayed hepatotoxicity.\"\n    },\n    {\n      \"compound\": \"gamma-Amanitin (amatoxin)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Inhibits RNA polymerase II and adds to the total amatoxin toxicity.\"\n    },\n    {\n      \"compound\": \"Amaninamide and amanin (amatoxin derivatives)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Act as RNA polymerase II inhibitors with amatoxin-type hepatotoxicity.\"\n    },\n    {\n      \"compound\": \"Phalloidin (phallotoxin)\",\n      \"amount\": \"0.2 mg/g dry weight\",\n      \"effect\": \"Stabilizes actin filaments and damages liver cells, but is poorly absorbed orally.\"\n    },\n    {\n      \"compound\": \"Phallacidin (phallotoxin)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Binds F-actin and is hepatotoxic when it reaches the bloodstream.\"\n    },\n    {\n      \"compound\": \"Phallisacin and phalloin (phallotoxins)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Disrupt the hepatocyte cytoskeleton, contributing to acute liver injury.\"\n    },\n    {\n      \"compound\": \"Viroidin (virotoxin)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Binds actin and causes rapid cytoskeletal damage in liver cells.\"\n    },\n    {\n      \"compound\": \"Polysaccharides including chitin and beta-glucans\",\n      \"amount\": \"20 % of dry weight\",\n      \"effect\": \"Largely indigestible fibre that can cause gastrointestinal discomfort.\"\n    },\n    {\n      \"compound\": \"Trehalose and mannitol (soluble carbohydrates)\",\n      \"amount\": \"50 mg/g dry weight\",\n      \"effect\": \"Poorly absorbed sugar alcohols and sugars that may cause osmotic diarrhoea.\"\n    },\n    {\n      \"compound\": \"Protein and free amino acids (incl. glutamic acid)\",\n      \"amount\": \"20 % of dry weight\",\n      \"effect\": \"Nutritionally usable nitrogen source if the toxins were absent.\"\n    },\n    {\n      \"compound\": \"Lipids with linoleic acid and ergosterol\",\n      \"amount\": \"3 % of dry weight\",\n      \"effect\": \"Ergosterol is a provitamin D2 precursor of minor nutritional relevance.\"\n    },\n    {\n      \"compound\": \"Potassium and other mineral ash\",\n      \"amount\": \"8 % of dry weight\",\n      \"effect\": \"Supplies electrolytes but is irrelevant next to the lethal peptide content.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88 % of fresh weight",
+          "влияние": "Provides hydration but carries the dissolved toxins of the mushroom."
+        },
+        {
+          "вещество": "alpha-Amanitin (amatoxin)",
+          "содержание": "0.3 mg/g dry weight",
+          "влияние": "Inhibits RNA polymerase II, causing fatal liver and kidney cell necrosis."
+        },
+        {
+          "вещество": "beta-Amanitin (amatoxin)",
+          "содержание": "0.1 mg/g dry weight",
+          "влияние": "Blocks mRNA synthesis and contributes to delayed hepatotoxicity."
+        },
+        {
+          "вещество": "gamma-Amanitin (amatoxin)",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II and adds to the total amatoxin toxicity."
+        },
+        {
+          "вещество": "Amaninamide and amanin (amatoxin derivatives)",
+          "содержание": "unknown",
+          "влияние": "Act as RNA polymerase II inhibitors with amatoxin-type hepatotoxicity."
+        },
+        {
+          "вещество": "Phalloidin (phallotoxin)",
+          "содержание": "0.2 mg/g dry weight",
+          "влияние": "Stabilizes actin filaments and damages liver cells, but is poorly absorbed orally."
+        },
+        {
+          "вещество": "Phallacidin (phallotoxin)",
+          "содержание": "unknown",
+          "влияние": "Binds F-actin and is hepatotoxic when it reaches the bloodstream."
+        },
+        {
+          "вещество": "Phallisacin and phalloin (phallotoxins)",
+          "содержание": "unknown",
+          "влияние": "Disrupt the hepatocyte cytoskeleton, contributing to acute liver injury."
+        },
+        {
+          "вещество": "Viroidin (virotoxin)",
+          "содержание": "unknown",
+          "влияние": "Binds actin and causes rapid cytoskeletal damage in liver cells."
+        },
+        {
+          "вещество": "Polysaccharides including chitin and beta-glucans",
+          "содержание": "20 % of dry weight",
+          "влияние": "Largely indigestible fibre that can cause gastrointestinal discomfort."
+        },
+        {
+          "вещество": "Trehalose and mannitol (soluble carbohydrates)",
+          "содержание": "50 mg/g dry weight",
+          "влияние": "Poorly absorbed sugar alcohols and sugars that may cause osmotic diarrhoea."
+        },
+        {
+          "вещество": "Protein and free amino acids (incl. glutamic acid)",
+          "содержание": "20 % of dry weight",
+          "влияние": "Nutritionally usable nitrogen source if the toxins were absent."
+        },
+        {
+          "вещество": "Lipids with linoleic acid and ergosterol",
+          "содержание": "3 % of dry weight",
+          "влияние": "Ergosterol is a provitamin D2 precursor of minor nutritional relevance."
+        },
+        {
+          "вещество": "Potassium and other mineral ash",
+          "содержание": "8 % of dry weight",
+          "влияние": "Supplies electrolytes but is irrelevant next to the lethal peptide content."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 14,
+      "thinking_len": 303,
+      "duration_s": 21.3,
+      "eval_count": 1098,
+      "prompt_eval_count": 198,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita citrina (false death cap)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"90% of fresh weight\",\n      \"effect\": \"Provides hydration but makes the fruiting body highly perishable.\"\n    },\n    {\n      \"compound\": \"Bufotenine (5-hydroxy-N,N-dimethyltryptamine)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A serotonin analogue reported in this species that can cause hallucinogenic and cardiovascular effects, though its actual presence and concentration are disputed.\"\n    },\n    {\n      \"compound\": \"Alpha-amanitin (amatoxins)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A lethal RNA polymerase II inhibitor causing liver and kidney failure, but it is generally not detected in A. citrina, unlike the true death cap.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid / muscimol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Neuroactive isoxazoles causing confusion and sedation; only trace or doubtful reports exist for this species.\"\n    },\n    {\n      \"compound\": \"Heat-labile hemolysins (proteinaceous)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Destroy red blood cells if the mushroom is eaten raw, but are inactivated by thorough cooking.\"\n    },\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A fungal sugar digested to glucose, providing calories and occasionally causing intolerance in trehalase-deficient people.\"\n    },\n    {\n      \"compound\": \"Mannitol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A sugar alcohol that can cause osmotic diarrhoea and bloating in larger amounts.\"\n    },\n    {\n      \"compound\": \"Chitin and other cell-wall polysaccharides (beta-glucans)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Largely indigestible dietary fibre that can cause gastrointestinal discomfort.\"\n    },\n    {\n      \"compound\": \"Protein and free amino acids (incl. glutamic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Supply dietary nitrogen and contribute the savoury umami taste.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A provitamin D2 sterol that supports vitamin D intake after UV exposure.\"\n    },\n    {\n      \"compound\": \"Potassium salts\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Support electrolyte balance and normal nerve and muscle function.\"\n    },\n    {\n      \"compound\": \"Volatile aroma compounds (e.g. 1-octen-3-ol, benzaldehyde-like odour principles)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Give the characteristic raw-potato/radish smell and are mildly irritating to the gut in raw tissue.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "90% of fresh weight",
+          "влияние": "Provides hydration but makes the fruiting body highly perishable."
+        },
+        {
+          "вещество": "Bufotenine (5-hydroxy-N,N-dimethyltryptamine)",
+          "содержание": "unknown",
+          "влияние": "A serotonin analogue reported in this species that can cause hallucinogenic and cardiovascular effects, though its actual presence and concentration are disputed."
+        },
+        {
+          "вещество": "Alpha-amanitin (amatoxins)",
+          "содержание": "unknown",
+          "влияние": "A lethal RNA polymerase II inhibitor causing liver and kidney failure, but it is generally not detected in A. citrina, unlike the true death cap."
+        },
+        {
+          "вещество": "Ibotenic acid / muscimol",
+          "содержание": "unknown",
+          "влияние": "Neuroactive isoxazoles causing confusion and sedation; only trace or doubtful reports exist for this species."
+        },
+        {
+          "вещество": "Heat-labile hemolysins (proteinaceous)",
+          "содержание": "unknown",
+          "влияние": "Destroy red blood cells if the mushroom is eaten raw, but are inactivated by thorough cooking."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "A fungal sugar digested to glucose, providing calories and occasionally causing intolerance in trehalase-deficient people."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "A sugar alcohol that can cause osmotic diarrhoea and bloating in larger amounts."
+        },
+        {
+          "вещество": "Chitin and other cell-wall polysaccharides (beta-glucans)",
+          "содержание": "unknown",
+          "влияние": "Largely indigestible dietary fibre that can cause gastrointestinal discomfort."
+        },
+        {
+          "вещество": "Protein and free amino acids (incl. glutamic acid)",
+          "содержание": "unknown",
+          "влияние": "Supply dietary nitrogen and contribute the savoury umami taste."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "A provitamin D2 sterol that supports vitamin D intake after UV exposure."
+        },
+        {
+          "вещество": "Potassium salts",
+          "содержание": "unknown",
+          "влияние": "Support electrolyte balance and normal nerve and muscle function."
+        },
+        {
+          "вещество": "Volatile aroma compounds (e.g. 1-octen-3-ol, benzaldehyde-like odour principles)",
+          "содержание": "unknown",
+          "влияние": "Give the characteristic raw-potato/radish smell and are mildly irritating to the gut in raw tissue."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 12,
+      "thinking_len": 552,
+      "duration_s": 24.76,
+      "eval_count": 1251,
+      "prompt_eval_count": 198,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita rubescens (blusher)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88-92 % of fresh weight\",\n      \"effect\": \"Provides hydration but makes the fruiting bodies highly perishable.\"\n    },\n    {\n      \"compound\": \"Rubescenslysin (thermolabile haemolytic protein)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Lyses red blood cells and causes gastric upset if the mushroom is eaten raw, but is destroyed by thorough cooking.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid (trace, reported inconsistently)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A neuroexcitatory glutamate agonist that can cause confusion and agitation at high doses.\"\n    },\n    {\n      \"compound\": \"Muscimol (trace, reported inconsistently)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A GABA-A agonist producing sedation and hallucinations at high doses.\"\n    },\n    {\n      \"compound\": \"Total protein (incl. free amino acids such as glutamic and aspartic acid)\",\n      \"amount\": \"15-25 % of dry weight\",\n      \"effect\": \"Supplies dietary amino acids and contributes umami taste.\"\n    },\n    {\n      \"compound\": \"Carbohydrates, incl. chitin and beta-glucans (dietary fibre)\",\n      \"amount\": \"45-60 % of dry weight\",\n      \"effect\": \"Acts as indigestible fibre supporting gut function, with beta-glucans showing immunomodulatory activity.\"\n    },\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A mildly sweet sugar that is digested to glucose and can cause bloating in trehalase-deficient people.\"\n    },\n    {\n      \"compound\": \"Mannitol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A sugar alcohol with a mild osmotic laxative effect in larger amounts.\"\n    },\n    {\n      \"compound\": \"Total fat, mainly linoleic acid\",\n      \"amount\": \"2-4 % of dry weight\",\n      \"effect\": \"Provides essential omega-6 fatty acids needed for cell membranes.\"\n    },\n    {\n      \"compound\": \"Oleic and palmitic acids\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Common dietary mono- and saturated fatty acids used for energy and lipid synthesis.\"\n    },\n    {\n      \"compound\": \"Ergosterol (provitamin D2)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Converts to vitamin D2 on UV exposure, supporting calcium and bone metabolism.\"\n    },\n    {\n      \"compound\": \"Potassium\",\n      \"amount\": \"25-50 mg/g dry weight\",\n      \"effect\": \"Supports nerve conduction, muscle function and blood pressure regulation.\"\n    },\n    {\n      \"compound\": \"Phosphorus\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Needed for bone mineralisation and ATP-based energy metabolism.\"\n    },\n    {\n      \"compound\": \"Selenium and other trace elements (incl. accumulated cadmium, lead, mercury from soil)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Selenium is an antioxidant cofactor, while accumulated heavy metals are nephrotoxic with repeated intake.\"\n    },\n    {\n      \"compound\": \"Phenolic acids (protocatechuic, p-hydroxybenzoic, cinnamic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Antioxidant compounds that scavenge free radicals in vitro.\"\n    },\n    {\n      \"compound\": \"Tocopherols (mainly gamma-tocopherol)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Vitamin E forms that protect lipids from oxidative damage.\"\n    },\n    {\n      \"compound\": \"Ascorbic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Vitamin C activity supporting collagen synthesis and antioxidant defence.\"\n    },\n    {\n      \"compound\": \"Organic acids (oxalic, citric, malic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Contribute flavour; oxalic acid can bind calcium and irritate the gut in large amounts.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88-92 % of fresh weight",
+          "влияние": "Provides hydration but makes the fruiting bodies highly perishable."
+        },
+        {
+          "вещество": "Rubescenslysin (thermolabile haemolytic protein)",
+          "содержание": "unknown",
+          "влияние": "Lyses red blood cells and causes gastric upset if the mushroom is eaten raw, but is destroyed by thorough cooking."
+        },
+        {
+          "вещество": "Ibotenic acid (trace, reported inconsistently)",
+          "содержание": "unknown",
+          "влияние": "A neuroexcitatory glutamate agonist that can cause confusion and agitation at high doses."
+        },
+        {
+          "вещество": "Muscimol (trace, reported inconsistently)",
+          "содержание": "unknown",
+          "влияние": "A GABA-A agonist producing sedation and hallucinations at high doses."
+        },
+        {
+          "вещество": "Total protein (incl. free amino acids such as glutamic and aspartic acid)",
+          "содержание": "15-25 % of dry weight",
+          "влияние": "Supplies dietary amino acids and contributes umami taste."
+        },
+        {
+          "вещество": "Carbohydrates, incl. chitin and beta-glucans (dietary fibre)",
+          "содержание": "45-60 % of dry weight",
+          "влияние": "Acts as indigestible fibre supporting gut function, with beta-glucans showing immunomodulatory activity."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "A mildly sweet sugar that is digested to glucose and can cause bloating in trehalase-deficient people."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "A sugar alcohol with a mild osmotic laxative effect in larger amounts."
+        },
+        {
+          "вещество": "Total fat, mainly linoleic acid",
+          "содержание": "2-4 % of dry weight",
+          "влияние": "Provides essential omega-6 fatty acids needed for cell membranes."
+        },
+        {
+          "вещество": "Oleic and palmitic acids",
+          "содержание": "unknown",
+          "влияние": "Common dietary mono- and saturated fatty acids used for energy and lipid synthesis."
+        },
+        {
+          "вещество": "Ergosterol (provitamin D2)",
+          "содержание": "unknown",
+          "влияние": "Converts to vitamin D2 on UV exposure, supporting calcium and bone metabolism."
+        },
+        {
+          "вещество": "Potassium",
+          "содержание": "25-50 mg/g dry weight",
+          "влияние": "Supports nerve conduction, muscle function and blood pressure regulation."
+        },
+        {
+          "вещество": "Phosphorus",
+          "содержание": "unknown",
+          "влияние": "Needed for bone mineralisation and ATP-based energy metabolism."
+        },
+        {
+          "вещество": "Selenium and other trace elements (incl. accumulated cadmium, lead, mercury from soil)",
+          "содержание": "unknown",
+          "влияние": "Selenium is an antioxidant cofactor, while accumulated heavy metals are nephrotoxic with repeated intake."
+        },
+        {
+          "вещество": "Phenolic acids (protocatechuic, p-hydroxybenzoic, cinnamic acid)",
+          "содержание": "unknown",
+          "влияние": "Antioxidant compounds that scavenge free radicals in vitro."
+        },
+        {
+          "вещество": "Tocopherols (mainly gamma-tocopherol)",
+          "содержание": "unknown",
+          "влияние": "Vitamin E forms that protect lipids from oxidative damage."
+        },
+        {
+          "вещество": "Ascorbic acid",
+          "содержание": "unknown",
+          "влияние": "Vitamin C activity supporting collagen synthesis and antioxidant defence."
+        },
+        {
+          "вещество": "Organic acids (oxalic, citric, malic acid)",
+          "содержание": "unknown",
+          "влияние": "Contribute flavour; oxalic acid can bind calcium and irritate the gut in large amounts."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 18,
+      "thinking_len": 771,
+      "duration_s": 32.38,
+      "eval_count": 1786,
+      "prompt_eval_count": 198,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita caesarea (Caesar's mushroom)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88-92% of fresh weight\",\n      \"effect\": \"Provides hydration and makes the fresh fruiting body highly perishable.\"\n    },\n    {\n      \"compound\": \"Carbohydrates (total, incl. glucans and fiber)\",\n      \"amount\": \"45-60% of dry weight\",\n      \"effect\": \"Supplies energy and largely indigestible fiber that supports gut function.\"\n    },\n    {\n      \"compound\": \"Protein (crude protein)\",\n      \"amount\": \"20-30% of dry weight\",\n      \"effect\": \"Contributes essential amino acids, though digestibility is limited by chitin.\"\n    },\n    {\n      \"compound\": \"Beta-glucans (cell-wall polysaccharides)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Act as immunomodulating and cholesterol-lowering dietary fiber.\"\n    },\n    {\n      \"compound\": \"Dietary fiber / chitin\",\n      \"amount\": \"10-25% of dry weight\",\n      \"effect\": \"Promotes bowel motility but can cause digestive discomfort if eaten raw or in excess.\"\n    },\n    {\n      \"compound\": \"Lipids (total fat, mainly linoleic and oleic acid)\",\n      \"amount\": \"2-5% of dry weight\",\n      \"effect\": \"Provide essential fatty acids with a favourable unsaturated profile.\"\n    },\n    {\n      \"compound\": \"Trehalose and mannitol (soluble sugars/polyols)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Give a mildly sweet taste; mannitol can have a laxative effect in large amounts.\"\n    },\n    {\n      \"compound\": \"Free amino acids (glutamic acid, aspartic acid, alanine)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Produce the savoury umami flavour typical of this edible species.\"\n    },\n    {\n      \"compound\": \"Potassium\",\n      \"amount\": \"30-45 mg/g dry weight\",\n      \"effect\": \"Supports electrolyte balance and normal blood pressure.\"\n    },\n    {\n      \"compound\": \"Phosphorus\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Contributes to bone mineralisation and energy metabolism.\"\n    },\n    {\n      \"compound\": \"Ash (total minerals, incl. Ca, Mg, Fe, Zn, Cu, Se)\",\n      \"amount\": \"6-10% of dry weight\",\n      \"effect\": \"Supplies trace elements needed for enzyme and antioxidant systems.\"\n    },\n    {\n      \"compound\": \"Ergosterol (provitamin D2)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Converts to vitamin D2 on UV exposure, supporting calcium metabolism.\"\n    },\n    {\n      \"compound\": \"B-group vitamins (riboflavin, niacin, pantothenic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Act as coenzymes in human energy metabolism.\"\n    },\n    {\n      \"compound\": \"Tocopherols (vitamin E)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Provide lipid-soluble antioxidant protection of cell membranes.\"\n    },\n    {\n      \"compound\": \"Phenolic acids (protocatechuic, p-hydroxybenzoic, gallic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Show antioxidant and mild anti-inflammatory activity in vitro.\"\n    },\n    {\n      \"compound\": \"Organic acids (oxalic, citric, malic, quinic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Add tartness; oxalic acid can bind calcium and is a concern in kidney-stone formers.\"\n    },\n    {\n      \"compound\": \"Volatile aroma compounds (1-octen-3-ol, C8 alcohols and ketones)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Create the characteristic mushroom aroma and are harmless at culinary levels.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid and muscimol\",\n      \"amount\": \"0 mg/kg (not present)\",\n      \"effect\": \"Absent, so this species causes no muscarinic or isoxazole-type neurotoxicity.\"\n    },\n    {\n      \"compound\": \"Amatoxins and phallotoxins (alpha-amanitin, phalloidin)\",\n      \"amount\": \"0 mg/kg (not present)\",\n      \"effect\": \"Absent, which is why the species is edible when cooked, unlike deadly Amanita species.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88-92% of fresh weight",
+          "влияние": "Provides hydration and makes the fresh fruiting body highly perishable."
+        },
+        {
+          "вещество": "Carbohydrates (total, incl. glucans and fiber)",
+          "содержание": "45-60% of dry weight",
+          "влияние": "Supplies energy and largely indigestible fiber that supports gut function."
+        },
+        {
+          "вещество": "Protein (crude protein)",
+          "содержание": "20-30% of dry weight",
+          "влияние": "Contributes essential amino acids, though digestibility is limited by chitin."
+        },
+        {
+          "вещество": "Beta-glucans (cell-wall polysaccharides)",
+          "содержание": "unknown",
+          "влияние": "Act as immunomodulating and cholesterol-lowering dietary fiber."
+        },
+        {
+          "вещество": "Dietary fiber / chitin",
+          "содержание": "10-25% of dry weight",
+          "влияние": "Promotes bowel motility but can cause digestive discomfort if eaten raw or in excess."
+        },
+        {
+          "вещество": "Lipids (total fat, mainly linoleic and oleic acid)",
+          "содержание": "2-5% of dry weight",
+          "влияние": "Provide essential fatty acids with a favourable unsaturated profile."
+        },
+        {
+          "вещество": "Trehalose and mannitol (soluble sugars/polyols)",
+          "содержание": "unknown",
+          "влияние": "Give a mildly sweet taste; mannitol can have a laxative effect in large amounts."
+        },
+        {
+          "вещество": "Free amino acids (glutamic acid, aspartic acid, alanine)",
+          "содержание": "unknown",
+          "влияние": "Produce the savoury umami flavour typical of this edible species."
+        },
+        {
+          "вещество": "Potassium",
+          "содержание": "30-45 mg/g dry weight",
+          "влияние": "Supports electrolyte balance and normal blood pressure."
+        },
+        {
+          "вещество": "Phosphorus",
+          "содержание": "unknown",
+          "влияние": "Contributes to bone mineralisation and energy metabolism."
+        },
+        {
+          "вещество": "Ash (total minerals, incl. Ca, Mg, Fe, Zn, Cu, Se)",
+          "содержание": "6-10% of dry weight",
+          "влияние": "Supplies trace elements needed for enzyme and antioxidant systems."
+        },
+        {
+          "вещество": "Ergosterol (provitamin D2)",
+          "содержание": "unknown",
+          "влияние": "Converts to vitamin D2 on UV exposure, supporting calcium metabolism."
+        },
+        {
+          "вещество": "B-group vitamins (riboflavin, niacin, pantothenic acid)",
+          "содержание": "unknown",
+          "влияние": "Act as coenzymes in human energy metabolism."
+        },
+        {
+          "вещество": "Tocopherols (vitamin E)",
+          "содержание": "unknown",
+          "влияние": "Provide lipid-soluble antioxidant protection of cell membranes."
+        },
+        {
+          "вещество": "Phenolic acids (protocatechuic, p-hydroxybenzoic, gallic acid)",
+          "содержание": "unknown",
+          "влияние": "Show antioxidant and mild anti-inflammatory activity in vitro."
+        },
+        {
+          "вещество": "Organic acids (oxalic, citric, malic, quinic acid)",
+          "содержание": "unknown",
+          "влияние": "Add tartness; oxalic acid can bind calcium and is a concern in kidney-stone formers."
+        },
+        {
+          "вещество": "Volatile aroma compounds (1-octen-3-ol, C8 alcohols and ketones)",
+          "содержание": "unknown",
+          "влияние": "Create the characteristic mushroom aroma and are harmless at culinary levels."
+        },
+        {
+          "вещество": "Ibotenic acid and muscimol",
+          "содержание": "0 mg/kg (not present)",
+          "влияние": "Absent, so this species causes no muscarinic or isoxazole-type neurotoxicity."
+        },
+        {
+          "вещество": "Amatoxins and phallotoxins (alpha-amanitin, phalloidin)",
+          "содержание": "0 mg/kg (not present)",
+          "влияние": "Absent, which is why the species is edible when cooked, unlike deadly Amanita species."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 19,
+      "thinking_len": 463,
+      "duration_s": 28.45,
+      "eval_count": 1560,
+      "prompt_eval_count": 199,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita virosa (destroying angel)\",\n  \"composition\": [\n    {\n      \"compound\": \"alpha-Amanitin (amatoxin)\",\n      \"amount\": \"1-3 mg/g dry weight\",\n      \"effect\": \"Potently inhibits RNA polymerase II, causing fatal liver and kidney failure after a delayed symptom-free period.\"\n    },\n    {\n      \"compound\": \"beta-Amanitin (amatoxin)\",\n      \"amount\": \"0.2-1 mg/g dry weight\",\n      \"effect\": \"Blocks mRNA synthesis in hepatocytes and renal cells, contributing to lethal cytotoxicity.\"\n    },\n    {\n      \"compound\": \"gamma-Amanitin (amatoxin)\",\n      \"amount\": \"0.1-0.5 mg/g dry weight\",\n      \"effect\": \"Inhibits RNA polymerase II with the same hepatotoxic mechanism, though usually a minor fraction of total toxin.\"\n    },\n    {\n      \"compound\": \"Amaninamide / amanin (amatoxin variants typical of white Amanita species)\",\n      \"amount\": \"0.5-2 mg/g dry weight\",\n      \"effect\": \"Inhibits RNA polymerase II and adds to the amatoxin-driven hepatic and renal damage.\"\n    },\n    {\n      \"compound\": \"Phalloidin (phallotoxin)\",\n      \"amount\": \"0.5-2 mg/g dry weight\",\n      \"effect\": \"Stabilizes actin filaments and damages liver cell membranes, but is poorly absorbed from the gut so contributes little to oral poisoning.\"\n    },\n    {\n      \"compound\": \"Phallacidin / phallisacin (phallotoxins)\",\n      \"amount\": \"0.1-1 mg/g dry weight\",\n      \"effect\": \"Bind F-actin and are hepatotoxic when injected, with limited relevance after ingestion.\"\n    },\n    {\n      \"compound\": \"Viroidin and related virotoxins (characteristic of A. virosa)\",\n      \"amount\": \"0.1-1 mg/g dry weight\",\n      \"effect\": \"Actin-binding peptides that are toxic to liver cells parenterally but largely inactive orally.\"\n    },\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88-92 % of fresh weight\",\n      \"effect\": \"Nutritionally inert; the high water content concentrates toxins on a dry-weight basis.\"\n    },\n    {\n      \"compound\": \"Chitin and beta-glucans (cell-wall polysaccharides)\",\n      \"amount\": \"5-15 % of dry weight\",\n      \"effect\": \"Indigestible fibre that can cause mild gastrointestinal irritation.\"\n    },\n    {\n      \"compound\": \"Trehalose and mannitol (soluble carbohydrates/polyols)\",\n      \"amount\": \"2-10 % of dry weight\",\n      \"effect\": \"Poorly digested sugars that may cause bloating or osmotic diarrhoea in sensitive people.\"\n    },\n    {\n      \"compound\": \"Ergosterol and other fungal sterols\",\n      \"amount\": \"1-5 mg/g dry weight\",\n      \"effect\": \"A provitamin D2 precursor of no toxicological significance at these levels.\"\n    },\n    {\n      \"compound\": \"Free amino acids and proteins (including toxic lectin-like proteins)\",\n      \"amount\": \"15-25 % of dry weight\",\n      \"effect\": \"Mostly nutritive, though some haemolytic proteins are destroyed by cooking and are minor compared with the amatoxins.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "alpha-Amanitin (amatoxin)",
+          "содержание": "1-3 mg/g dry weight",
+          "влияние": "Potently inhibits RNA polymerase II, causing fatal liver and kidney failure after a delayed symptom-free period."
+        },
+        {
+          "вещество": "beta-Amanitin (amatoxin)",
+          "содержание": "0.2-1 mg/g dry weight",
+          "влияние": "Blocks mRNA synthesis in hepatocytes and renal cells, contributing to lethal cytotoxicity."
+        },
+        {
+          "вещество": "gamma-Amanitin (amatoxin)",
+          "содержание": "0.1-0.5 mg/g dry weight",
+          "влияние": "Inhibits RNA polymerase II with the same hepatotoxic mechanism, though usually a minor fraction of total toxin."
+        },
+        {
+          "вещество": "Amaninamide / amanin (amatoxin variants typical of white Amanita species)",
+          "содержание": "0.5-2 mg/g dry weight",
+          "влияние": "Inhibits RNA polymerase II and adds to the amatoxin-driven hepatic and renal damage."
+        },
+        {
+          "вещество": "Phalloidin (phallotoxin)",
+          "содержание": "0.5-2 mg/g dry weight",
+          "влияние": "Stabilizes actin filaments and damages liver cell membranes, but is poorly absorbed from the gut so contributes little to oral poisoning."
+        },
+        {
+          "вещество": "Phallacidin / phallisacin (phallotoxins)",
+          "содержание": "0.1-1 mg/g dry weight",
+          "влияние": "Bind F-actin and are hepatotoxic when injected, with limited relevance after ingestion."
+        },
+        {
+          "вещество": "Viroidin and related virotoxins (characteristic of A. virosa)",
+          "содержание": "0.1-1 mg/g dry weight",
+          "влияние": "Actin-binding peptides that are toxic to liver cells parenterally but largely inactive orally."
+        },
+        {
+          "вещество": "Water",
+          "содержание": "88-92 % of fresh weight",
+          "влияние": "Nutritionally inert; the high water content concentrates toxins on a dry-weight basis."
+        },
+        {
+          "вещество": "Chitin and beta-glucans (cell-wall polysaccharides)",
+          "содержание": "5-15 % of dry weight",
+          "влияние": "Indigestible fibre that can cause mild gastrointestinal irritation."
+        },
+        {
+          "вещество": "Trehalose and mannitol (soluble carbohydrates/polyols)",
+          "содержание": "2-10 % of dry weight",
+          "влияние": "Poorly digested sugars that may cause bloating or osmotic diarrhoea in sensitive people."
+        },
+        {
+          "вещество": "Ergosterol and other fungal sterols",
+          "содержание": "1-5 mg/g dry weight",
+          "влияние": "A provitamin D2 precursor of no toxicological significance at these levels."
+        },
+        {
+          "вещество": "Free amino acids and proteins (including toxic lectin-like proteins)",
+          "содержание": "15-25 % of dry weight",
+          "влияние": "Mostly nutritive, though some haemolytic proteins are destroyed by cooking and are minor compared with the amatoxins."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 12,
+      "thinking_len": 616,
+      "duration_s": 28.19,
+      "eval_count": 1432,
+      "prompt_eval_count": 197,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Armillaria mellea (honey fungus)\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88–92% of fresh weight\",\n      \"effect\": \"Provides hydration and makes the fruiting body highly perishable.\"\n    },\n    {\n      \"compound\": \"Protein and free amino acids (glutamic acid, aspartic acid, essential amino acids)\",\n      \"amount\": \"15–25% of dry weight\",\n      \"effect\": \"Supplies dietary nitrogen and essential amino acids; glutamate contributes umami taste.\"\n    },\n    {\n      \"compound\": \"Polysaccharides (β-1,3/1,6-glucans and heteroglycans, 'AMP' fraction)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Show immunomodulatory, antioxidant and hypoglycaemic activity in experimental studies.\"\n    },\n    {\n      \"compound\": \"Chitin and other insoluble cell-wall fibre\",\n      \"amount\": \"3–8% of dry weight\",\n      \"effect\": \"Indigestible for humans, acts as dietary fibre and can cause heaviness or bloating.\"\n    },\n    {\n      \"compound\": \"Melleolides / armillaridin-type protoilludane sesquiterpene aryl esters\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Cytotoxic and antimicrobial to cells; contribute to the gastrointestinal irritation caused by raw or undercooked mushrooms.\"\n    },\n    {\n      \"compound\": \"Armillaric acid and related aromatic sesquiterpene esters\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Antibacterial and cytotoxic in vitro; not a nutritional component and potentially irritant.\"\n    },\n    {\n      \"compound\": \"Heat-labile haemolysins and lectins (protein toxins)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Agglutinate or lyse red blood cells and cause vomiting and diarrhoea if the mushroom is eaten raw; destroyed by thorough cooking.\"\n    },\n    {\n      \"compound\": \"Trehalose\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Digestible disaccharide giving a mild sweet taste and a source of glucose.\"\n    },\n    {\n      \"compound\": \"Mannitol and other polyols\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Poorly absorbed sugar alcohol that can have a laxative effect in large amounts.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"1–5 mg/g dry weight\",\n      \"effect\": \"Provitamin D2 that converts to vitamin D2 on UV exposure, supporting calcium metabolism.\"\n    },\n    {\n      \"compound\": \"Phenolic compounds and flavonoids\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Act as antioxidants and free-radical scavengers.\"\n    },\n    {\n      \"compound\": \"Potassium and other mineral salts (phosphorus, magnesium, iron, trace selenium)\",\n      \"amount\": \"20–40 mg/g dry weight (total ash minerals)\",\n      \"effect\": \"Support electrolyte balance, nerve function and enzyme activity.\"\n    },\n    {\n      \"compound\": \"B vitamins (riboflavin, niacin, pantothenic acid) and vitamin C traces\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Serve as coenzyme precursors in human energy metabolism.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88–92% of fresh weight",
+          "влияние": "Provides hydration and makes the fruiting body highly perishable."
+        },
+        {
+          "вещество": "Protein and free amino acids (glutamic acid, aspartic acid, essential amino acids)",
+          "содержание": "15–25% of dry weight",
+          "влияние": "Supplies dietary nitrogen and essential amino acids; glutamate contributes umami taste."
+        },
+        {
+          "вещество": "Polysaccharides (β-1,3/1,6-glucans and heteroglycans, 'AMP' fraction)",
+          "содержание": "unknown",
+          "влияние": "Show immunomodulatory, antioxidant and hypoglycaemic activity in experimental studies."
+        },
+        {
+          "вещество": "Chitin and other insoluble cell-wall fibre",
+          "содержание": "3–8% of dry weight",
+          "влияние": "Indigestible for humans, acts as dietary fibre and can cause heaviness or bloating."
+        },
+        {
+          "вещество": "Melleolides / armillaridin-type protoilludane sesquiterpene aryl esters",
+          "содержание": "unknown",
+          "влияние": "Cytotoxic and antimicrobial to cells; contribute to the gastrointestinal irritation caused by raw or undercooked mushrooms."
+        },
+        {
+          "вещество": "Armillaric acid and related aromatic sesquiterpene esters",
+          "содержание": "unknown",
+          "влияние": "Antibacterial and cytotoxic in vitro; not a nutritional component and potentially irritant."
+        },
+        {
+          "вещество": "Heat-labile haemolysins and lectins (protein toxins)",
+          "содержание": "unknown",
+          "влияние": "Agglutinate or lyse red blood cells and cause vomiting and diarrhoea if the mushroom is eaten raw; destroyed by thorough cooking."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "Digestible disaccharide giving a mild sweet taste and a source of glucose."
+        },
+        {
+          "вещество": "Mannitol and other polyols",
+          "содержание": "unknown",
+          "влияние": "Poorly absorbed sugar alcohol that can have a laxative effect in large amounts."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "1–5 mg/g dry weight",
+          "влияние": "Provitamin D2 that converts to vitamin D2 on UV exposure, supporting calcium metabolism."
+        },
+        {
+          "вещество": "Phenolic compounds and flavonoids",
+          "содержание": "unknown",
+          "влияние": "Act as antioxidants and free-radical scavengers."
+        },
+        {
+          "вещество": "Potassium and other mineral salts (phosphorus, magnesium, iron, trace selenium)",
+          "содержание": "20–40 mg/g dry weight (total ash minerals)",
+          "влияние": "Support electrolyte balance, nerve function and enzyme activity."
+        },
+        {
+          "вещество": "B vitamins (riboflavin, niacin, pantothenic acid) and vitamin C traces",
+          "содержание": "unknown",
+          "влияние": "Serve as coenzyme precursors in human energy metabolism."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 13,
+      "thinking_len": 668,
+      "duration_s": 29.65,
+      "eval_count": 1480,
+      "prompt_eval_count": 198,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ]
+}

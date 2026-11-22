@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Состав мухоморов — qwen3.8:latest, think off: 5 прогонов</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+<a class="backlink" href="../../../report-en.html">← Сводный отчёт</a>
+<h1>Состав мухоморов — qwen3.8:latest, think off: 5 прогонов</h1>
+<p class="proto">клетка = вопрос «перечисли основные и характерные соединения гриба» (recall-генерация, промпты v4; один прогон = все 8 клеток); архивы серий v1–v3 с другими промптами в отчётах не участвуют. Цвет клетки = вердикт судьи (glm-5.3-flash low против эталона), серая = вещество не перечислено в этом прогоне; стабильность = средний Jaccard наборов веществ между прогонами</p>
+<div class="chip">Модель: <b>qwen3.8:latest</b><br><small>think off · прогонов: 5 (в таблице гриба — где его клетка спрашивалась)</small></div><div class="chip">Балл судьи (средний): <b>2.5 / 10</b><br><small>по оценённым клеткам</small></div><div class="chip">Галлюцинации: <b>124 / 186</b><br><small>доля вердиктов «галлюцинация»</small></div><div class="chip">Стабильность состава: <b>21%</b><br><small>средний попарный Jaccard веществ между прогонами</small></div><div class="chip">Стабильность реальных: <b>29%</b><br><small>Jaccard по веществам, признанным судьёй</small></div><div class="chip">JSON-разбор: <b>100%</b><br><small>(40 из 40 клеток)</small></div><div class="chip">Время: <b>86 c</b><br><small>токены: 6725 вх / 10055 вых</small></div><div class="chip">Эталон: <b>v12</b><br><small>судья видит справку целиком</small></div>
+
+<h2>Методика</h2>
+<div class="method">
+<h3>Запуск модели</h3>
+<p>Одна клетка = один независимый запрос к ollama
+<code>POST http://nserv:11434/api/chat</code>, stream=false. Истории между клетками
+нет — клетки изолированы, каждый вопрос несёт system-рамку теста. Параметры
+генерации — дефолтные ollama (temperature и прочее не переопределяются),
+seed не фиксируется; уровень размышлений передаётся полем <code>think</code>
+(уровень размышлений этого отчёта: <b>off</b>). Запрос содержит поле <code>format</code> — структурированный вывод ollama: <code>json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}</code>. Декодирование ограничено грамматикой по схеме — текст вне JSON и больше 100 элементов невозможны на уровне декодера.</p>
+<pre class="prompt-sample">{
+ &quot;model&quot;: &quot;qwen3.8:latest&quot;,
+ &quot;stream&quot;: false,
+ &quot;keep_alive&quot;: &quot;10m&quot;,
+ &quot;think&quot;: false,
+ &quot;messages&quot;: [
+  {
+   &quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;&lt;SYSTEM-ПРОМПТ — целиком ниже&gt;&quot;
+  },
+  {
+   &quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).&quot;
+  }
+ ]
+}</pre>
+<ul>
+<li>внутри прогона <code>keep_alive</code> = 10m — веса держатся
+загруженными;</li>
+<li>модель выгружается перед первым и после каждого прогона
+(<code>keep_alive: 0</code>) — изоляция прогонов, KV-кэш между сериями не
+переживает;</li>
+<li>серия: 5 прогонов на уровень размышлений; уровни не смешиваются;</li>
+<li>ответ должен быть строго JSON; при усечённом/дегенеративном ответе парсер
+достаёт целые фрагменты-объекты (пометка «ремонт», json_ok=false).</li>
+</ul>
+<h3>System-промпт (одинаков во всех запросах)</h3>
+<pre class="prompt-sample">You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {&quot;mushroom&quot;: &quot;...&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;...&quot;, &quot;amount&quot;: &quot;...&quot;, &quot;effect&quot;: &quot;...&quot;}]}. In &quot;amount&quot; give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write &quot;unknown&quot;. In &quot;effect&quot; give one short sentence about the compound&#x27;s effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.</pre>
+<h3>Пример user-сообщения — Fly agaric</h3>
+<pre class="prompt-sample">List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).</pre>
+<details class="raw"><summary>Пример ответа модели на эту клетку</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.1-2.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a potent GABA-A receptor agonist causing sedation and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.1-1.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;An excitatory amino acid neurotransmitter that can cause toxicity and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;A GABA antagonist that may modulate the effects of muscimol.&quot;
+}
+]
+}</pre></details>
+<h3>Судья</h3>
+<p>Каждый ответ сверяется судьёй — <code>glm-5.3-flash</code>, thinking <code>low</code>,
+транспорт <code>pi</code> (провайдер zai). Судья получает эталонную справку
+состава гриба — запись этого гриба из <a class="report-link" target="_blank" rel="noopener" href="../../../ethalon-en.json">ethalon-en.json</a>, целиком файл не
+передаётся — и разобранный состав ответа; по каждому веществу
+выносит вердикт «реальное / спорно / галлюцинация», оценивает концентрацию
+(в норме / завышена / занижена) и влияние на человека, перечисляет пропущенные
+эталонно важные вещества и ставит балл 0–10. Ответы длиннее 100 веществ
+(дегенеративный перебор) режутся до первых 100 с пометкой. Вердикт строго
+JSON: невалидная схема — одна повторная попытка, иначе клетка исключается из
+метрик. Переиспользование вердиктов — по хэшам входов эталона: изменение
+входа конкретного гриба переоценивает только его клетки.</p>
+<details class="raw"><summary>Пример вердикта судьи</summary><pre>{
+ &quot;вещества&quot;: [
+  {
+   &quot;название&quot;: &quot;Muscimol&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;завышена&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Ibotenic acid&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;в норме&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Muscine&quot;,
+   &quot;статус&quot;: &quot;галлюцинация&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;нет данных&quot;
+  }
+ ],
+ &quot;пропущено_важное&quot;: [
+  &quot;muscazone&quot;,
+  &quot;muscarine (следовой, но важен для развенчания мифа)&quot;
+ ],
+ &quot;балл&quot;: 4,
+ &quot;комментарий&quot;: &quot;Модель знает два главных изоксазола, но концентрация мусцимола завышена почти на порядок (в справке ~0.09% сухого веса), а «Muscine» — выдумка, отсутствующая в эталоне.&quot;
+}</pre></details>
+<details class="raw"><summary>Полный промпт судьи (system + критерии)</summary>
+<pre>Ты — судья теста на знание химического состава грибов. Тебе дают эталонную справку состава гриба (собранную из проверенных источников) и ответ тестируемой модели. Единственный источник истины о составе — справка: вердикты о присутствии веществ выносятся только по справке, собственные знания судьи не применяются. Твоя задача — строгий и честный вердикт строго в JSON. Никакого текста вне JSON.
+
+Задача: установи для каждого вещества из ответа модели, входит ли оно в переданный тебе эталонный состав. Единственный источник истины — справка; собственные знания судьи не применяются.
+
+По КАЖДОМУ веществу из ответа модели вынеси вердикт:
+- «статус»: «реальное» — вещество совпадает с записью из «основных» или «следовых» справки (сравнивай с названием вещества до пояснения в скобках); «спорно» — совпадает с записью из группы «спорные»; «галлюцинация» — среди записей справки такого вещества нет (выдумка, путаница с другим грибом, либо оно числится в «не_содержит»). Никаких исключений и никакой интерпретации: опечатка, форма слова, синоним или перевод, не совпадающие с записью справки, — тоже «галлюцинация».
+- «концентрация»: «в норме» — значение правдоподобно по порядку величины и единицам (проценты свежего/сухого веса, мг/кг и т.п.; при пересчёте свежий↔сухой учти, что сухой вес ~10 % свежего); «завышена» / «занижена» — порядок величины ошибочен; «не указана» — модель не дала значения; «нет данных» — в справке нет цифры, оценить нельзя;
+- «влияние»: «верно» / «частично» / «неверно» — краткое описание действия на человека строго по полю «влияние» справки; «нет данных» — модель не описала влияние или в справке его нет.
+
+Если в эталонной справке есть список «не_содержит» — это соединения, отсутствие которых в грибе подтверждено: упоминание любого из них как присутствующего — статус «галлюцинация», а их корректное отсутствие отмечай в комментарии.
+Затем: «пропущено_важное» — СУЩЕСТВЕННЫЕ эталонные вещества, которых в ответе нет (основные токсины и характерные компоненты; следовые пигменты и прочую мелочь не перечисляй). Пустой список — если всё важное названо.
+«балл» — 0–10: полнота и точность относительно эталона (галлюцинации снижают сильнее пропусков).
+«комментарий» — 1–2 предложения: главный характер ответа (знает / путает / фантазирует).
+
+Формат ответа строго:
+{&quot;вещества&quot;: [{&quot;название&quot;: &quot;&lt;как назвала модель&gt;&quot;, &quot;статус&quot;: &quot;реальное|спорно|галлюцинация&quot;, &quot;концентрация&quot;: &quot;в норме|завышена|занижена|не указана|нет данных&quot;, &quot;влияние&quot;: &quot;верно|частично|неверно|нет данных&quot;}], &quot;пропущено_важное&quot;: [&quot;...&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;...&quot;}
+
+Ответ absent: если ответ модели пуст или отсутствует — верни {&quot;вещества&quot;: [], &quot;пропущено_важное&quot;: [&quot;все основные&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;ответ отсутствует&quot;}.
+</pre></details>
+</div>
+<div class="mush">
+<h3>Fly agaric <span class="latin">(Amanita muscaria)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.8 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>35%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>80%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>23</b></div>
+  <div class="chip">Галлюцинации: <b>43%</b> (10 из 23 вердиктов)</div>
+  <div class="chip">реальных <b>13</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Ibotenic acid</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.1-1.0% of dry weight<br>Влияние: An excitatory amino acid neurotransmitter that can cause toxicity and hallucinations.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-1.0% of dry weight</b><span>An excitatory amino acid neurotransmitter that can cause toxicity and hallucinations.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 250-1000 mg/kg dry weight<br>Влияние: Acts as a GABA agonist, causing convulsions and delirium.<br>Судья: реальное · концентрация занижена · влияние неверно<br></div><div class="inner"><b>250-1000 mg/kg dry weight</b><span>Acts as a GABA agonist, causing convulsions and delirium.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.3-0.6 % of dry weight<br>Влияние: Acts as a GABA agonist causing nausea, dizziness, and confusion.<br>Судья: реальное · концентрация в норме · влияние неверно<br></div><div class="inner"><b>0.3-0.6 % of dry weight</b><span>Acts as a GABA agonist causing nausea, dizziness, and confusion.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.1-0.4% of dry weight<br>Влияние: Acts as a glutamate receptor agonist causing neurotoxicity, muscle spasms, and vomiting.<br>Судья: реальное · концентрация занижена · влияние частично<br></div><div class="inner"><b>0.1-0.4% of dry weight</b><span>Acts as a glutamate receptor agonist causing neurotoxicity, muscle spasms, and vomiting.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.006-0.03% of dry weight<br>Влияние: Serves as a precursor to muscimol and can act as an NMDA receptor agonist, potentially causing excitotoxicity.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>0.006-0.03% of dry weight</b><span>Serves as a precursor to muscimol and can act as an NMDA receptor agonist, potentially cau</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Muscimol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.1-2.0% of dry weight<br>Влияние: Acts as a potent GABA-A receptor agonist causing sedation and hallucinations.<br>Судья: реальное · концентрация завышена · влияние верно<br></div><div class="inner"><b>0.1-2.0% of dry weight</b><span>Acts as a potent GABA-A receptor agonist causing sedation and hallucinations.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 100-400 mg/kg dry weight<br>Влияние: Potent CNS depressant and hallucinogen that acts on GABA-A receptors.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>100-400 mg/kg dry weight</b><span>Potent CNS depressant and hallucinogen that acts on GABA-A receptors.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.3-0.6 % of dry weight<br>Влияние: Functions as a GABA-A receptor agonist producing sedative and hallucinogenic effects.<br>Судья: реальное · концентрация завышена · влияние верно<br></div><div class="inner"><b>0.3-0.6 % of dry weight</b><span>Functions as a GABA-A receptor agonist producing sedative and hallucinogenic effects.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.1-0.3% of dry weight<br>Влияние: Acts as a GABA-A receptor agonist leading to sedation, drowsiness, and hallucinations.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-0.3% of dry weight</b><span>Acts as a GABA-A receptor agonist leading to sedation, drowsiness, and hallucinations.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.05-1.0% of dry weight<br>Влияние: Acts as a potent agonist at GABA-A receptors, causing CNS depression and sedation.<br>Судья: реальное · концентрация завышена · влияние верно<br></div><div class="inner"><b>0.05-1.0% of dry weight</b><span>Acts as a potent agonist at GABA-A receptors, causing CNS depression and sedation.</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Muscarine</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscarine</b><br>Содержание: &lt;10 mg/kg dry weight<br>Влияние: Cholinergic agonist that causes nausea, vomiting, and bradycardia.<br>Судья: реальное · концентрация занижена · влияние неверно<br></div><div class="inner"><b>&lt;10 mg/kg dry weight</b><span>Cholinergic agonist that causes nausea, vomiting, and bradycardia.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscarine</b><br>Содержание: &lt;0.001% of dry weight<br>Влияние: Contributes to cholinergic symptoms such as increased salivation, lacrimation, and diarrhea in high doses.<br>Судья: реальное · концентрация занижена · влияние неверно<br></div><div class="inner"><b>&lt;0.001% of dry weight</b><span>Contributes to cholinergic symptoms such as increased salivation, lacrimation, and diarrhe</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Muscine</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscine</b><br>Содержание: unknown<br>Влияние: A GABA antagonist that may modulate the effects of muscimol.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A GABA antagonist that may modulate the effects of muscimol.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscine</b><br>Содержание: 0.04-0.1 % of dry weight<br>Влияние: A peptide that contributes to the hallucinogenic effects of the mushroom.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.04-0.1 % of dry weight</b><span>A peptide that contributes to the hallucinogenic effects of the mushroom.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Amanitulin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanitulin</b><br>Содержание: 0.001-0.004% of dry weight<br>Влияние: A sterol that has been reported to possess psychoactive properties similar to other triterpenoids.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.001-0.004% of dry weight</b><span>A sterol that has been reported to possess psychoactive properties similar to other triter</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Beta-brucin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-brucin</b><br>Содержание: Unknown<br>Влияние: Acts as a weak GABA-A receptor modulator with psychoactive properties.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Acts as a weak GABA-A receptor modulator with psychoactive properties.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Flyagaric acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Flyagaric acid</b><br>Содержание: 0.002-0.005% of dry weight<br>Влияние: A triterpene alcohol that may contribute to the overall toxic and psychoactive profile of the mushroom.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.002-0.005% of dry weight</b><span>A triterpene alcohol that may contribute to the overall toxic and psychoactive profile of </span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Muscicarpic acid</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscicarpic acid</b><br>Содержание: Unknown mg/kg<br>Влияние: Related to ibotenic acid and may contribute to neurotoxic effects.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>Unknown mg/kg</b><span>Related to ibotenic acid and may contribute to neurotoxic effects.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Muscigone</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscigone</b><br>Содержание: Trace amounts (mg/kg)<br>Влияние: Contributes to the intoxicating effects and potential hallucinogenic properties.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Trace amounts (mg/kg)</b><span>Contributes to the intoxicating effects and potential hallucinogenic properties.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Muscipine</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscipine</b><br>Содержание: unknown<br>Влияние: A peptide found in fly agaric that may contribute to the psychoactive response.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A peptide found in fly agaric that may contribute to the psychoactive response.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Probatine</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Probatine</b><br>Содержание: Unknown mg/kg<br>Влияние: Neurotoxic compound that inhibits cholinesterase and may enhance toxicity.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>Unknown mg/kg</b><span>Neurotoxic compound that inhibits cholinesterase and may enhance toxicity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Sclerocystin</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Sclerocystin</b><br>Содержание: 0.1-0.4 % of dry weight<br>Влияние: A cyclic peptide with psychoactive properties contributing to the overall toxicological profile.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-0.4 % of dry weight</b><span>A cyclic peptide with psychoactive properties contributing to the overall toxicological pr</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">ibotenic acid</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscimol</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscazone</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Panther cap <span class="latin">(Amanita pantherina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>45%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>18</b></div>
+  <div class="chip">Галлюцинации: <b>44%</b> (8 из 18 вердиктов)</div>
+  <div class="chip">реальных <b>10</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Ibotenic acid</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 1-5 mg/g dry weight<br>Влияние: A non-selective glutamate receptor agonist that can cause confusion, delirium, and ataxia.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>1-5 mg/g dry weight</b><span>A non-selective glutamate receptor agonist that can cause confusion, delirium, and ataxia.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 3.3 mg/g dry weight<br>Влияние: Acts as a potent neurotoxin causing confusion, hallucinations, and agitation.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>3.3 mg/g dry weight</b><span>Acts as a potent neurotoxin causing confusion, hallucinations, and agitation.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.034 - 0.045 % of dry weight<br>Влияние: Acts as a potent agonist for glutamate receptors, causing confusion, dizziness, and hallucinations.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>0.034 - 0.045 % of dry weight</b><span>Acts as a potent agonist for glutamate receptors, causing confusion, dizziness, and halluc</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.1-0.4% dry weight<br>Влияние: Acts as a glutamate agonist causing seizures, delirium, and neurotoxicity.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-0.4% dry weight</b><span>Acts as a glutamate agonist causing seizures, delirium, and neurotoxicity.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.1-0.5% of dry weight<br>Влияние: Acts as a glutamate receptor agonist, causing confusion, hallucinations, and potentially fatal respiratory failure.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.1-0.5% of dry weight</b><span>Acts as a glutamate receptor agonist, causing confusion, hallucinations, and potentially f</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Muscimol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 10-30 mg/g dry weight<br>Влияние: A GABA-A receptor agonist that induces sedation, mydriasis, and potential seizures or convulsions.<br>Судья: реальное · концентрация завышена · влияние частично<br></div><div class="inner"><b>10-30 mg/g dry weight</b><span>A GABA-A receptor agonist that induces sedation, mydriasis, and potential seizures or conv</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.3 mg/g dry weight<br>Влияние: Functions as a GABA-A receptor agonist leading to sedation and convulsions.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.3 mg/g dry weight</b><span>Functions as a GABA-A receptor agonist leading to sedation and convulsions.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.15 - 0.18 % of dry weight<br>Влияние: Binds to GABA-A receptors, producing sedation, muscle twitching, and nausea.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.15 - 0.18 % of dry weight</b><span>Binds to GABA-A receptors, producing sedation, muscle twitching, and nausea.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 0.1-1.0% dry weight<br>Влияние: Binds to GABA-A receptors inducing sedation, hypnosis, and CNS depression.<br>Судья: реальное · концентрация завышена · влияние верно<br></div><div class="inner"><b>0.1-1.0% dry weight</b><span>Binds to GABA-A receptors inducing sedation, hypnosis, and CNS depression.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: 1-2% of dry weight<br>Влияние: An agonist of GABA-A receptors that induces sedation, convulsions, and neurological disturbances.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>1-2% of dry weight</b><span>An agonist of GABA-A receptors that induces sedation, convulsions, and neurological distur</span></div></td><td class="freq">5/5</td></tr><tr><td class="name">Muscine</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscine</b><br>Содержание: Unknown<br>Влияние: A minor neuroactive amino acid that may contribute to the toxic effects, though its specific mechanism is less defined.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A minor neuroactive amino acid that may contribute to the toxic effects, though its specif</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscine</b><br>Содержание: unknown<br>Влияние: A neurotoxic alkaloid that affects the central nervous system, often co-occurring with ibotenic acid.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A neurotoxic alkaloid that affects the central nervous system, often co-occurring with ibo</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Carbohydrates</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: 30 - 35 % of dry weight<br>Влияние: Serves as a source of energy, primarily in the form of polysaccharides like chitin.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>30 - 35 % of dry weight</b><span>Serves as a source of energy, primarily in the form of polysaccharides like chitin.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Ibotenine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenine</b><br>Содержание: 0.1-0.4% dry weight<br>Влияние: An isomer of ibotenic acid that also acts as a glutamate agonist causing neurotoxic effects.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-0.4% dry weight</b><span>An isomer of ibotenic acid that also acts as a glutamate agonist causing neurotoxic effect</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Panterin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Panterin</b><br>Содержание: 0.1-0.5% dry weight<br>Влияние: Inhibits acetylcholinesterase and may contribute to cholinergic symptoms like vomiting and salivation.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-0.5% dry weight</b><span>Inhibits acetylcholinesterase and may contribute to cholinergic symptoms like vomiting and</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Pantheramine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Pantheramine</b><br>Содержание: unknown<br>Влияние: A toxic alkaloid associated with the species, contributing to its overall neurotoxic profile.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A toxic alkaloid associated with the species, contributing to its overall neurotoxic profi</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Pantherine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Pantherine</b><br>Содержание: 0.1-1.0% dry weight<br>Влияние: Acts as a GABA-A receptor positive allosteric modulator contributing to sedative and hallucinogenic effects.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-1.0% dry weight</b><span>Acts as a GABA-A receptor positive allosteric modulator contributing to sedative and hallu</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Protein</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 30 - 40 % of dry weight<br>Влияние: Provides essential amino acids for nutritional value, though high amounts can be difficult to digest.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>30 - 40 % of dry weight</b><span>Provides essential amino acids for nutritional value, though high amounts can be difficult</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">ibotenic acid</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscimol</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscazone</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Death cap <span class="latin">(Amanita phalloides)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.6 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>16%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>30%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>23</b></div>
+  <div class="chip">Галлюцинации: <b>39%</b> (9 из 23 вердиктов)</div>
+  <div class="chip">реальных <b>14</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Phalloidin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: 0.1-0.5 mg/g dry weight<br>Влияние: Binds to actin filaments, disrupting cytoskeletal integrity and cell function.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.1-0.5 mg/g dry weight</b><span>Binds to actin filaments, disrupting cytoskeletal integrity and cell function.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>phalloidin</b><br>Содержание: 0.1 - 0.5 mg per fruiting body<br>Влияние: Disrupts the actin cytoskeleton, leading to cell membrane damage and vascular collapse.<br>Судья: реальное · концентрация занижена · влияние частично<br></div><div class="inner"><b>0.1 - 0.5 mg per fruiting body</b><span>Disrupts the actin cytoskeleton, leading to cell membrane damage and vascular collapse.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>phalloidin</b><br>Содержание: 0.01-0.5% of dry weight<br>Влияние: Disrupts actin filaments in cell membranes, leading to cell dysfunction.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.01-0.5% of dry weight</b><span>Disrupts actin filaments in cell membranes, leading to cell dysfunction.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: 0.04% of dry weight<br>Влияние: Disrupts actin filaments in cells, leading to gastrointestinal distress and muscle necrosis.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>0.04% of dry weight</b><span>Disrupts actin filaments in cells, leading to gastrointestinal distress and muscle necrosi</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">virotoxin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Virotoxin</b><br>Содержание: Unknown<br>Влияние: Contributes to the toxic amatoxin complex, affecting cellular integrity.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Contributes to the toxic amatoxin complex, affecting cellular integrity.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>virotoxin</b><br>Содержание: unknown<br>Влияние: Contributes to the acute toxicity associated with amatoxin poisoning.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Contributes to the acute toxicity associated with amatoxin poisoning.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>virotoxin</b><br>Содержание: 0.01-0.03% of dry weight<br>Влияние: Participates in the toxin complex causing fatal organ failure.<br>Судья: реальное · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>0.01-0.03% of dry weight</b><span>Participates in the toxin complex causing fatal organ failure.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">alpha-amanitin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>alpha-amanitin</b><br>Содержание: 0.1 - 2 mg per fruiting body<br>Влияние: Inhibits RNA polymerase II, leading to severe hepatic and renal failure.<br>Судья: реальное · концентрация занижена · влияние верно<br></div><div class="inner"><b>0.1 - 2 mg per fruiting body</b><span>Inhibits RNA polymerase II, leading to severe hepatic and renal failure.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>alpha-amanitin</b><br>Содержание: 0.04-0.06% of dry weight<br>Влияние: Causes acute liver and kidney failure by inhibiting RNA polymerase II.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.04-0.06% of dry weight</b><span>Causes acute liver and kidney failure by inhibiting RNA polymerase II.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Amatoxin (Alpha-amanitin)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Amatoxin (Alpha-amanitin)</b><br>Содержание: 0.1-1.5 mg/g dry weight<br>Влияние: Inhibits RNA polymerase II, causing lethal liver and kidney failure.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1-1.5 mg/g dry weight</b><span>Inhibits RNA polymerase II, causing lethal liver and kidney failure.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>amatoxin (alpha-amanitin)</b><br>Содержание: 0.1-1.0% of dry weight<br>Влияние: Inhibits RNA polymerase II, causing fatal liver and kidney failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>0.1-1.0% of dry weight</b><span>Inhibits RNA polymerase II, causing fatal liver and kidney failure.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">beta-amanitin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>beta-amanitin</b><br>Содержание: 0.05 - 1 mg per fruiting body<br>Влияние: Inhibits RNA polymerase II and contributes to cellular damage in the liver and kidneys.<br>Судья: реальное · концентрация занижена · влияние частично<br></div><div class="inner"><b>0.05 - 1 mg per fruiting body</b><span>Inhibits RNA polymerase II and contributes to cellular damage in the liver and kidneys.</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>beta-amanitin</b><br>Содержание: 0.01-0.02% of dry weight<br>Влияние: Contributes to hepatotoxicity and neurotoxicity by interfering with RNA synthesis.<br>Судья: реальное · концентрация в норме · влияние частично<br></div><div class="inner"><b>0.01-0.02% of dry weight</b><span>Contributes to hepatotoxicity and neurotoxicity by interfering with RNA synthesis.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">amafitoxin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>amafitoxin</b><br>Содержание: 0.03-0.05% of dry weight<br>Влияние: Acts synergistically with amanita toxins to cause severe gastrointestinal and hepatic damage.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.03-0.05% of dry weight</b><span>Acts synergistically with amanita toxins to cause severe gastrointestinal and hepatic dama</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Amanitin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Amanitin</b><br>Содержание: 0.1% of dry weight<br>Влияние: Inhibits RNA polymerase II, causing severe liver and kidney failure.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>0.1% of dry weight</b><span>Inhibits RNA polymerase II, causing severe liver and kidney failure.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Carbohydrates (Polysaccharides)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates (Polysaccharides)</b><br>Содержание: ~10-20% of dry weight<br>Влияние: Generally non-toxic, providing structural support to the mushroom.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~10-20% of dry weight</b><span>Generally non-toxic, providing structural support to the mushroom.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">deoxyphallotoxin</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>deoxyphallotoxin</b><br>Содержание: 0.05 - 0.3 mg per fruiting body<br>Влияние: Binds to F-actin and disrupts cellular integrity.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.05 - 0.3 mg per fruiting body</b><span>Binds to F-actin and disrupts cellular integrity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">epi-amaurotin</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>epi-amaurotin</b><br>Содержание: 0.1 - 1 mg per fruiting body<br>Влияние: Potent inhibitor of RNA polymerase II causing systemic toxicity.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1 - 1 mg per fruiting body</b><span>Potent inhibitor of RNA polymerase II causing systemic toxicity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Fallo-toxin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Fallo-toxin</b><br>Содержание: Unknown<br>Влияние: Part of the amatoxin group, contributing to systemic toxicity.<br>Судья: галлюцинация · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Part of the amatoxin group, contributing to systemic toxicity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">fallotoxin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>fallotoxin</b><br>Содержание: 0.01-0.02% of dry weight<br>Влияние: Inhibits RNA polymerase II, leading to cell death in target organs.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>0.01-0.02% of dry weight</b><span>Inhibits RNA polymerase II, leading to cell death in target organs.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Orellanine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Orellanine</b><br>Содержание: unknown<br>Влияние: Inhibits protein synthesis in eukaryotic cells, potentially contributing to cellular damage.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Inhibits protein synthesis in eukaryotic cells, potentially contributing to cellular damag</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Vestal toxin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Vestal toxin</b><br>Содержание: 0.04% of dry weight<br>Влияние: Exhibits toxicity similar to phalloidin by affecting cytoskeletal dynamics.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.04% of dry weight</b><span>Exhibits toxicity similar to phalloidin by affecting cytoskeletal dynamics.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Water</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: ~90% of fresh weight<br>Влияние: No direct toxic effect, but serves as the medium for toxin absorption.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~90% of fresh weight</b><span>No direct toxic effect, but serves as the medium for toxin absorption.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">α-amanitin (chief amatoxin)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-amanitin</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">γ-amanitin</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td></tr><tr><td class="name">phalloidin</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>False death cap <span class="latin">(Amanita citrina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>1.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>7%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>0%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>20</b></div>
+  <div class="chip">Галлюцинации: <b>80%</b> (16 из 20 вердиктов)</div>
+  <div class="chip">реальных <b>0</b> · спорных <b>4</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Amatoxins (specifically alpha-amanitin, beta-amanitin, gamma-amanitin, and epsilo-amanitin)</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Amatoxins (specifically alpha-amanitin, beta-amanitin, gamma-amanitin, and epsilo-amanitin)</b><br>Содержание: 2-5 mg per fresh fruiting body<br>Влияние: These toxins inhibit RNA polymerase II, causing severe liver and kidney failure, and are often fatal if untreated.<br>Судья: спорно · концентрация завышена · влияние неверно<br></div><div class="inner"><b>2-5 mg per fresh fruiting body</b><span>These toxins inhibit RNA polymerase II, causing severe liver and kidney failure, and are o</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Amatoxins</b><br>Содержание: 1-4 mg per fruiting body<br>Влияние: Inhibit protein synthesis in the liver and kidneys, causing severe organ failure and death.<br>Судья: спорно · концентрация завышена · влияние частично<br></div><div class="inner"><b>1-4 mg per fruiting body</b><span>Inhibit protein synthesis in the liver and kidneys, causing severe organ failure and death</span></div></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Amatoxins (specifically alpha-amanitin and beta-amanitin)</b><br>Содержание: 10-200 mg/kg dry weight<br>Влияние: Inhibits RNA polymerase II, leading to massive liver and kidney failure.<br>Судья: спорно · концентрация завышена · влияние частично<br></div><div class="inner"><b>10-200 mg/kg dry weight</b><span>Inhibits RNA polymerase II, leading to massive liver and kidney failure.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Proteins</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 5-10% of dry weight<br>Влияние: Generally non-toxic on their own but may trigger allergic reactions in sensitive individuals.<br>Судья: галлюцинация · концентрация в норме · влияние нет данных<br></div><div class="inner"><b>5-10% of dry weight</b><span>Generally non-toxic on their own but may trigger allergic reactions in sensitive individua</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: unknown<br>Влияние: Serves as a structural and functional component of the mushroom tissue.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Serves as a structural and functional component of the mushroom tissue.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Water</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: 70-90% of fresh weight<br>Влияние: No direct toxic or therapeutic effect, but contributes to the physical bulk.<br>Судья: галлюцинация · концентрация в норме · влияние верно<br></div><div class="inner"><b>70-90% of fresh weight</b><span>No direct toxic or therapeutic effect, but contributes to the physical bulk.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: ~70-80% fresh weight<br>Влияние: Serves as the primary solvent and medium for transport of metabolites in the body.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~70-80% fresh weight</b><span>Serves as the primary solvent and medium for transport of metabolites in the body.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Alpha-amanitin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Alpha-amanitin</b><br>Содержание: unknown<br>Влияние: Potent inhibitor of RNA polymerase II causing multi-organ failure and death.<br>Судья: спорно · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Potent inhibitor of RNA polymerase II causing multi-organ failure and death.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Beta-amanitin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-amanitin</b><br>Содержание: unknown<br>Влияние: Inhibits DNA and RNA synthesis leading to cellular damage.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Inhibits DNA and RNA synthesis leading to cellular damage.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Cytotoxic protein</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Cytotoxic protein</b><br>Содержание: Trace to undetectable in standard tests<br>Влияние: Note: While A. citrina was historically linked to amatoxin, it is now widely accepted as non-amatoxicin, but individual toxicity can vary; this entry reflects the primary psychoactive toxins present.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Trace to undetectable in standard tests</b><span>Note: While A. citrina was historically linked to amatoxin, it is now widely accepted as n</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Guanine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Guanine</b><br>Содержание: unknown<br>Влияние: Binds to RNA polymerase II and inhibits its activity.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Binds to RNA polymerase II and inhibits its activity.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Ibotenic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 2.5-10.0 mg/g dry weight<br>Влияние: Acts as a non-selective excitatory amino acid agonist causing central nervous system symptoms like confusion and tremors.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.5-10.0 mg/g dry weight</b><span>Acts as a non-selective excitatory amino acid agonist causing central nervous system sympt</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Isovitamine B12</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Isovitamine B12</b><br>Содержание: unknown<br>Влияние: A structural analog of Vitamin B12 that competes for absorption but is biologically inactive or harmful.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A structural analog of Vitamin B12 that competes for absorption but is biologically inacti</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Lipids</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Lipids</b><br>Содержание: unknown<br>Влияние: Forms cell membranes and stores energy within the mushroom.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Forms cell membranes and stores energy within the mushroom.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Muscimol</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscimol</b><br>Содержание: 2.0-23.0 mg/g dry weight<br>Влияние: Functions as a GABA-A receptor agonist inducing sedation, delirium, and potential seizures.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.0-23.0 mg/g dry weight</b><span>Functions as a GABA-A receptor agonist inducing sedation, delirium, and potential seizures</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Mushroom peptide (Amanicin)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mushroom peptide (Amanicin)</b><br>Содержание: Unknown<br>Влияние: A large molecular weight peptide found in Amanita species, with limited data on its specific acute toxicological effect compared to amatoxins.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A large molecular weight peptide found in Amanita species, with limited data on its specif</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Polysaccharides</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Polysaccharides</b><br>Содержание: 5-15% of dry weight<br>Влияние: Structural components with no significant direct pharmacological effect.<br>Судья: галлюцинация · концентрация в норме · влияние нет данных<br></div><div class="inner"><b>5-15% of dry weight</b><span>Structural components with no significant direct pharmacological effect.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Vermotoxins (specifically alpha- and beta-vermotoxin)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Vermotoxins (specifically alpha- and beta-vermotoxin)</b><br>Содержание: Trace amounts (mg/kg dry weight)<br>Влияние: These cyclic peptides are neurotoxic and can cause gastrointestinal and neuromuscular symptoms.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Trace amounts (mg/kg dry weight)</b><span>These cyclic peptides are neurotoxic and can cause gastrointestinal and neuromuscular symp</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Vicine</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Vicine</b><br>Содержание: unknown<br>Влияние: A hemolytic agent that causes breakdown of red blood cells and anemia.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A hemolytic agent that causes breakdown of red blood cells and anemia.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Virotoxin (beta-amanitin)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Virotoxin (beta-amanitin)</b><br>Содержание: Included in total amatoxin range<br>Влияние: Potent inhibitor of RNA synthesis in human cells.<br>Судья: галлюцинация · концентрация завышена · влияние частично<br></div><div class="inner"><b>Included in total amatoxin range</b><span>Potent inhibitor of RNA synthesis in human cells.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">bufotenin (5-hydroxy-N,N-dimethyltryptamine)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">bufotenin N-oxide</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Blusher <span class="latin">(Amanita rubescens)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>0.8 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>20%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>0%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>24</b></div>
+  <div class="chip">Галлюцинации: <b>92%</b> (22 из 24 вердиктов)</div>
+  <div class="chip">реальных <b>1</b> · спорных <b>1</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Amanitine</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanitine</b><br>Содержание: trace or undetectable<br>Влияние: Inhibits RNA polymerase II, leading to severe liver and kidney damage if present in significant quantities.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>trace or undetectable</b><span>Inhibits RNA polymerase II, leading to severe liver and kidney damage if present in signif</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanitine</b><br>Содержание: 0 mg/kg<br>Влияние: Absent in this species, so it does not contribute to the specific neurotoxic or hepatotoxic effects associated with other deadly Amanitas.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0 mg/kg</b><span>Absent in this species, so it does not contribute to the specific neurotoxic or hepatotoxi</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanitine</b><br>Содержание: unknown<br>Влияние: Inhibits RNA polymerase II, leading to liver and kidney failure, which can be fatal.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Inhibits RNA polymerase II, leading to liver and kidney failure, which can be fatal.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Carbohydrates</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: ~30-40% of dry weight<br>Влияние: Serves as an energy source for humans after the mushroom is properly prepared.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~30-40% of dry weight</b><span>Serves as an energy source for humans after the mushroom is properly prepared.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: 10-20 % of dry weight<br>Влияние: Primary source of energy when cooked and digested.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>10-20 % of dry weight</b><span>Primary source of energy when cooked and digested.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: unknown<br>Влияние: Serve as a source of energy for the human body.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Serve as a source of energy for the human body.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Ibotenic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: Acts as a potent glutamate receptor agonist that can trigger seizures and hallucinations.<br>Судья: галлюцинация · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>Acts as a potent glutamate receptor agonist that can trigger seizures and hallucinations.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic Acid</b><br>Содержание: unknown<br>Влияние: A glutamate agonist that may contribute to neuromuscular symptoms if consumed.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A glutamate agonist that may contribute to neuromuscular symptoms if consumed.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: Excitotoxin that causes neurological symptoms such as confusion, hallucinations, and seizures.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Excitotoxin that causes neurological symptoms such as confusion, hallucinations, and seizu</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Muscimol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: Functions as a GABA-A receptor agonist, producing sedation and CNS depression.<br>Судья: галлюцинация · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>Functions as a GABA-A receptor agonist, producing sedation and CNS depression.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: A GABA agonist that can cause confusion, dizziness, or mild hallucinations in sensitive individuals.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A GABA agonist that can cause confusion, dizziness, or mild hallucinations in sensitive in</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: GABAergic agonist that acts as a sedative and can cause drowsiness and muscle spasms.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>GABAergic agonist that acts as a sedative and can cause drowsiness and muscle spasms.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Protein</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: ~25-30% of dry weight<br>Влияние: Provides nutritional value but requires proper cooking to denature certain proteins and mitigate toxicity.<br>Судья: галлюцинация · концентрация нет данных · влияние частично<br></div><div class="inner"><b>~25-30% of dry weight</b><span>Provides nutritional value but requires proper cooking to denature certain proteins and mi</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 2.0-3.5 % of dry weight<br>Влияние: Provides essential amino acids for nutritional value.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.0-3.5 % of dry weight</b><span>Provides essential amino acids for nutritional value.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Water</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: ~85-90% of fresh weight<br>Влияние: The primary constituent by mass in fresh fruiting bodies, contributing to texture and volume.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~85-90% of fresh weight</b><span>The primary constituent by mass in fresh fruiting bodies, contributing to texture and volu</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: 80-85 % of fresh weight<br>Влияние: Main constituent providing bulk and texture.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>80-85 % of fresh weight</b><span>Main constituent providing bulk and texture.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Amanin A</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanin A</b><br>Содержание: unknown<br>Влияние: An amatoxin-like compound (though distinct from alpha-amanitin) contributing to the species&#x27; mild to moderate toxicity.<br>Судья: галлюцинация · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>An amatoxin-like compound (though distinct from alpha-amanitin) contributing to the specie</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Amanitacin A</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Amanitacin A</b><br>Содержание: unknown<br>Влияние: A triterpenoid that causes gastrointestinal distress and is a hallmark of toxic Amanita species.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>A triterpenoid that causes gastrointestinal distress and is a hallmark of toxic Amanita sp</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Fiber (Cellulose/Chitin)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Fiber (Cellulose/Chitin)</b><br>Содержание: 1.0-2.0 % of dry weight<br>Влияние: Aids in digestion but is largely indigestible to humans.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>1.0-2.0 % of dry weight</b><span>Aids in digestion but is largely indigestible to humans.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Hydrazine</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Hydrazine</b><br>Содержание: variable mg/g<br>Влияние: A toxic hydrazine derivative that can cause hemolysis and liver damage if consumed in significant quantities.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>variable mg/g</b><span>A toxic hydrazine derivative that can cause hemolysis and liver damage if consumed in sign</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Hypholomaic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Hypholomaic acid</b><br>Содержание: unknown<br>Влияние: Non-toxic organic acid present in the mushroom.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Non-toxic organic acid present in the mushroom.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Muscarine</td><td class="cell " style="background:#e8b64c"><div class="tip"><b>Muscarine</b><br>Содержание: unknown<br>Влияние: Causes excessive salivation, sweating, and vomiting by overstimulating cholinergic receptors.<br>Судья: спорно · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>Causes excessive salivation, sweating, and vomiting by overstimulating cholinergic recepto</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Proteins</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Proteins</b><br>Содержание: unknown<br>Влияние: Provide essential amino acids and nutritional value when properly prepared, though toxicity risks remain.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>Provide essential amino acids and nutritional value when properly prepared, though toxicit</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Rubescein</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Rubescein</b><br>Содержание: unknown<br>Влияние: Pigment responsible for the reddish coloration when bruised.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Pigment responsible for the reddish coloration when bruised.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">hemolytic protein (rubescenslysin)</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Caesar&#x27;s mushroom <span class="latin">(Amanita caesarea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>1.2 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>15%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>0%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>28</b></div>
+  <div class="chip">Галлюцинации: <b>93%</b> (26 из 28 вердиктов)</div>
+  <div class="chip">реальных <b>2</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Protein</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 2.6-3.0 % of fresh weight<br>Влияние: Provides essential amino acids for human nutrition and tissue repair.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.6-3.0 % of fresh weight</b><span>Provides essential amino acids for human nutrition and tissue repair.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 3-5% of dry weight<br>Влияние: Provides essential amino acids and nutritional value.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>3-5% of dry weight</b><span>Provides essential amino acids and nutritional value.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 2.3-3.7 %<br>Влияние: Provides amino acids for muscle repair and growth.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.3-3.7 %</b><span>Provides amino acids for muscle repair and growth.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 12-14% of dry weight<br>Влияние: Provides essential amino acids for human nutrition and muscle repair.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>12-14% of dry weight</b><span>Provides essential amino acids for human nutrition and muscle repair.</span></div></td><td class="freq">4/5</td></tr><tr><td class="name">Ergothioneine</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergothioneine</b><br>Содержание: 1-2 mg/g of dry weight<br>Влияние: Acts as an antioxidant that helps protect cells from oxidative stress.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>1-2 mg/g of dry weight</b><span>Acts as an antioxidant that helps protect cells from oxidative stress.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergothioneine</b><br>Содержание: 5-15 mg/kg<br>Влияние: Antioxidant that helps protect cells from oxidative stress and may reduce inflammation.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>5-15 mg/kg</b><span>Antioxidant that helps protect cells from oxidative stress and may reduce inflammation.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergothioneine</b><br>Содержание: unknown<br>Влияние: Acts as an antioxidant to protect cells from oxidative stress.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Acts as an antioxidant to protect cells from oxidative stress.</span></div></td><td class="cell na"></td><td class="freq">3/5</td></tr><tr><td class="name">Beta-glucans</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: Variable (typically 20-40% of total polysaccharides)<br>Влияние: Known to support the human immune system.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Variable (typically 20-40% of total polysaccharides)</b><span>Known to support the human immune system.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: May support the immune system.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>May support the immune system.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Carbohydrates (Glucose, Fructose, Sucrose)</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates (Glucose, Fructose, Sucrose)</b><br>Содержание: 10-20% of dry weight<br>Влияние: Serves as an immediate energy source.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>10-20% of dry weight</b><span>Serves as an immediate energy source.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: 2.5-5.6 %<br>Влияние: Serves as an immediate source of energy.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2.5-5.6 %</b><span>Serves as an immediate source of energy.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Chitin</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: 10-30% of dry weight<br>Влияние: Structural component of the cell wall; indigestible by humans but acts as dietary fiber.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>10-30% of dry weight</b><span>Structural component of the cell wall; indigestible by humans but acts as dietary fiber.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: 15-20% of dry weight<br>Влияние: Structural polysaccharide that aids in human gut microbiome regulation.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>15-20% of dry weight</b><span>Structural polysaccharide that aids in human gut microbiome regulation.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Lipids</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Lipids</b><br>Содержание: 1.5-2.5 % of dry weight<br>Влияние: Contributes to energy metabolism, though some specific lipids may interfere with absorption of other nutrients.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>1.5-2.5 % of dry weight</b><span>Contributes to energy metabolism, though some specific lipids may interfere with absorptio</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Lipids</b><br>Содержание: 1-2% of dry weight<br>Влияние: Contributes to energy storage and cell membrane structure.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>1-2% of dry weight</b><span>Contributes to energy storage and cell membrane structure.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Alanine</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Alanine</b><br>Содержание: 10-12% of total amino acids<br>Влияние: An amino acid involved in the transport of nitrogen and glucose.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>10-12% of total amino acids</b><span>An amino acid involved in the transport of nitrogen and glucose.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Caffeine</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Caffeine</b><br>Содержание: Unknown (trace levels)<br>Влияние: Acts as a mild central nervous system stimulant.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Unknown (trace levels)</b><span>Acts as a mild central nervous system stimulant.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Ergosterol</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ergosterol</b><br>Содержание: 100-200 mg/kg fresh weight<br>Влияние: A precursor to Vitamin D2 which supports bone health.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>100-200 mg/kg fresh weight</b><span>A precursor to Vitamin D2 which supports bone health.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Fructose and Glucose</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Fructose and Glucose</b><br>Содержание: 3-5 % of fresh weight<br>Влияние: Provides a source of quick energy and contributes to the mild flavor profile.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>3-5 % of fresh weight</b><span>Provides a source of quick energy and contributes to the mild flavor profile.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Glutamic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Glutamic acid</b><br>Содержание: 8-10% of total amino acids<br>Влияние: Contributes to the umami taste and supports neurotransmission.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>8-10% of total amino acids</b><span>Contributes to the umami taste and supports neurotransmission.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Ibotenic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic acid</b><br>Содержание: Trace or unknown (lower than in toxic Amanita species)<br>Влияние: Can cause neurotoxicity if present in significant quantities.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>Trace or unknown (lower than in toxic Amanita species)</b><span>Can cause neurotoxicity if present in significant quantities.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Mannitol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: 1-2 % of dry weight<br>Влияние: Functions as a humectant and has mild osmotic effects in the human body.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>1-2 % of dry weight</b><span>Functions as a humectant and has mild osmotic effects in the human body.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Polysaccharides</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Polysaccharides</b><br>Содержание: 2-5% of dry weight<br>Влияние: May have immunomodulatory effects and contribute to gut health.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2-5% of dry weight</b><span>May have immunomodulatory effects and contribute to gut health.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Proteins</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 5-10% of dry weight<br>Влияние: Provides amino acids essential for human nutritional needs.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>5-10% of dry weight</b><span>Provides amino acids essential for human nutritional needs.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Sterols (Ergosterol)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Sterols (Ergosterol)</b><br>Содержание: Approx. 1-2% of dry weight<br>Влияние: Functions as a vitamin D precursor in the skin upon exposure to sunlight.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>Approx. 1-2% of dry weight</b><span>Functions as a vitamin D precursor in the skin upon exposure to sunlight.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Trehalose</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: 5-7% of dry weight<br>Влияние: Serves as a primary energy source and storage carbohydrate.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>5-7% of dry weight</b><span>Serves as a primary energy source and storage carbohydrate.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Vitamins (B1, B2, C, D, E)</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Vitamins (B1, B2, C, D, E)</b><br>Содержание: unknown<br>Влияние: Supports various metabolic processes and immune function.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Supports various metabolic processes and immune function.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Water</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: ~90% of fresh weight<br>Влияние: Acts as the primary solvent for nutrients and metabolites.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>~90% of fresh weight</b><span>Acts as the primary solvent for nutrients and metabolites.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">malic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ascorbic acid (vitamin C)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark no">—</td></tr><tr><td class="name">citric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ketoglutaric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">fumaric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">shikimic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">succinic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ergosterol (provitamin D2)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Destroying angel <span class="latin">(Amanita virosa)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>4.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>16%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>21%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>21</b></div>
+  <div class="chip">Галлюцинации: <b>48%</b> (10 из 21 вердиктов)</div>
+  <div class="chip">реальных <b>11</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Alpha-amanitin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Alpha-amanitin</b><br>Содержание: 10 mg/kg dry weight<br>Влияние: A potent toxin that inhibits RNA polymerase II, leading to cellular death and acute liver failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>10 mg/kg dry weight</b><span>A potent toxin that inhibits RNA polymerase II, leading to cellular death and acute liver </span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>alpha-amanitin</b><br>Содержание: 2 mg/g<br>Влияние: Inhibits RNA polymerase II, causing severe liver and kidney failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>2 mg/g</b><span>Inhibits RNA polymerase II, causing severe liver and kidney failure.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Alpha-amanitin</b><br>Содержание: 2-5 mg/g dry weight<br>Влияние: Causes fatal liver and kidney failure by inhibiting RNA polymerase II.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>2-5 mg/g dry weight</b><span>Causes fatal liver and kidney failure by inhibiting RNA polymerase II.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Beta-amanitin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-amanitin</b><br>Содержание: 1 mg/kg dry weight<br>Влияние: Contributes to the hepatotoxic and nephrotoxic effects by inhibiting cellular transcription.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>1 mg/kg dry weight</b><span>Contributes to the hepatotoxic and nephrotoxic effects by inhibiting cellular transcriptio</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>beta-amanitin</b><br>Содержание: 1 mg/g<br>Влияние: Exerts similar toxic effects on cellular protein synthesis.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>1 mg/g</b><span>Exerts similar toxic effects on cellular protein synthesis.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-amanitin</b><br>Содержание: 1-2 mg/g dry weight<br>Влияние: Inhibits RNA synthesis and contributes to acute toxicity.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>1-2 mg/g dry weight</b><span>Inhibits RNA synthesis and contributes to acute toxicity.</span></div></td><td class="freq">3/5</td></tr><tr><td class="name">Gamma-amanitin</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Gamma-amanitin</b><br>Содержание: 0.1 mg/kg dry weight<br>Влияние: Assists in the toxic mechanism of inhibiting DNA and RNA synthesis in human cells.<br>Судья: галлюцинация · концентрация нет данных · влияние частично<br></div><div class="inner"><b>0.1 mg/kg dry weight</b><span>Assists in the toxic mechanism of inhibiting DNA and RNA synthesis in human cells.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Gamma-amanitin</b><br>Содержание: 0.1-0.5 mg/g dry weight<br>Влияние: Acts as an RNA polymerase inhibitor with moderate toxicity.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-0.5 mg/g dry weight</b><span>Acts as an RNA polymerase inhibitor with moderate toxicity.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Phalloidin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: trace amounts<br>Влияние: Destabilizes actin filaments in cells, contributing to toxicity.<br>Судья: реальное · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>trace amounts</b><span>Destabilizes actin filaments in cells, contributing to toxicity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>phalloidin</b><br>Содержание: trace<br>Влияние: Disrupts the actin cytoskeleton in cells.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>trace</b><span>Disrupts the actin cytoskeleton in cells.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Amatoxin (α-amanitin)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Amatoxin (α-amanitin)</b><br>Содержание: 0.06-0.16% dry weight<br>Влияние: Inhibits RNA polymerase II, causing lethal liver and kidney failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>0.06-0.16% dry weight</b><span>Inhibits RNA polymerase II, causing lethal liver and kidney failure.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Amatoxins (specifically α-amanitin and β-amanitin)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Amatoxins (specifically α-amanitin and β-amanitin)</b><br>Содержание: 0.1-0.7% of dry weight<br>Влияние: Causes severe liver and kidney failure and is often fatal by inhibiting RNA polymerase II.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>0.1-0.7% of dry weight</b><span>Causes severe liver and kidney failure and is often fatal by inhibiting RNA polymerase II.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Carbohydrates</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: 40-60% dry weight<br>Влияние: Serves as an energy source and structural polysaccharide.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>40-60% dry weight</b><span>Serves as an energy source and structural polysaccharide.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">epi-alpha-amanitin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>epi-alpha-amanitin</b><br>Содержание: 0.1 mg/g<br>Влияние: Contributes to the overall cytotoxicity of the mushroom.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1 mg/g</b><span>Contributes to the overall cytotoxicity of the mushroom.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Hagrin</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Hagrin</b><br>Содержание: 50-150 mg/g dry weight<br>Влияние: Acts as a neurotoxin causing gastrointestinal distress and potentially contributing to systemic toxicity.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>50-150 mg/g dry weight</b><span>Acts as a neurotoxin causing gastrointestinal distress and potentially contributing to sys</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Ibotenic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ibotenic acid</b><br>Содержание: 0.1-0.5% of dry weight<br>Влияние: Causes gastrointestinal symptoms and neurological effects such as delirium and convulsions.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>0.1-0.5% of dry weight</b><span>Causes gastrointestinal symptoms and neurological effects such as delirium and convulsions</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Muscimol</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Muscimol</b><br>Содержание: 0.5-2.0% of dry weight<br>Влияние: Produces hallucinations, drowsiness, and sedation by acting as an agonist at GABA-A receptors.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>0.5-2.0% of dry weight</b><span>Produces hallucinations, drowsiness, and sedation by acting as an agonist at GABA-A recept</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Phallotoxins (phalloidin)</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phallotoxins (phalloidin)</b><br>Содержание: 1-2 mg/g dry weight<br>Влияние: Disrupts actin filaments in cells, leading to gastrointestinal distress and liver damage.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>1-2 mg/g dry weight</b><span>Disrupts actin filaments in cells, leading to gastrointestinal distress and liver damage.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Proteins</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 30-40% dry weight<br>Влияние: Provides structural components and amino acids, though often co-toxic in raw form.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>30-40% dry weight</b><span>Provides structural components and amino acids, though often co-toxic in raw form.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Vicine</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Vicine</b><br>Содержание: 200-500 mg/g dry weight<br>Влияние: Exhibits toxic effects similar to amatoxins, contributing to the overall lethality of the mushroom.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>200-500 mg/g dry weight</b><span>Exhibits toxic effects similar to amatoxins, contributing to the overall lethality of the </span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Viretoxin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Viretoxin</b><br>Содержание: unknown<br>Влияние: Contributes to the toxic profile and hepatotoxicity.<br>Судья: галлюцинация · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Contributes to the toxic profile and hepatotoxicity.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">α-amanitin (chief amatoxin)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-amanitin</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">phallotoxins (phalloidin etc.)</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">virotoxins (viroisin, viroidin, deoxoviroisin, alaviroidin etc.)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Honey fungus <span class="latin">(Armillaria mellea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>2.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>12%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>3%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>29</b></div>
+  <div class="chip">Галлюцинации: <b>79%</b> (23 из 29 вердиктов)</div>
+  <div class="chip">реальных <b>6</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th><th>частота</th></tr>
+<tr><td class="name">Proteins</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 20-30% dry weight<br>Влияние: Provides essential amino acids for human nutrition.<br>Судья: галлюцинация · концентрация нет данных · влияние частично<br></div><div class="inner"><b>20-30% dry weight</b><span>Provides essential amino acids for human nutrition.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 20-30% of dry weight<br>Влияние: Provides essential amino acids and contributes to the mushroom&#x27;s nutritional value.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>20-30% of dry weight</b><span>Provides essential amino acids and contributes to the mushroom&#x27;s nutritional value.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Proteins</b><br>Содержание: 15-20% of dry weight<br>Влияние: Provide essential amino acids necessary for human tissue repair and metabolism.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>15-20% of dry weight</b><span>Provide essential amino acids necessary for human tissue repair and metabolism.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: 25-35% of dry weight<br>Влияние: Serves as a nutritional source of amino acids but can trigger allergic reactions in sensitive individuals.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>25-35% of dry weight</b><span>Serves as a nutritional source of amino acids but can trigger allergic reactions in sensit</span></div></td><td class="cell na"></td><td class="freq">4/5</td></tr><tr><td class="name">Armillarin A</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarin A</b><br>Содержание: 0.1-0.5% of dry weight<br>Влияние: Exhibits cytotoxic and antiviral properties.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>0.1-0.5% of dry weight</b><span>Exhibits cytotoxic and antiviral properties.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarin A</b><br>Содержание: unknown<br>Влияние: Acts as a toxin that can cause gastrointestinal distress if consumed raw.<br>Судья: галлюцинация · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Acts as a toxin that can cause gastrointestinal distress if consumed raw.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Armillarisin A</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarisin A</b><br>Содержание: Variable<br>Влияние: A triterpenoid that may contribute to the bitter taste and potential gastric discomfort in sensitive individuals.<br>Судья: галлюцинация · концентрация нет данных · влияние неверно<br></div><div class="inner"><b>Variable</b><span>A triterpenoid that may contribute to the bitter taste and potential gastric discomfort in</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarisin A</b><br>Содержание: unknown<br>Влияние: Inhibits the growth of plant pathogens and serves as a defense compound for the fungus.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Inhibits the growth of plant pathogens and serves as a defense compound for the fungus.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Carbohydrates</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Carbohydrates</b><br>Содержание: 40-50% dry weight<br>Влияние: Serves as a primary energy source.<br>Судья: галлюцинация · концентрация нет данных · влияние верно<br></div><div class="inner"><b>40-50% dry weight</b><span>Serves as a primary energy source.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Carbohydrates (Polysaccharides)</b><br>Содержание: 50% of dry weight<br>Влияние: Serves as a primary energy source and fiber for digestion.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>50% of dry weight</b><span>Serves as a primary energy source and fiber for digestion.</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Ligninolytic enzymes (e.g., Laccase, Manganese peroxidase)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ligninolytic enzymes (e.g., Laccase, Manganese peroxidase)</b><br>Содержание: Unknown<br>Влияние: Breakdown enzymes that are generally non-toxic to humans but indicate the mushroom&#x27;s saprophytic nature.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Breakdown enzymes that are generally non-toxic to humans but indicate the mushroom&#x27;s sapro</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ligninolytic Enzymes (Laccase, Manganese Peroxidase)</b><br>Содержание: unknown<br>Влияние: Generally non-toxic but indicates the mushroom&#x27;s ability to degrade wood, not directly affecting human metabolism.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Generally non-toxic but indicates the mushroom&#x27;s ability to degrade wood, not directly aff</span></div></td><td class="freq">2/5</td></tr><tr><td class="name">Polysaccharides (β-glucans)</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Polysaccharides (β-glucans)</b><br>Содержание: 1-5% of dry weight<br>Влияние: Possesses immunomodulatory and potential anti-tumor effects.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>1-5% of dry weight</b><span>Possesses immunomodulatory and potential anti-tumor effects.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Polysaccharides (e.g., Glucans)</b><br>Содержание: unknown<br>Влияние: Support immune function and may help regulate blood sugar levels.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Support immune function and may help regulate blood sugar levels.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Water</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: 60-70% of fresh weight<br>Влияние: Primary component affecting freshness and shelf-life.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>60-70% of fresh weight</b><span>Primary component affecting freshness and shelf-life.</span></div></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: 85-90% of fresh weight<br>Влияние: No direct pharmacological effect, primarily contributes to bulk and texture.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>85-90% of fresh weight</b><span>No direct pharmacological effect, primarily contributes to bulk and texture.</span></div></td><td class="cell na"></td><td class="freq">2/5</td></tr><tr><td class="name">Arlactone</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Arlactone</b><br>Содержание: unknown<br>Влияние: Acts as an immunomodulator and has demonstrated anti-inflammatory and antitumor properties.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Acts as an immunomodulator and has demonstrated anti-inflammatory and antitumor properties</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Armillarin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarin</b><br>Содержание: unknown<br>Влияние: Acts as a potent inhibitor of fungal cell wall synthesis.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Acts as a potent inhibitor of fungal cell wall synthesis.</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Armillarin B</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Armillarin B</b><br>Содержание: unknown<br>Влияние: Contributes to the toxic properties of the mushroom, potentially inducing nausea.<br>Судья: галлюцинация · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Contributes to the toxic properties of the mushroom, potentially inducing nausea.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Chitin</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Chitin</b><br>Содержание: 15% of dry weight<br>Влияние: Indigestible structural carbohydrate that acts as dietary fiber.<br>Судья: реальное · концентрация в норме · влияние верно<br></div><div class="inner"><b>15% of dry weight</b><span>Indigestible structural carbohydrate that acts as dietary fiber.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Dipicolinic acid</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Dipicolinic acid</b><br>Содержание: unknown<br>Влияние: Is generally non-toxic but may cause gastrointestinal distress if consumed in large quantities or if the mushroom is raw.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Is generally non-toxic but may cause gastrointestinal distress if consumed in large quanti</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Fructans</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Fructans</b><br>Содержание: 5-15% of dry weight<br>Влияние: Function as prebiotic fibers that are resistant to human digestion but may cause digestive discomfort in large quantities.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>5-15% of dry weight</b><span>Function as prebiotic fibers that are resistant to human digestion but may cause digestive</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Glucomannans</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Glucomannans</b><br>Содержание: 20-30% of dry weight<br>Влияние: Acts as a dietary fiber that can improve gut health but causes severe bloating if not properly cooked.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>20-30% of dry weight</b><span>Acts as a dietary fiber that can improve gut health but causes severe bloating if not prop</span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Lipids</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Lipids</b><br>Содержание: 5-10% of dry weight<br>Влияние: Provides caloric energy and essential fatty acids but may cause gastrointestinal distress if consumed raw.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>5-10% of dry weight</b><span>Provides caloric energy and essential fatty acids but may cause gastrointestinal distress </span></div></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Minerals (e.g., Potassium, Phosphorus)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Minerals (e.g., Potassium, Phosphorus)</b><br>Содержание: 2-5% dry weight<br>Влияние: Essential for various physiological functions such as fluid balance and bone health.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>2-5% dry weight</b><span>Essential for various physiological functions such as fluid balance and bone health.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Protein</td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Protein</b><br>Содержание: 30% of dry weight<br>Влияние: Provides essential amino acids for human nutrition.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>30% of dry weight</b><span>Provides essential amino acids for human nutrition.</span></div></td><td class="freq">1/5</td></tr><tr><td class="name">Sterols (e.g., Ergosterol)</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Sterols (e.g., Ergosterol)</b><br>Содержание: Approx. 1% dry weight<br>Влияние: Converted to Vitamin D2 upon exposure to UV light, which is essential for calcium metabolism.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>Approx. 1% dry weight</b><span>Converted to Vitamin D2 upon exposure to UV light, which is essential for calcium metaboli</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Trehalose</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Trehalose</b><br>Содержание: 5-8% of dry weight<br>Влияние: Acts as a storage carbohydrate and contributes to the mushroom&#x27;s texture.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>5-8% of dry weight</b><span>Acts as a storage carbohydrate and contributes to the mushroom&#x27;s texture.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr><tr><td class="name">Triterpenoids (e.g., 24-epi-ent-kaurene)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Triterpenoids (e.g., 24-epi-ent-kaurene)</b><br>Содержание: unknown<br>Влияние: Exhibit potential cytotoxic effects against certain cancer cell lines.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Exhibit potential cytotoxic effects against certain cancer cell lines.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/5</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th class="runhd">run-04</th><th class="runhd">run-05</th></tr>
+<tr><td class="name">heat-labile gastrointestinal irritants (proteinaceous)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">melleolides (sesquiterpene antibiotics: orsellinic-acid esters of protoilludane alcohols, some chlorinated)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div><h2>Ответы моделей (raw)</h2><details class="raw"><summary>Fly agaric · run-01 · 6.86 c · 3 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.1-2.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a potent GABA-A receptor agonist causing sedation and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.1-1.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;An excitatory amino acid neurotransmitter that can cause toxicity and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;A GABA antagonist that may modulate the effects of muscimol.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-01 · 1.42 c · 3 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita pantherina&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;1-5 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;A non-selective glutamate receptor agonist that can cause confusion, delirium, and ataxia.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;10-30 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;A GABA-A receptor agonist that induces sedation, mydriasis, and potential seizures or convulsions.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscine&quot;,
+&quot;amount&quot;: &quot;Unknown&quot;,
+&quot;effect&quot;: &quot;A minor neuroactive amino acid that may contribute to the toxic effects, though its specific mechanism is less defined.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-01 · 1.85 c · 6 веществ</summary><pre>{&quot;mushroom&quot;: &quot;Amanita phalloides&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;Amatoxin (Alpha-amanitin)&quot;, &quot;amount&quot;: &quot;0.1-1.5 mg/g dry weight&quot;, &quot;effect&quot;: &quot;Inhibits RNA polymerase II, causing lethal liver and kidney failure.&quot;}, {&quot;compound&quot;: &quot;Phalloidin&quot;, &quot;amount&quot;: &quot;0.1-0.5 mg/g dry weight&quot;, &quot;effect&quot;: &quot;Binds to actin filaments, disrupting cytoskeletal integrity and cell function.&quot;}, {&quot;compound&quot;: &quot;Virotoxin&quot;, &quot;amount&quot;: &quot;Unknown&quot;, &quot;effect&quot;: &quot;Contributes to the toxic amatoxin complex, affecting cellular integrity.&quot;}, {&quot;compound&quot;: &quot;Fallo-toxin&quot;, &quot;amount&quot;: &quot;Unknown&quot;, &quot;effect&quot;: &quot;Part of the amatoxin group, contributing to systemic toxicity.&quot;}, {&quot;compound&quot;: &quot;Water&quot;, &quot;amount&quot;: &quot;~90% of fresh weight&quot;, &quot;effect&quot;: &quot;No direct toxic effect, but serves as the medium for toxin absorption.&quot;}, {&quot;compound&quot;: &quot;Carbohydrates (Polysaccharides)&quot;, &quot;amount&quot;: &quot;~10-20% of dry weight&quot;, &quot;effect&quot;: &quot;Generally non-toxic, providing structural support to the mushroom.&quot;}]}</pre></details>
+<details class="raw"><summary>False death cap · run-01 · 1.82 c · 3 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita citrina&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amatoxins (specifically alpha-amanitin, beta-amanitin, gamma-amanitin, and epsilo-amanitin)&quot;,
+      &quot;amount&quot;: &quot;2-5 mg per fresh fruiting body&quot;,
+      &quot;effect&quot;: &quot;These toxins inhibit RNA polymerase II, causing severe liver and kidney failure, and are often fatal if untreated.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Vermotoxins (specifically alpha- and beta-vermotoxin)&quot;,
+      &quot;amount&quot;: &quot;Trace amounts (mg/kg dry weight)&quot;,
+      &quot;effect&quot;: &quot;These cyclic peptides are neurotoxic and can cause gastrointestinal and neuromuscular symptoms.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mushroom peptide (Amanicin)&quot;,
+      &quot;amount&quot;: &quot;Unknown&quot;,
+      &quot;effect&quot;: &quot;A large molecular weight peptide found in Amanita species, with limited data on its specific acute toxicological effect compared to amatoxins.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-01 · 1.36 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita rubescens&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Muscarine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Causes excessive salivation, sweating, and vomiting by overstimulating cholinergic receptors.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Acts as a potent glutamate receptor agonist that can trigger seizures and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Functions as a GABA-A receptor agonist, producing sedation and CNS depression.&quot;
+},
+{
+&quot;compound&quot;: &quot;Amanitine&quot;,
+&quot;amount&quot;: &quot;trace or undetectable&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II, leading to severe liver and kidney damage if present in significant quantities.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-01 · 1.85 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita caesarea&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Protein&quot;,
+&quot;amount&quot;: &quot;2.6-3.0 % of fresh weight&quot;,
+&quot;effect&quot;: &quot;Provides essential amino acids for human nutrition and tissue repair.&quot;
+},
+{
+&quot;compound&quot;: &quot;Lipids&quot;,
+&quot;amount&quot;: &quot;1.5-2.5 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Contributes to energy metabolism, though some specific lipids may interfere with absorption of other nutrients.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ergothioneine&quot;,
+&quot;amount&quot;: &quot;1-2 mg/g of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as an antioxidant that helps protect cells from oxidative stress.&quot;
+},
+{
+&quot;compound&quot;: &quot;Fructose and Glucose&quot;,
+&quot;amount&quot;: &quot;3-5 % of fresh weight&quot;,
+&quot;effect&quot;: &quot;Provides a source of quick energy and contributes to the mild flavor profile.&quot;
+},
+{
+&quot;compound&quot;: &quot;Mannitol&quot;,
+&quot;amount&quot;: &quot;1-2 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Functions as a humectant and has mild osmotic effects in the human body.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-01 · 1.84 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita virosa&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amatoxin (α-amanitin)&quot;,
+      &quot;amount&quot;: &quot;0.06-0.16% dry weight&quot;,
+      &quot;effect&quot;: &quot;Inhibits RNA polymerase II, causing lethal liver and kidney failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Viretoxin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Contributes to the toxic profile and hepatotoxicity.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;trace amounts&quot;,
+      &quot;effect&quot;: &quot;Destabilizes actin filaments in cells, contributing to toxicity.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;30-40% dry weight&quot;,
+      &quot;effect&quot;: &quot;Provides structural components and amino acids, though often co-toxic in raw form.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Carbohydrates&quot;,
+      &quot;amount&quot;: &quot;40-60% dry weight&quot;,
+      &quot;effect&quot;: &quot;Serves as an energy source and structural polysaccharide.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-01 · 2.19 c · 6 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Armillaria mellea&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;20-30% dry weight&quot;,
+      &quot;effect&quot;: &quot;Provides essential amino acids for human nutrition.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Carbohydrates&quot;,
+      &quot;amount&quot;: &quot;40-50% dry weight&quot;,
+      &quot;effect&quot;: &quot;Serves as a primary energy source.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ligninolytic enzymes (e.g., Laccase, Manganese peroxidase)&quot;,
+      &quot;amount&quot;: &quot;Unknown&quot;,
+      &quot;effect&quot;: &quot;Breakdown enzymes that are generally non-toxic to humans but indicate the mushroom&#x27;s saprophytic nature.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Armillarisin A&quot;,
+      &quot;amount&quot;: &quot;Variable&quot;,
+      &quot;effect&quot;: &quot;A triterpenoid that may contribute to the bitter taste and potential gastric discomfort in sensitive individuals.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Sterols (e.g., Ergosterol)&quot;,
+      &quot;amount&quot;: &quot;Approx. 1% dry weight&quot;,
+      &quot;effect&quot;: &quot;Converted to Vitamin D2 upon exposure to UV light, which is essential for calcium metabolism.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Minerals (e.g., Potassium, Phosphorus)&quot;,
+      &quot;amount&quot;: &quot;2-5% dry weight&quot;,
+      &quot;effect&quot;: &quot;Essential for various physiological functions such as fluid balance and bone health.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-02 · 4.65 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;250-1000 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a GABA agonist, causing convulsions and delirium.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;100-400 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;Potent CNS depressant and hallucinogen that acts on GABA-A receptors.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscarine&quot;,
+&quot;amount&quot;: &quot;&lt;10 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;Cholinergic agonist that causes nausea, vomiting, and bradycardia.&quot;
+},
+{
+&quot;compound&quot;: &quot;Probatine&quot;,
+&quot;amount&quot;: &quot;Unknown mg/kg&quot;,
+&quot;effect&quot;: &quot;Neurotoxic compound that inhibits cholinesterase and may enhance toxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscicarpic acid&quot;,
+&quot;amount&quot;: &quot;Unknown mg/kg&quot;,
+&quot;effect&quot;: &quot;Related to ibotenic acid and may contribute to neurotoxic effects.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-02 · 0.89 c · 2 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita pantherina&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;3.3 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a potent neurotoxin causing confusion, hallucinations, and agitation.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.3 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Functions as a GABA-A receptor agonist leading to sedation and convulsions.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-02 · 1.86 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita phalloides&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;0.1 - 2 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II, leading to severe hepatic and renal failure.&quot;
+},
+{
+&quot;compound&quot;: &quot;beta-amanitin&quot;,
+&quot;amount&quot;: &quot;0.05 - 1 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II and contributes to cellular damage in the liver and kidneys.&quot;
+},
+{
+&quot;compound&quot;: &quot;epi-amaurotin&quot;,
+&quot;amount&quot;: &quot;0.1 - 1 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Potent inhibitor of RNA polymerase II causing systemic toxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;phalloidin&quot;,
+&quot;amount&quot;: &quot;0.1 - 0.5 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Disrupts the actin cytoskeleton, leading to cell membrane damage and vascular collapse.&quot;
+},
+{
+&quot;compound&quot;: &quot;deoxyphallotoxin&quot;,
+&quot;amount&quot;: &quot;0.05 - 0.3 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Binds to F-actin and disrupts cellular integrity.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-02 · 1.19 c · 3 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita citrina&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Amatoxins&quot;,
+&quot;amount&quot;: &quot;1-4 mg per fruiting body&quot;,
+&quot;effect&quot;: &quot;Inhibit protein synthesis in the liver and kidneys, causing severe organ failure and death.&quot;
+},
+{
+&quot;compound&quot;: &quot;Vicine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;A hemolytic agent that causes breakdown of red blood cells and anemia.&quot;
+},
+{
+&quot;compound&quot;: &quot;Isovitamine B12&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;A structural analog of Vitamin B12 that competes for absorption but is biologically inactive or harmful.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-02 · 1.99 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita rubescens&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Hydrazine&quot;,
+&quot;amount&quot;: &quot;variable mg/g&quot;,
+&quot;effect&quot;: &quot;A toxic hydrazine derivative that can cause hemolysis and liver damage if consumed in significant quantities.&quot;
+},
+{
+&quot;compound&quot;: &quot;Protein&quot;,
+&quot;amount&quot;: &quot;~25-30% of dry weight&quot;,
+&quot;effect&quot;: &quot;Provides nutritional value but requires proper cooking to denature certain proteins and mitigate toxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;Carbohydrates&quot;,
+&quot;amount&quot;: &quot;~30-40% of dry weight&quot;,
+&quot;effect&quot;: &quot;Serves as an energy source for humans after the mushroom is properly prepared.&quot;
+},
+{
+&quot;compound&quot;: &quot;Water&quot;,
+&quot;amount&quot;: &quot;~85-90% of fresh weight&quot;,
+&quot;effect&quot;: &quot;The primary constituent by mass in fresh fruiting bodies, contributing to texture and volume.&quot;
+},
+{
+&quot;compound&quot;: &quot;Amanitine&quot;,
+&quot;amount&quot;: &quot;0 mg/kg&quot;,
+&quot;effect&quot;: &quot;Absent in this species, so it does not contribute to the specific neurotoxic or hepatotoxic effects associated with other deadly Amanitas.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-02 · 1.62 c · 6 веществ</summary><pre>{&quot;mushroom&quot;: &quot;Amanita caesarea&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;Protein&quot;, &quot;amount&quot;: &quot;3-5% of dry weight&quot;, &quot;effect&quot;: &quot;Provides essential amino acids and nutritional value.&quot;}, {&quot;compound&quot;: &quot;Carbohydrates (Glucose, Fructose, Sucrose)&quot;, &quot;amount&quot;: &quot;10-20% of dry weight&quot;, &quot;effect&quot;: &quot;Serves as an immediate energy source.&quot;}, {&quot;compound&quot;: &quot;Chitin&quot;, &quot;amount&quot;: &quot;10-30% of dry weight&quot;, &quot;effect&quot;: &quot;Structural component of the cell wall; indigestible by humans but acts as dietary fiber.&quot;}, {&quot;compound&quot;: &quot;Ergothioneine&quot;, &quot;amount&quot;: &quot;5-15 mg/kg&quot;, &quot;effect&quot;: &quot;Antioxidant that helps protect cells from oxidative stress and may reduce inflammation.&quot;}, {&quot;compound&quot;: &quot;Polysaccharides&quot;, &quot;amount&quot;: &quot;2-5% of dry weight&quot;, &quot;effect&quot;: &quot;May have immunomodulatory effects and contribute to gut health.&quot;}, {&quot;compound&quot;: &quot;Lipids&quot;, &quot;amount&quot;: &quot;1-2% of dry weight&quot;, &quot;effect&quot;: &quot;Contributes to energy storage and cell membrane structure.&quot;}]}</pre></details>
+<details class="raw"><summary>Destroying angel · run-02 · 1.08 c · 3 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita virosa&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;10 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;A potent toxin that inhibits RNA polymerase II, leading to cellular death and acute liver failure.&quot;
+},
+{
+&quot;compound&quot;: &quot;Beta-amanitin&quot;,
+&quot;amount&quot;: &quot;1 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;Contributes to the hepatotoxic and nephrotoxic effects by inhibiting cellular transcription.&quot;
+},
+{
+&quot;compound&quot;: &quot;Gamma-amanitin&quot;,
+&quot;amount&quot;: &quot;0.1 mg/kg dry weight&quot;,
+&quot;effect&quot;: &quot;Assists in the toxic mechanism of inhibiting DNA and RNA synthesis in human cells.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-02 · 1.78 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Armillaria mellea&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;5-8% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Acts as a storage carbohydrate and contributes to the mushroom&#x27;s texture.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Armillarin A&quot;,
+      &quot;amount&quot;: &quot;0.1-0.5% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Exhibits cytotoxic and antiviral properties.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;20-30% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Provides essential amino acids and contributes to the mushroom&#x27;s nutritional value.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Polysaccharides (β-glucans)&quot;,
+      &quot;amount&quot;: &quot;1-5% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Possesses immunomodulatory and potential anti-tumor effects.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;60-70% of fresh weight&quot;,
+      &quot;effect&quot;: &quot;Primary component affecting freshness and shelf-life.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-03 · 4.86 c · 6 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.3-0.6 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a GABA agonist causing nausea, dizziness, and confusion.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.3-0.6 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Functions as a GABA-A receptor agonist producing sedative and hallucinogenic effects.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Functions as a GABA-A receptor agonist producing sedative and hallucinogenic effects.&quot;
+},
+{
+&quot;compound&quot;: &quot;Sclerocystin&quot;,
+&quot;amount&quot;: &quot;0.1-0.4 % of dry weight&quot;,
+&quot;effect&quot;: &quot;A cyclic peptide with psychoactive properties contributing to the overall toxicological profile.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscine&quot;,
+&quot;amount&quot;: &quot;0.04-0.1 % of dry weight&quot;,
+&quot;effect&quot;: &quot;A peptide that contributes to the hallucinogenic effects of the mushroom.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscipine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;A peptide found in fly agaric that may contribute to the psychoactive response.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-03 · 1.72 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita pantherina&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.034 - 0.045 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a potent agonist for glutamate receptors, causing confusion, dizziness, and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.15 - 0.18 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Binds to GABA-A receptors, producing sedation, muscle twitching, and nausea.&quot;
+},
+{
+&quot;compound&quot;: &quot;Protein&quot;,
+&quot;amount&quot;: &quot;30 - 40 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Provides essential amino acids for nutritional value, though high amounts can be difficult to digest.&quot;
+},
+{
+&quot;compound&quot;: &quot;Carbohydrates&quot;,
+&quot;amount&quot;: &quot;30 - 35 % of dry weight&quot;,
+&quot;effect&quot;: &quot;Serves as a source of energy, primarily in the form of polysaccharides like chitin.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-03 · 1.11 c · 3 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita phalloides&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;amatoxin (alpha-amanitin)&quot;,
+&quot;amount&quot;: &quot;0.1-1.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II, causing fatal liver and kidney failure.&quot;
+},
+{
+&quot;compound&quot;: &quot;phalloidin&quot;,
+&quot;amount&quot;: &quot;0.01-0.5% of dry weight&quot;,
+&quot;effect&quot;: &quot;Disrupts actin filaments in cell membranes, leading to cell dysfunction.&quot;
+},
+{
+&quot;compound&quot;: &quot;virotoxin&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Contributes to the acute toxicity associated with amatoxin poisoning.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-03 · 1.98 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita citrina&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amatoxins (specifically alpha-amanitin and beta-amanitin)&quot;,
+      &quot;amount&quot;: &quot;10-200 mg/kg dry weight&quot;,
+      &quot;effect&quot;: &quot;Inhibits RNA polymerase II, leading to massive liver and kidney failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Virotoxin (beta-amanitin)&quot;,
+      &quot;amount&quot;: &quot;Included in total amatoxin range&quot;,
+      &quot;effect&quot;: &quot;Potent inhibitor of RNA synthesis in human cells.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;70-90% of fresh weight&quot;,
+      &quot;effect&quot;: &quot;No direct toxic or therapeutic effect, but contributes to the physical bulk.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;5-10% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Generally non-toxic on their own but may trigger allergic reactions in sensitive individuals.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Polysaccharides&quot;,
+      &quot;amount&quot;: &quot;5-15% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Structural components with no significant direct pharmacological effect.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-03 · 1.64 c · 6 веществ</summary><pre>{&quot;mushroom&quot;: &quot;Amanita rubescens&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;Hypholomaic acid&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Non-toxic organic acid present in the mushroom.&quot;}, {&quot;compound&quot;: &quot;Rubescein&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Pigment responsible for the reddish coloration when bruised.&quot;}, {&quot;compound&quot;: &quot;Protein&quot;, &quot;amount&quot;: &quot;2.0-3.5 % of dry weight&quot;, &quot;effect&quot;: &quot;Provides essential amino acids for nutritional value.&quot;}, {&quot;compound&quot;: &quot;Fiber (Cellulose/Chitin)&quot;, &quot;amount&quot;: &quot;1.0-2.0 % of dry weight&quot;, &quot;effect&quot;: &quot;Aids in digestion but is largely indigestible to humans.&quot;}, {&quot;compound&quot;: &quot;Carbohydrates&quot;, &quot;amount&quot;: &quot;10-20 % of dry weight&quot;, &quot;effect&quot;: &quot;Primary source of energy when cooked and digested.&quot;}, {&quot;compound&quot;: &quot;Water&quot;, &quot;amount&quot;: &quot;80-85 % of fresh weight&quot;, &quot;effect&quot;: &quot;Main constituent providing bulk and texture.&quot;}]}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-03 · 2.12 c · 6 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita caesarea&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Water&quot;,
+&quot;amount&quot;: &quot;~90% of fresh weight&quot;,
+&quot;effect&quot;: &quot;Acts as the primary solvent for nutrients and metabolites.&quot;
+},
+{
+&quot;compound&quot;: &quot;Proteins&quot;,
+&quot;amount&quot;: &quot;5-10% of dry weight&quot;,
+&quot;effect&quot;: &quot;Provides amino acids essential for human nutritional needs.&quot;
+},
+{
+&quot;compound&quot;: &quot;Beta-glucans&quot;,
+&quot;amount&quot;: &quot;Variable (typically 20-40% of total polysaccharides)&quot;,
+&quot;effect&quot;: &quot;Known to support the human immune system.&quot;
+},
+{
+&quot;compound&quot;: &quot;Sterols (Ergosterol)&quot;,
+&quot;amount&quot;: &quot;Approx. 1-2% of dry weight&quot;,
+&quot;effect&quot;: &quot;Functions as a vitamin D precursor in the skin upon exposure to sunlight.&quot;
+},
+{
+&quot;compound&quot;: &quot;Caffeine&quot;,
+&quot;amount&quot;: &quot;Unknown (trace levels)&quot;,
+&quot;effect&quot;: &quot;Acts as a mild central nervous system stimulant.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;Trace or unknown (lower than in toxic Amanita species)&quot;,
+&quot;effect&quot;: &quot;Can cause neurotoxicity if present in significant quantities.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-03 · 2.33 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita virosa&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amatoxins (specifically \u03b1-amanitin and \u03b2-amanitin)&quot;,
+      &quot;amount&quot;: &quot;0.1-0.7% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Causes severe liver and kidney failure and is often fatal by inhibiting RNA polymerase II.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Vicine&quot;,
+      &quot;amount&quot;: &quot;200-500 mg/g dry weight&quot;,
+      &quot;effect&quot;: &quot;Exhibits toxic effects similar to amatoxins, contributing to the overall lethality of the mushroom.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Hagrin&quot;,
+      &quot;amount&quot;: &quot;50-150 mg/g dry weight&quot;,
+      &quot;effect&quot;: &quot;Acts as a neurotoxin causing gastrointestinal distress and potentially contributing to systemic toxicity.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;0.1-0.5% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Causes gastrointestinal symptoms and neurological effects such as delirium and convulsions.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;0.5-2.0% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Produces hallucinations, drowsiness, and sedation by acting as an agonist at GABA-A receptors.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-03 · 2.23 c · 6 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Armillaria mellea&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Arlactone&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Acts as an immunomodulator and has demonstrated anti-inflammatory and antitumor properties.&quot;
+},
+{
+&quot;compound&quot;: &quot;Armillarisin A&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Inhibits the growth of plant pathogens and serves as a defense compound for the fungus.&quot;
+},
+{
+&quot;compound&quot;: &quot;Triterpenoids (e.g., 24-epi-ent-kaurene)&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Exhibit potential cytotoxic effects against certain cancer cell lines.&quot;
+},
+{
+&quot;compound&quot;: &quot;Polysaccharides (e.g., Glucans)&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Support immune function and may help regulate blood sugar levels.&quot;
+},
+{
+&quot;compound&quot;: &quot;Proteins&quot;,
+&quot;amount&quot;: &quot;15-20% of dry weight&quot;,
+&quot;effect&quot;: &quot;Provide essential amino acids necessary for human tissue repair and metabolism.&quot;
+},
+{
+&quot;compound&quot;: &quot;Dipicolinic acid&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Is generally non-toxic but may cause gastrointestinal distress if consumed in large quantities or if the mushroom is raw.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-04 · 4.76 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.1-0.4% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a glutamate receptor agonist causing neurotoxicity, muscle spasms, and vomiting.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.1-0.3% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a GABA-A receptor agonist leading to sedation, drowsiness, and hallucinations.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscarine&quot;,
+&quot;amount&quot;: &quot;&lt;0.001% of dry weight&quot;,
+&quot;effect&quot;: &quot;Contributes to cholinergic symptoms such as increased salivation, lacrimation, and diarrhea in high doses.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscigone&quot;,
+&quot;amount&quot;: &quot;Trace amounts (mg/kg)&quot;,
+&quot;effect&quot;: &quot;Contributes to the intoxicating effects and potential hallucinogenic properties.&quot;
+},
+{
+&quot;compound&quot;: &quot;Beta-brucin&quot;,
+&quot;amount&quot;: &quot;Unknown&quot;,
+&quot;effect&quot;: &quot;Acts as a weak GABA-A receptor modulator with psychoactive properties.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-04 · 1.76 c · 5 веществ</summary><pre>{&quot;mushroom&quot;: &quot;Amanita pantherina&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;Ibotenic acid&quot;, &quot;amount&quot;: &quot;0.1-0.4% dry weight&quot;, &quot;effect&quot;: &quot;Acts as a glutamate agonist causing seizures, delirium, and neurotoxicity.&quot;}, {&quot;compound&quot;: &quot;Muscimol&quot;, &quot;amount&quot;: &quot;0.1-1.0% dry weight&quot;, &quot;effect&quot;: &quot;Binds to GABA-A receptors inducing sedation, hypnosis, and CNS depression.&quot;}, {&quot;compound&quot;: &quot;Pantherine&quot;, &quot;amount&quot;: &quot;0.1-1.0% dry weight&quot;, &quot;effect&quot;: &quot;Acts as a GABA-A receptor positive allosteric modulator contributing to sedative and hallucinogenic effects.&quot;}, {&quot;compound&quot;: &quot;Panterin&quot;, &quot;amount&quot;: &quot;0.1-0.5% dry weight&quot;, &quot;effect&quot;: &quot;Inhibits acetylcholinesterase and may contribute to cholinergic symptoms like vomiting and salivation.&quot;}, {&quot;compound&quot;: &quot;Ibotenine&quot;, &quot;amount&quot;: &quot;0.1-0.4% dry weight&quot;, &quot;effect&quot;: &quot;An isomer of ibotenic acid that also acts as a glutamate agonist causing neurotoxic effects.&quot;}]}</pre></details>
+<details class="raw"><summary>Death cap · run-04 · 1.88 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita phalloides&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;0.04-0.06% of dry weight&quot;,
+&quot;effect&quot;: &quot;Causes acute liver and kidney failure by inhibiting RNA polymerase II.&quot;
+},
+{
+&quot;compound&quot;: &quot;beta-amanitin&quot;,
+&quot;amount&quot;: &quot;0.01-0.02% of dry weight&quot;,
+&quot;effect&quot;: &quot;Contributes to hepatotoxicity and neurotoxicity by interfering with RNA synthesis.&quot;
+},
+{
+&quot;compound&quot;: &quot;amafitoxin&quot;,
+&quot;amount&quot;: &quot;0.03-0.05% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts synergistically with amanita toxins to cause severe gastrointestinal and hepatic damage.&quot;
+},
+{
+&quot;compound&quot;: &quot;virotoxin&quot;,
+&quot;amount&quot;: &quot;0.01-0.03% of dry weight&quot;,
+&quot;effect&quot;: &quot;Participates in the toxin complex causing fatal organ failure.&quot;
+},
+{
+&quot;compound&quot;: &quot;fallotoxin&quot;,
+&quot;amount&quot;: &quot;0.01-0.02% of dry weight&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II, leading to cell death in target organs.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-04 · 2.15 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita citrina&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;2.5-10.0 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a non-selective excitatory amino acid agonist causing central nervous system symptoms like confusion and tremors.&quot;
+},
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;2.0-23.0 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Functions as a GABA-A receptor agonist inducing sedation, delirium, and potential seizures.&quot;
+},
+{
+&quot;compound&quot;: &quot;Cytotoxic protein&quot;,
+&quot;amount&quot;: &quot;Trace to undetectable in standard tests&quot;,
+&quot;effect&quot;: &quot;Note: While A. citrina was historically linked to amatoxin, it is now widely accepted as non-amatoxicin, but individual toxicity can vary; this entry reflects the primary psychoactive toxins present.&quot;
+},
+{
+&quot;compound&quot;: &quot;Water&quot;,
+&quot;amount&quot;: &quot;~70-80% fresh weight&quot;,
+&quot;effect&quot;: &quot;Serves as the primary solvent and medium for transport of metabolites in the body.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-04 · 1.74 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita rubescens&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amanitacin A&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;A triterpenoid that causes gastrointestinal distress and is a hallmark of toxic Amanita species.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Amanin A&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;An amatoxin-like compound (though distinct from alpha-amanitin) contributing to the species&#x27; mild to moderate toxicity.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;A GABA agonist that can cause confusion, dizziness, or mild hallucinations in sensitive individuals.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ibotenic Acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;A glutamate agonist that may contribute to neuromuscular symptoms if consumed.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-04 · 1.42 c · 5 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita caesarea&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Protein&quot;,
+&quot;amount&quot;: &quot;2.3-3.7 %&quot;,
+&quot;effect&quot;: &quot;Provides amino acids for muscle repair and growth.&quot;
+},
+{
+&quot;compound&quot;: &quot;Carbohydrates&quot;,
+&quot;amount&quot;: &quot;2.5-5.6 %&quot;,
+&quot;effect&quot;: &quot;Serves as an immediate source of energy.&quot;
+},
+{
+&quot;compound&quot;: &quot;Beta-glucans&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;May support the immune system.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ergothioneine&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Acts as an antioxidant to protect cells from oxidative stress.&quot;
+},
+{
+&quot;compound&quot;: &quot;Vitamins (B1, B2, C, D, E)&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Supports various metabolic processes and immune function.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-04 · 1.24 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita virosa&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;2 mg/g&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA polymerase II, causing severe liver and kidney failure.&quot;
+},
+{
+&quot;compound&quot;: &quot;beta-amanitin&quot;,
+&quot;amount&quot;: &quot;1 mg/g&quot;,
+&quot;effect&quot;: &quot;Exerts similar toxic effects on cellular protein synthesis.&quot;
+},
+{
+&quot;compound&quot;: &quot;epi-alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;0.1 mg/g&quot;,
+&quot;effect&quot;: &quot;Contributes to the overall cytotoxicity of the mushroom.&quot;
+},
+{
+&quot;compound&quot;: &quot;phalloidin&quot;,
+&quot;amount&quot;: &quot;trace&quot;,
+&quot;effect&quot;: &quot;Disrupts the actin cytoskeleton in cells.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-04 · 2.16 c · 6 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Armillaria mellea&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Armillarin&quot;,
+&quot;amount&quot;: &quot;unknown&quot;,
+&quot;effect&quot;: &quot;Acts as a potent inhibitor of fungal cell wall synthesis.&quot;
+},
+{
+&quot;compound&quot;: &quot;Proteins&quot;,
+&quot;amount&quot;: &quot;25-35% of dry weight&quot;,
+&quot;effect&quot;: &quot;Serves as a nutritional source of amino acids but can trigger allergic reactions in sensitive individuals.&quot;
+},
+{
+&quot;compound&quot;: &quot;Lipids&quot;,
+&quot;amount&quot;: &quot;5-10% of dry weight&quot;,
+&quot;effect&quot;: &quot;Provides caloric energy and essential fatty acids but may cause gastrointestinal distress if consumed raw.&quot;
+},
+{
+&quot;compound&quot;: &quot;Glucomannans&quot;,
+&quot;amount&quot;: &quot;20-30% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a dietary fiber that can improve gut health but causes severe bloating if not properly cooked.&quot;
+},
+{
+&quot;compound&quot;: &quot;Fructans&quot;,
+&quot;amount&quot;: &quot;5-15% of dry weight&quot;,
+&quot;effect&quot;: &quot;Function as prebiotic fibers that are resistant to human digestion but may cause digestive discomfort in large quantities.&quot;
+},
+{
+&quot;compound&quot;: &quot;Water&quot;,
+&quot;amount&quot;: &quot;85-90% of fresh weight&quot;,
+&quot;effect&quot;: &quot;No direct pharmacological effect, primarily contributes to bulk and texture.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-05 · 4.66 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita muscaria&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Muscimol&quot;,
+&quot;amount&quot;: &quot;0.05-1.0% of dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as a potent agonist at GABA-A receptors, causing CNS depression and sedation.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ibotenic acid&quot;,
+&quot;amount&quot;: &quot;0.006-0.03% of dry weight&quot;,
+&quot;effect&quot;: &quot;Serves as a precursor to muscimol and can act as an NMDA receptor agonist, potentially causing excitotoxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;Amanitulin&quot;,
+&quot;amount&quot;: &quot;0.001-0.004% of dry weight&quot;,
+&quot;effect&quot;: &quot;A sterol that has been reported to possess psychoactive properties similar to other triterpenoids.&quot;
+},
+{
+&quot;compound&quot;: &quot;Flyagaric acid&quot;,
+&quot;amount&quot;: &quot;0.002-0.005% of dry weight&quot;,
+&quot;effect&quot;: &quot;A triterpene alcohol that may contribute to the overall toxic and psychoactive profile of the mushroom.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-05 · 1.6 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita pantherina&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;0.1-0.5% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Acts as a glutamate receptor agonist, causing confusion, hallucinations, and potentially fatal respiratory failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;1-2% of dry weight&quot;,
+      &quot;effect&quot;: &quot;An agonist of GABA-A receptors that induces sedation, convulsions, and neurological disturbances.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Pantheramine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;A toxic alkaloid associated with the species, contributing to its overall neurotoxic profile.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;A neurotoxic alkaloid that affects the central nervous system, often co-occurring with ibotenic acid.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-05 · 1.44 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita phalloides&quot;,
+&quot;composition&quot;: [
+{&quot;compound&quot;: &quot;Amanitin&quot;, &quot;amount&quot;: &quot;0.1% of dry weight&quot;, &quot;effect&quot;: &quot;Inhibits RNA polymerase II, causing severe liver and kidney failure.&quot;},
+{&quot;compound&quot;: &quot;Phalloidin&quot;, &quot;amount&quot;: &quot;0.04% of dry weight&quot;, &quot;effect&quot;: &quot;Disrupts actin filaments in cells, leading to gastrointestinal distress and muscle necrosis.&quot;},
+{&quot;compound&quot;: &quot;Vestal toxin&quot;, &quot;amount&quot;: &quot;0.04% of dry weight&quot;, &quot;effect&quot;: &quot;Exhibits toxicity similar to phalloidin by affecting cytoskeletal dynamics.&quot;},
+{&quot;compound&quot;: &quot;Orellanine&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Inhibits protein synthesis in eukaryotic cells, potentially contributing to cellular damage.&quot;}
+]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-05 · 1.3 c · 5 веществ</summary><pre>{&quot;mushroom&quot;: &quot;Amanita citrina&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;Alpha-amanitin&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Potent inhibitor of RNA polymerase II causing multi-organ failure and death.&quot;}, {&quot;compound&quot;: &quot;Beta-amanitin&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Inhibits DNA and RNA synthesis leading to cellular damage.&quot;}, {&quot;compound&quot;: &quot;Guanine&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Binds to RNA polymerase II and inhibits its activity.&quot;}, {&quot;compound&quot;: &quot;Proteins&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Serves as a structural and functional component of the mushroom tissue.&quot;}, {&quot;compound&quot;: &quot;Lipids&quot;, &quot;amount&quot;: &quot;unknown&quot;, &quot;effect&quot;: &quot;Forms cell membranes and stores energy within the mushroom.&quot;}]}</pre></details>
+<details class="raw"><summary>Blusher · run-05 · 1.67 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Amanita rubescens&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Amanitine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Inhibits RNA polymerase II, leading to liver and kidney failure, which can be fatal.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Excitotoxin that causes neurological symptoms such as confusion, hallucinations, and seizures.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;GABAergic agonist that acts as a sedative and can cause drowsiness and muscle spasms.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Provide essential amino acids and nutritional value when properly prepared, though toxicity risks remain.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Carbohydrates&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Serve as a source of energy for the human body.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-05 · 1.94 c · 6 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Caesar&#x27;s mushroom (Amanita caesarea)&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Protein&quot;,
+&quot;amount&quot;: &quot;12-14% of dry weight&quot;,
+&quot;effect&quot;: &quot;Provides essential amino acids for human nutrition and muscle repair.&quot;
+},
+{
+&quot;compound&quot;: &quot;Trehalose&quot;,
+&quot;amount&quot;: &quot;5-7% of dry weight&quot;,
+&quot;effect&quot;: &quot;Serves as a primary energy source and storage carbohydrate.&quot;
+},
+{
+&quot;compound&quot;: &quot;Alanine&quot;,
+&quot;amount&quot;: &quot;10-12% of total amino acids&quot;,
+&quot;effect&quot;: &quot;An amino acid involved in the transport of nitrogen and glucose.&quot;
+},
+{
+&quot;compound&quot;: &quot;Glutamic acid&quot;,
+&quot;amount&quot;: &quot;8-10% of total amino acids&quot;,
+&quot;effect&quot;: &quot;Contributes to the umami taste and supports neurotransmission.&quot;
+},
+{
+&quot;compound&quot;: &quot;Ergosterol&quot;,
+&quot;amount&quot;: &quot;100-200 mg/kg fresh weight&quot;,
+&quot;effect&quot;: &quot;A precursor to Vitamin D2 which supports bone health.&quot;
+},
+{
+&quot;compound&quot;: &quot;Chitin&quot;,
+&quot;amount&quot;: &quot;15-20% of dry weight&quot;,
+&quot;effect&quot;: &quot;Structural polysaccharide that aids in human gut microbiome regulation.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-05 · 1.45 c · 4 веществ</summary><pre>{
+&quot;mushroom&quot;: &quot;Amanita virosa&quot;,
+&quot;composition&quot;: [
+{
+&quot;compound&quot;: &quot;Alpha-amanitin&quot;,
+&quot;amount&quot;: &quot;2-5 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Causes fatal liver and kidney failure by inhibiting RNA polymerase II.&quot;
+},
+{
+&quot;compound&quot;: &quot;Beta-amanitin&quot;,
+&quot;amount&quot;: &quot;1-2 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Inhibits RNA synthesis and contributes to acute toxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;Gamma-amanitin&quot;,
+&quot;amount&quot;: &quot;0.1-0.5 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Acts as an RNA polymerase inhibitor with moderate toxicity.&quot;
+},
+{
+&quot;compound&quot;: &quot;Phallotoxins (phalloidin)&quot;,
+&quot;amount&quot;: &quot;1-2 mg/g dry weight&quot;,
+&quot;effect&quot;: &quot;Disrupts actin filaments in cells, leading to gastrointestinal distress and liver damage.&quot;
+}
+]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-05 · 2.06 c · 6 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Armillaria mellea&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Armillarin A&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Acts as a toxin that can cause gastrointestinal distress if consumed raw.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Armillarin B&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Contributes to the toxic properties of the mushroom, potentially inducing nausea.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Protein&quot;,
+      &quot;amount&quot;: &quot;30% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Provides essential amino acids for human nutrition.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Carbohydrates (Polysaccharides)&quot;,
+      &quot;amount&quot;: &quot;50% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Serves as a primary energy source and fiber for digestion.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;15% of dry weight&quot;,
+      &quot;effect&quot;: &quot;Indigestible structural carbohydrate that acts as dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ligninolytic Enzymes (Laccase, Manganese Peroxidase)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Generally non-toxic but indicates the mushroom&#x27;s ability to degrade wood, not directly affecting human metabolism.&quot;
+    }
+  ]
+}</pre></details>
+<footer>построено build_mush_report.py · 2026-11-21 15:22 UTC · данные: run-*/session.json, run-*/verdicts.json</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

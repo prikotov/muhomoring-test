@@ -1,0 +1,351 @@
+{
+  "model": "qwen3.8:latest",
+  "run": 5,
+  "started_at": "2026-11-20T12:00:38.515029+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 16.1,
+    "prompt_tokens": 1345,
+    "output_tokens": 1995,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita muscaria\",\n\"composition\": [\n{\n\"compound\": \"Muscimol\",\n\"amount\": \"0.05-1.0% of dry weight\",\n\"effect\": \"Acts as a potent agonist at GABA-A receptors, causing CNS depression and sedation.\"\n},\n{\n\"compound\": \"Ibotenic acid\",\n\"amount\": \"0.006-0.03% of dry weight\",\n\"effect\": \"Serves as a precursor to muscimol and can act as an NMDA receptor agonist, potentially causing excitotoxicity.\"\n},\n{\n\"compound\": \"Amanitulin\",\n\"amount\": \"0.001-0.004% of dry weight\",\n\"effect\": \"A sterol that has been reported to possess psychoactive properties similar to other triterpenoids.\"\n},\n{\n\"compound\": \"Flyagaric acid\",\n\"amount\": \"0.002-0.005% of dry weight\",\n\"effect\": \"A triterpene alcohol that may contribute to the overall toxic and psychoactive profile of the mushroom.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.05-1.0% of dry weight",
+          "влияние": "Acts as a potent agonist at GABA-A receptors, causing CNS depression and sedation."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.006-0.03% of dry weight",
+          "влияние": "Serves as a precursor to muscimol and can act as an NMDA receptor agonist, potentially causing excitotoxicity."
+        },
+        {
+          "вещество": "Amanitulin",
+          "содержание": "0.001-0.004% of dry weight",
+          "влияние": "A sterol that has been reported to possess psychoactive properties similar to other triterpenoids."
+        },
+        {
+          "вещество": "Flyagaric acid",
+          "содержание": "0.002-0.005% of dry weight",
+          "влияние": "A triterpene alcohol that may contribute to the overall toxic and psychoactive profile of the mushroom."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 4.66,
+      "eval_count": 267,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita pantherina\",\n  \"composition\": [\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"0.1-0.5% of dry weight\",\n      \"effect\": \"Acts as a glutamate receptor agonist, causing confusion, hallucinations, and potentially fatal respiratory failure.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"1-2% of dry weight\",\n      \"effect\": \"An agonist of GABA-A receptors that induces sedation, convulsions, and neurological disturbances.\"\n    },\n    {\n      \"compound\": \"Pantheramine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A toxic alkaloid associated with the species, contributing to its overall neurotoxic profile.\"\n    },\n    {\n      \"compound\": \"Muscine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A neurotoxic alkaloid that affects the central nervous system, often co-occurring with ibotenic acid.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.1-0.5% of dry weight",
+          "влияние": "Acts as a glutamate receptor agonist, causing confusion, hallucinations, and potentially fatal respiratory failure."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "1-2% of dry weight",
+          "влияние": "An agonist of GABA-A receptors that induces sedation, convulsions, and neurological disturbances."
+        },
+        {
+          "вещество": "Pantheramine",
+          "содержание": "unknown",
+          "влияние": "A toxic alkaloid associated with the species, contributing to its overall neurotoxic profile."
+        },
+        {
+          "вещество": "Muscine",
+          "содержание": "unknown",
+          "влияние": "A neurotoxic alkaloid that affects the central nervous system, often co-occurring with ibotenic acid."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 1.6,
+      "eval_count": 250,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita phalloides\",\n\"composition\": [\n{\"compound\": \"Amanitin\", \"amount\": \"0.1% of dry weight\", \"effect\": \"Inhibits RNA polymerase II, causing severe liver and kidney failure.\"},\n{\"compound\": \"Phalloidin\", \"amount\": \"0.04% of dry weight\", \"effect\": \"Disrupts actin filaments in cells, leading to gastrointestinal distress and muscle necrosis.\"},\n{\"compound\": \"Vestal toxin\", \"amount\": \"0.04% of dry weight\", \"effect\": \"Exhibits toxicity similar to phalloidin by affecting cytoskeletal dynamics.\"},\n{\"compound\": \"Orellanine\", \"amount\": \"unknown\", \"effect\": \"Inhibits protein synthesis in eukaryotic cells, potentially contributing to cellular damage.\"}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Amanitin",
+          "содержание": "0.1% of dry weight",
+          "влияние": "Inhibits RNA polymerase II, causing severe liver and kidney failure."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "0.04% of dry weight",
+          "влияние": "Disrupts actin filaments in cells, leading to gastrointestinal distress and muscle necrosis."
+        },
+        {
+          "вещество": "Vestal toxin",
+          "содержание": "0.04% of dry weight",
+          "влияние": "Exhibits toxicity similar to phalloidin by affecting cytoskeletal dynamics."
+        },
+        {
+          "вещество": "Orellanine",
+          "содержание": "unknown",
+          "влияние": "Inhibits protein synthesis in eukaryotic cells, potentially contributing to cellular damage."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 1.44,
+      "eval_count": 193,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\"mushroom\": \"Amanita citrina\", \"composition\": [{\"compound\": \"Alpha-amanitin\", \"amount\": \"unknown\", \"effect\": \"Potent inhibitor of RNA polymerase II causing multi-organ failure and death.\"}, {\"compound\": \"Beta-amanitin\", \"amount\": \"unknown\", \"effect\": \"Inhibits DNA and RNA synthesis leading to cellular damage.\"}, {\"compound\": \"Guanine\", \"amount\": \"unknown\", \"effect\": \"Binds to RNA polymerase II and inhibits its activity.\"}, {\"compound\": \"Proteins\", \"amount\": \"unknown\", \"effect\": \"Serves as a structural and functional component of the mushroom tissue.\"}, {\"compound\": \"Lipids\", \"amount\": \"unknown\", \"effect\": \"Forms cell membranes and stores energy within the mushroom.\"}]}",
+      "composition": [
+        {
+          "вещество": "Alpha-amanitin",
+          "содержание": "unknown",
+          "влияние": "Potent inhibitor of RNA polymerase II causing multi-organ failure and death."
+        },
+        {
+          "вещество": "Beta-amanitin",
+          "содержание": "unknown",
+          "влияние": "Inhibits DNA and RNA synthesis leading to cellular damage."
+        },
+        {
+          "вещество": "Guanine",
+          "содержание": "unknown",
+          "влияние": "Binds to RNA polymerase II and inhibits its activity."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "unknown",
+          "влияние": "Serves as a structural and functional component of the mushroom tissue."
+        },
+        {
+          "вещество": "Lipids",
+          "содержание": "unknown",
+          "влияние": "Forms cell membranes and stores energy within the mushroom."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 1.3,
+      "eval_count": 178,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita rubescens\",\n  \"composition\": [\n    {\n      \"compound\": \"Amanitine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Inhibits RNA polymerase II, leading to liver and kidney failure, which can be fatal.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Excitotoxin that causes neurological symptoms such as confusion, hallucinations, and seizures.\"\n    },\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"GABAergic agonist that acts as a sedative and can cause drowsiness and muscle spasms.\"\n    },\n    {\n      \"compound\": \"Proteins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Provide essential amino acids and nutritional value when properly prepared, though toxicity risks remain.\"\n    },\n    {\n      \"compound\": \"Carbohydrates\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Serve as a source of energy for the human body.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Amanitine",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II, leading to liver and kidney failure, which can be fatal."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Excitotoxin that causes neurological symptoms such as confusion, hallucinations, and seizures."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "GABAergic agonist that acts as a sedative and can cause drowsiness and muscle spasms."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "unknown",
+          "влияние": "Provide essential amino acids and nutritional value when properly prepared, though toxicity risks remain."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "unknown",
+          "влияние": "Serve as a source of energy for the human body."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 1.67,
+      "eval_count": 268,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n\"mushroom\": \"Caesar's mushroom (Amanita caesarea)\",\n\"composition\": [\n{\n\"compound\": \"Protein\",\n\"amount\": \"12-14% of dry weight\",\n\"effect\": \"Provides essential amino acids for human nutrition and muscle repair.\"\n},\n{\n\"compound\": \"Trehalose\",\n\"amount\": \"5-7% of dry weight\",\n\"effect\": \"Serves as a primary energy source and storage carbohydrate.\"\n},\n{\n\"compound\": \"Alanine\",\n\"amount\": \"10-12% of total amino acids\",\n\"effect\": \"An amino acid involved in the transport of nitrogen and glucose.\"\n},\n{\n\"compound\": \"Glutamic acid\",\n\"amount\": \"8-10% of total amino acids\",\n\"effect\": \"Contributes to the umami taste and supports neurotransmission.\"\n},\n{\n\"compound\": \"Ergosterol\",\n\"amount\": \"100-200 mg/kg fresh weight\",\n\"effect\": \"A precursor to Vitamin D2 which supports bone health.\"\n},\n{\n\"compound\": \"Chitin\",\n\"amount\": \"15-20% of dry weight\",\n\"effect\": \"Structural polysaccharide that aids in human gut microbiome regulation.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Protein",
+          "содержание": "12-14% of dry weight",
+          "влияние": "Provides essential amino acids for human nutrition and muscle repair."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "5-7% of dry weight",
+          "влияние": "Serves as a primary energy source and storage carbohydrate."
+        },
+        {
+          "вещество": "Alanine",
+          "содержание": "10-12% of total amino acids",
+          "влияние": "An amino acid involved in the transport of nitrogen and glucose."
+        },
+        {
+          "вещество": "Glutamic acid",
+          "содержание": "8-10% of total amino acids",
+          "влияние": "Contributes to the umami taste and supports neurotransmission."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "100-200 mg/kg fresh weight",
+          "влияние": "A precursor to Vitamin D2 which supports bone health."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "15-20% of dry weight",
+          "влияние": "Structural polysaccharide that aids in human gut microbiome regulation."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 1.94,
+      "eval_count": 301,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita virosa\",\n\"composition\": [\n{\n\"compound\": \"Alpha-amanitin\",\n\"amount\": \"2-5 mg/g dry weight\",\n\"effect\": \"Causes fatal liver and kidney failure by inhibiting RNA polymerase II.\"\n},\n{\n\"compound\": \"Beta-amanitin\",\n\"amount\": \"1-2 mg/g dry weight\",\n\"effect\": \"Inhibits RNA synthesis and contributes to acute toxicity.\"\n},\n{\n\"compound\": \"Gamma-amanitin\",\n\"amount\": \"0.1-0.5 mg/g dry weight\",\n\"effect\": \"Acts as an RNA polymerase inhibitor with moderate toxicity.\"\n},\n{\n\"compound\": \"Phallotoxins (phalloidin)\",\n\"amount\": \"1-2 mg/g dry weight\",\n\"effect\": \"Disrupts actin filaments in cells, leading to gastrointestinal distress and liver damage.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Alpha-amanitin",
+          "содержание": "2-5 mg/g dry weight",
+          "влияние": "Causes fatal liver and kidney failure by inhibiting RNA polymerase II."
+        },
+        {
+          "вещество": "Beta-amanitin",
+          "содержание": "1-2 mg/g dry weight",
+          "влияние": "Inhibits RNA synthesis and contributes to acute toxicity."
+        },
+        {
+          "вещество": "Gamma-amanitin",
+          "содержание": "0.1-0.5 mg/g dry weight",
+          "влияние": "Acts as an RNA polymerase inhibitor with moderate toxicity."
+        },
+        {
+          "вещество": "Phallotoxins (phalloidin)",
+          "содержание": "1-2 mg/g dry weight",
+          "влияние": "Disrupts actin filaments in cells, leading to gastrointestinal distress and liver damage."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 1.45,
+      "eval_count": 216,
+      "prompt_eval_count": 167,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Armillaria mellea\",\n  \"composition\": [\n    {\n      \"compound\": \"Armillarin A\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Acts as a toxin that can cause gastrointestinal distress if consumed raw.\"\n    },\n    {\n      \"compound\": \"Armillarin B\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Contributes to the toxic properties of the mushroom, potentially inducing nausea.\"\n    },\n    {\n      \"compound\": \"Protein\",\n      \"amount\": \"30% of dry weight\",\n      \"effect\": \"Provides essential amino acids for human nutrition.\"\n    },\n    {\n      \"compound\": \"Carbohydrates (Polysaccharides)\",\n      \"amount\": \"50% of dry weight\",\n      \"effect\": \"Serves as a primary energy source and fiber for digestion.\"\n    },\n    {\n      \"compound\": \"Chitin\",\n      \"amount\": \"15% of dry weight\",\n      \"effect\": \"Indigestible structural carbohydrate that acts as dietary fiber.\"\n    },\n    {\n      \"compound\": \"Ligninolytic Enzymes (Laccase, Manganese Peroxidase)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Generally non-toxic but indicates the mushroom's ability to degrade wood, not directly affecting human metabolism.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Armillarin A",
+          "содержание": "unknown",
+          "влияние": "Acts as a toxin that can cause gastrointestinal distress if consumed raw."
+        },
+        {
+          "вещество": "Armillarin B",
+          "содержание": "unknown",
+          "влияние": "Contributes to the toxic properties of the mushroom, potentially inducing nausea."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "30% of dry weight",
+          "влияние": "Provides essential amino acids for human nutrition."
+        },
+        {
+          "вещество": "Carbohydrates (Polysaccharides)",
+          "содержание": "50% of dry weight",
+          "влияние": "Serves as a primary energy source and fiber for digestion."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "15% of dry weight",
+          "влияние": "Indigestible structural carbohydrate that acts as dietary fiber."
+        },
+        {
+          "вещество": "Ligninolytic Enzymes (Laccase, Manganese Peroxidase)",
+          "содержание": "unknown",
+          "влияние": "Generally non-toxic but indicates the mushroom's ability to degrade wood, not directly affecting human metabolism."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 2.06,
+      "eval_count": 322,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

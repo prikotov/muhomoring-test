@@ -1,0 +1,620 @@
+{
+  "model": "deepseek-flash",
+  "run": 6,
+  "started_at": "2026-11-21T04:33:32.274988+00:00",
+  "base_url": "api.deepseek.com (через pi)",
+  "protocol": "pi (anthropic-messages, deepseek api)",
+  "provider": "deepseek",
+  "keep_alive": "n/a (API stateless)",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 26.6,
+    "prompt_tokens": 1411,
+    "output_tokens": 3441,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita muscaria (fly agaric)\",\n  \"composition\": [\n    {\n      \"compound\": \"Muscimol\",\n      \"amount\": \"0.1% of dry weight\",\n      \"effect\": \"Psychoactive GABA-A agonist causing sedation, euphoria, and hallucinations.\"\n    },\n    {\n      \"compound\": \"Ibotenic acid\",\n      \"amount\": \"0.1% of dry weight\",\n      \"effect\": \"Neurotoxin and prodrug of muscimol, causing excitatory effects and potential brain lesions.\"\n    },\n    {\n      \"compound\": \"Muscazone\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Minor psychoactive compound with effects similar to muscimol but less potent.\"\n    },\n    {\n      \"compound\": \"Muscarine\",\n      \"amount\": \"0.01% of fresh weight\",\n      \"effect\": \"Muscarinic acetylcholine receptor agonist causing salivation, sweating, and other parasympathetic effects.\"\n    },\n    {\n      \"compound\": \"Choline\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Essential nutrient and precursor to acetylcholine, with no significant acute toxicity.\"\n    },\n    {\n      \"compound\": \"Betaine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Osmolyte and methyl donor, generally harmless in small amounts.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.1% of dry weight",
+          "влияние": "Psychoactive GABA-A agonist causing sedation, euphoria, and hallucinations."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.1% of dry weight",
+          "влияние": "Neurotoxin and prodrug of muscimol, causing excitatory effects and potential brain lesions."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "Minor psychoactive compound with effects similar to muscimol but less potent."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "0.01% of fresh weight",
+          "влияние": "Muscarinic acetylcholine receptor agonist causing salivation, sweating, and other parasympathetic effects."
+        },
+        {
+          "вещество": "Choline",
+          "содержание": "unknown",
+          "влияние": "Essential nutrient and precursor to acetylcholine, with no significant acute toxicity."
+        },
+        {
+          "вещество": "Betaine",
+          "содержание": "unknown",
+          "влияние": "Osmolyte and methyl donor, generally harmless in small amounts."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 2.72,
+      "eval_count": 293,
+      "prompt_eval_count": 177,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\"mushroom\": \"Amanita pantherina (panther cap)\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"90% of fresh weight\", \"effect\": \"Essential solvent for all cellular processes; not itself bioactive.\"}, {\"compound\": \"Ibotenic acid\", \"amount\": \"unknown\", \"effect\": \"Neurotoxin that acts as a glutamate agonist and is decarboxylated to muscimol.\"}, {\"compound\": \"Muscimol\", \"amount\": \"unknown\", \"effect\": \"Psychoactive GABA-A agonist causing sedation, hallucinations, and delirium.\"}, {\"compound\": \"Muscazone\", \"amount\": \"unknown\", \"effect\": \"Minor psychoactive isoxazole derivative with weak GABAergic activity.\"}, {\"compound\": \"Stizolobic acid\", \"amount\": \"unknown\", \"effect\": \"Non-protein amino acid with unclear human effects, possibly neuroactive.\"}, {\"compound\": \"Stizolobinic acid\", \"amount\": \"unknown\", \"effect\": \"Related non-protein amino acid of uncertain significance to humans.\"}, {\"compound\": \"Pantherine\", \"amount\": \"unknown\", \"effect\": \"Isoxazole compound historically reported from this species; effects poorly characterized.\"}, {\"compound\": \"Tricholomic acid\", \"amount\": \"unknown\", \"effect\": \"Amino acid derivative with reported weak neuroactivity; human relevance uncertain.\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"Fungal sterol precursor of vitamin D2; largely nutritional.\"}, {\"compound\": \"Chitin\", \"amount\": \"unknown\", \"effect\": \"Structural polysaccharide acting as dietary fiber in humans.\"}, {\"compound\": \"Protein\", \"amount\": \"20-30% of dry weight\", \"effect\": \"Nutritional macronutrient source of amino acids.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"40-60% of dry weight\", \"effect\": \"Main energy reserve, including glycogen and structural polysaccharides.\"}, {\"compound\": \"Potassium\", \"amount\": \"unknown\", \"effect\": \"Essential mineral electrolyte for normal cell function.\"}, {\"compound\": \"Phosphorus\", \"amount\": \"unknown\", \"effect\": \"Essential mineral for bone and cellular energy metabolism.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "90% of fresh weight",
+          "влияние": "Essential solvent for all cellular processes; not itself bioactive."
+        },
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Neurotoxin that acts as a glutamate agonist and is decarboxylated to muscimol."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "Psychoactive GABA-A agonist causing sedation, hallucinations, and delirium."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "Minor psychoactive isoxazole derivative with weak GABAergic activity."
+        },
+        {
+          "вещество": "Stizolobic acid",
+          "содержание": "unknown",
+          "влияние": "Non-protein amino acid with unclear human effects, possibly neuroactive."
+        },
+        {
+          "вещество": "Stizolobinic acid",
+          "содержание": "unknown",
+          "влияние": "Related non-protein amino acid of uncertain significance to humans."
+        },
+        {
+          "вещество": "Pantherine",
+          "содержание": "unknown",
+          "влияние": "Isoxazole compound historically reported from this species; effects poorly characterized."
+        },
+        {
+          "вещество": "Tricholomic acid",
+          "содержание": "unknown",
+          "влияние": "Amino acid derivative with reported weak neuroactivity; human relevance uncertain."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "Fungal sterol precursor of vitamin D2; largely nutritional."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "unknown",
+          "влияние": "Structural polysaccharide acting as dietary fiber in humans."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "20-30% of dry weight",
+          "влияние": "Nutritional macronutrient source of amino acids."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "40-60% of dry weight",
+          "влияние": "Main energy reserve, including glycogen and structural polysaccharides."
+        },
+        {
+          "вещество": "Potassium",
+          "содержание": "unknown",
+          "влияние": "Essential mineral electrolyte for normal cell function."
+        },
+        {
+          "вещество": "Phosphorus",
+          "содержание": "unknown",
+          "влияние": "Essential mineral for bone and cellular energy metabolism."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 14,
+      "thinking_len": 0,
+      "duration_s": 3.81,
+      "eval_count": 483,
+      "prompt_eval_count": 177,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\"mushroom\": \"Amanita phalloides (death cap)\", \"composition\": [{\"compound\": \"α-amanitin\", \"amount\": \"unknown\", \"effect\": \"Potently inhibits RNA polymerase II, causing severe liver and kidney damage.\"}, {\"compound\": \"β-amanitin\", \"amount\": \"unknown\", \"effect\": \"A toxic amatoxin that inhibits RNA polymerase II and contributes to hepatotoxicity.\"}, {\"compound\": \"γ-amanitin\", \"amount\": \"unknown\", \"effect\": \"A minor amatoxin with similar RNA polymerase II–inhibiting toxicity.\"}, {\"compound\": \"phalloidin\", \"amount\": \"unknown\", \"effect\": \"Binds and stabilizes actin filaments, damaging cells but poorly absorbed from the gut.\"}, {\"compound\": \"phallacidin\", \"amount\": \"unknown\", \"effect\": \"A phallotoxin that stabilizes actin filaments and is cytotoxic.\"}, {\"compound\": \"phalloin\", \"amount\": \"unknown\", \"effect\": \"A phallotoxin causing actin filament stabilization and cellular injury.\"}, {\"compound\": \"amanullin\", \"amount\": \"unknown\", \"effect\": \"An amatoxin-like peptide with lower toxicity than α-amanitin.\"}, {\"compound\": \"amanin\", \"amount\": \"unknown\", \"effect\": \"An amatoxin that inhibits RNA polymerase II and is toxic to the liver.\"}, {\"compound\": \"water\", \"amount\": \"unknown\", \"effect\": \"Essential solvent and major component of the fruiting body.\"}, {\"compound\": \"proteins\", \"amount\": \"unknown\", \"effect\": \"Provide amino acids and include the toxic peptide toxins.\"}, {\"compound\": \"polysaccharides\", \"amount\": \"unknown\", \"effect\": \"Structural and storage carbohydrates with possible immunomodulatory activity.\"}, {\"compound\": \"ergosterol\", \"amount\": \"unknown\", \"effect\": \"A fungal sterol and provitamin D2 precursor.\"}, {\"compound\": \"trehalose\", \"amount\": \"unknown\", \"effect\": \"A storage sugar used as an energy source.\"}, {\"compound\": \"mannitol\", \"amount\": \"unknown\", \"effect\": \"A sugar alcohol contributing to osmotic balance.\"}]}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "unknown",
+          "влияние": "Potently inhibits RNA polymerase II, causing severe liver and kidney damage."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "unknown",
+          "влияние": "A toxic amatoxin that inhibits RNA polymerase II and contributes to hepatotoxicity."
+        },
+        {
+          "вещество": "γ-amanitin",
+          "содержание": "unknown",
+          "влияние": "A minor amatoxin with similar RNA polymerase II–inhibiting toxicity."
+        },
+        {
+          "вещество": "phalloidin",
+          "содержание": "unknown",
+          "влияние": "Binds and stabilizes actin filaments, damaging cells but poorly absorbed from the gut."
+        },
+        {
+          "вещество": "phallacidin",
+          "содержание": "unknown",
+          "влияние": "A phallotoxin that stabilizes actin filaments and is cytotoxic."
+        },
+        {
+          "вещество": "phalloin",
+          "содержание": "unknown",
+          "влияние": "A phallotoxin causing actin filament stabilization and cellular injury."
+        },
+        {
+          "вещество": "amanullin",
+          "содержание": "unknown",
+          "влияние": "An amatoxin-like peptide with lower toxicity than α-amanitin."
+        },
+        {
+          "вещество": "amanin",
+          "содержание": "unknown",
+          "влияние": "An amatoxin that inhibits RNA polymerase II and is toxic to the liver."
+        },
+        {
+          "вещество": "water",
+          "содержание": "unknown",
+          "влияние": "Essential solvent and major component of the fruiting body."
+        },
+        {
+          "вещество": "proteins",
+          "содержание": "unknown",
+          "влияние": "Provide amino acids and include the toxic peptide toxins."
+        },
+        {
+          "вещество": "polysaccharides",
+          "содержание": "unknown",
+          "влияние": "Structural and storage carbohydrates with possible immunomodulatory activity."
+        },
+        {
+          "вещество": "ergosterol",
+          "содержание": "unknown",
+          "влияние": "A fungal sterol and provitamin D2 precursor."
+        },
+        {
+          "вещество": "trehalose",
+          "содержание": "unknown",
+          "влияние": "A storage sugar used as an energy source."
+        },
+        {
+          "вещество": "mannitol",
+          "содержание": "unknown",
+          "влияние": "A sugar alcohol contributing to osmotic balance."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 14,
+      "thinking_len": 0,
+      "duration_s": 3.19,
+      "eval_count": 467,
+      "prompt_eval_count": 176,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\"mushroom\": \"Amanita citrina (false death cap)\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"unknown\", \"effect\": \"Essential solvent and major component of the fruiting body, maintaining cellular hydration.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"unknown\", \"effect\": \"Provide dietary energy and structural polysaccharides such as chitin.\"}, {\"compound\": \"Proteins\", \"amount\": \"unknown\", \"effect\": \"Supply amino acids and contribute to nutritional value, though some may be allergenic.\"}, {\"compound\": \"Bufotenine\", \"amount\": \"unknown\", \"effect\": \"A psychoactive tryptamine that can cause hallucinations and autonomic effects if ingested.\"}, {\"compound\": \"5-Hydroxy-N,N-dimethyltryptamine (bufotenine-related alkaloids)\", \"amount\": \"unknown\", \"effect\": \"May contribute to neurological and cardiovascular effects after consumption.\"}, {\"compound\": \"Tryptophan derivatives\", \"amount\": \"unknown\", \"effect\": \"Precursors to indole alkaloids with potential psychoactive properties.\"}, {\"compound\": \"Soluble sugars (trehalose, mannitol)\", \"amount\": \"unknown\", \"effect\": \"Serve as energy reserves and osmotic regulators; generally harmless.\"}, {\"compound\": \"Fatty acids\", \"amount\": \"unknown\", \"effect\": \"Contribute to membrane structure and modest nutritional lipid content.\"}, {\"compound\": \"Ash/minerals (potassium, phosphorus)\", \"amount\": \"unknown\", \"effect\": \"Provide essential dietary minerals.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "unknown",
+          "влияние": "Essential solvent and major component of the fruiting body, maintaining cellular hydration."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "unknown",
+          "влияние": "Provide dietary energy and structural polysaccharides such as chitin."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "unknown",
+          "влияние": "Supply amino acids and contribute to nutritional value, though some may be allergenic."
+        },
+        {
+          "вещество": "Bufotenine",
+          "содержание": "unknown",
+          "влияние": "A psychoactive tryptamine that can cause hallucinations and autonomic effects if ingested."
+        },
+        {
+          "вещество": "5-Hydroxy-N,N-dimethyltryptamine (bufotenine-related alkaloids)",
+          "содержание": "unknown",
+          "влияние": "May contribute to neurological and cardiovascular effects after consumption."
+        },
+        {
+          "вещество": "Tryptophan derivatives",
+          "содержание": "unknown",
+          "влияние": "Precursors to indole alkaloids with potential psychoactive properties."
+        },
+        {
+          "вещество": "Soluble sugars (trehalose, mannitol)",
+          "содержание": "unknown",
+          "влияние": "Serve as energy reserves and osmotic regulators; generally harmless."
+        },
+        {
+          "вещество": "Fatty acids",
+          "содержание": "unknown",
+          "влияние": "Contribute to membrane structure and modest nutritional lipid content."
+        },
+        {
+          "вещество": "Ash/minerals (potassium, phosphorus)",
+          "содержание": "unknown",
+          "влияние": "Provide essential dietary minerals."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 9,
+      "thinking_len": 0,
+      "duration_s": 3.1,
+      "eval_count": 327,
+      "prompt_eval_count": 176,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\"mushroom\": \"Amanita rubescens (blusher)\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"90% of fresh weight\", \"effect\": \"Essential solvent and major component of the fruiting body, with no specific pharmacological effect.\"}, {\"compound\": \"Protein\", \"amount\": \"3% of fresh weight\", \"effect\": \"Provides amino acids for nutrition.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"4% of fresh weight\", \"effect\": \"Serves as an energy source.\"}, {\"compound\": \"Dietary fiber\", \"amount\": \"2% of fresh weight\", \"effect\": \"Supports digestive health.\"}, {\"compound\": \"Ash (minerals)\", \"amount\": \"1% of fresh weight\", \"effect\": \"Provides essential mineral nutrients such as potassium and phosphorus.\"}, {\"compound\": \"Fat\", \"amount\": \"0.5% of fresh weight\", \"effect\": \"Provides energy and fat-soluble nutrients.\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"A provitamin D2 that becomes vitamin D2 when exposed to UV light.\"}, {\"compound\": \"Tryptophan\", \"amount\": \"unknown\", \"effect\": \"An essential amino acid and serotonin precursor.\"}, {\"compound\": \"Ergothioneine\", \"amount\": \"unknown\", \"effect\": \"An antioxidant that may protect cells from oxidative stress.\"}, {\"compound\": \"Rubescenslysin\", \"amount\": \"unknown\", \"effect\": \"A hemolytic protein that can lyse red blood cells but is destroyed by cooking.\"}, {\"compound\": \"Amanita hemolysins (other)\", \"amount\": \"unknown\", \"effect\": \"Heat-labile hemolytic proteins that can cause hemolysis if the mushroom is eaten raw.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "90% of fresh weight",
+          "влияние": "Essential solvent and major component of the fruiting body, with no specific pharmacological effect."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "3% of fresh weight",
+          "влияние": "Provides amino acids for nutrition."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "4% of fresh weight",
+          "влияние": "Serves as an energy source."
+        },
+        {
+          "вещество": "Dietary fiber",
+          "содержание": "2% of fresh weight",
+          "влияние": "Supports digestive health."
+        },
+        {
+          "вещество": "Ash (minerals)",
+          "содержание": "1% of fresh weight",
+          "влияние": "Provides essential mineral nutrients such as potassium and phosphorus."
+        },
+        {
+          "вещество": "Fat",
+          "содержание": "0.5% of fresh weight",
+          "влияние": "Provides energy and fat-soluble nutrients."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "A provitamin D2 that becomes vitamin D2 when exposed to UV light."
+        },
+        {
+          "вещество": "Tryptophan",
+          "содержание": "unknown",
+          "влияние": "An essential amino acid and serotonin precursor."
+        },
+        {
+          "вещество": "Ergothioneine",
+          "содержание": "unknown",
+          "влияние": "An antioxidant that may protect cells from oxidative stress."
+        },
+        {
+          "вещество": "Rubescenslysin",
+          "содержание": "unknown",
+          "влияние": "A hemolytic protein that can lyse red blood cells but is destroyed by cooking."
+        },
+        {
+          "вещество": "Amanita hemolysins (other)",
+          "содержание": "unknown",
+          "влияние": "Heat-labile hemolytic proteins that can cause hemolysis if the mushroom is eaten raw."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 11,
+      "thinking_len": 0,
+      "duration_s": 3.11,
+      "eval_count": 385,
+      "prompt_eval_count": 177,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\"mushroom\": \"Caesar's mushroom (Amanita caesarea)\", \"composition\": [{\"compound\": \"Water\", \"amount\": \"90 % of fresh weight\", \"effect\": \"Provides moisture and is essential for the mushroom's texture and metabolism.\"}, {\"compound\": \"Carbohydrates\", \"amount\": \"5 % of fresh weight\", \"effect\": \"Serve as an energy source for human nutrition.\"}, {\"compound\": \"Proteins\", \"amount\": \"2 % of fresh weight\", \"effect\": \"Supply amino acids needed for human nutrition.\"}, {\"compound\": \"Dietary fiber\", \"amount\": \"2 % of fresh weight\", \"effect\": \"Supports digestive health and bowel regularity.\"}, {\"compound\": \"Ash (minerals)\", \"amount\": \"1 % of fresh weight\", \"effect\": \"Provides essential minerals such as potassium and phosphorus.\"}, {\"compound\": \"Ergosterol\", \"amount\": \"unknown\", \"effect\": \"A provitamin D2 that can be converted to vitamin D2 in humans.\"}, {\"compound\": \"Free amino acids\", \"amount\": \"unknown\", \"effect\": \"Contribute to the mushroom's umami taste and nutritional value.\"}, {\"compound\": \"Fatty acids\", \"amount\": \"unknown\", \"effect\": \"Provide dietary lipids and contribute to flavor.\"}, {\"compound\": \"Caffeine\", \"amount\": \"unknown\", \"effect\": \"A mild stimulant that may cause alertness if present.\"}, {\"compound\": \"Phenolic compounds\", \"amount\": \"unknown\", \"effect\": \"Act as antioxidants that may help protect cells from oxidative damage.\"}, {\"compound\": \"Mannitol\", \"amount\": \"unknown\", \"effect\": \"A sugar alcohol that may affect blood sugar and digestion.\"}, {\"compound\": \"Tocopherols (vitamin E)\", \"amount\": \"unknown\", \"effect\": \"Provide antioxidant activity that may protect cells from damage.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "90 % of fresh weight",
+          "влияние": "Provides moisture and is essential for the mushroom's texture and metabolism."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "5 % of fresh weight",
+          "влияние": "Serve as an energy source for human nutrition."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "2 % of fresh weight",
+          "влияние": "Supply amino acids needed for human nutrition."
+        },
+        {
+          "вещество": "Dietary fiber",
+          "содержание": "2 % of fresh weight",
+          "влияние": "Supports digestive health and bowel regularity."
+        },
+        {
+          "вещество": "Ash (minerals)",
+          "содержание": "1 % of fresh weight",
+          "влияние": "Provides essential minerals such as potassium and phosphorus."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "A provitamin D2 that can be converted to vitamin D2 in humans."
+        },
+        {
+          "вещество": "Free amino acids",
+          "содержание": "unknown",
+          "влияние": "Contribute to the mushroom's umami taste and nutritional value."
+        },
+        {
+          "вещество": "Fatty acids",
+          "содержание": "unknown",
+          "влияние": "Provide dietary lipids and contribute to flavor."
+        },
+        {
+          "вещество": "Caffeine",
+          "содержание": "unknown",
+          "влияние": "A mild stimulant that may cause alertness if present."
+        },
+        {
+          "вещество": "Phenolic compounds",
+          "содержание": "unknown",
+          "влияние": "Act as antioxidants that may help protect cells from oxidative damage."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "A sugar alcohol that may affect blood sugar and digestion."
+        },
+        {
+          "вещество": "Tocopherols (vitamin E)",
+          "содержание": "unknown",
+          "влияние": "Provide antioxidant activity that may protect cells from damage."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 12,
+      "thinking_len": 0,
+      "duration_s": 3.03,
+      "eval_count": 406,
+      "prompt_eval_count": 177,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\"mushroom\": \"Amanita virosa (destroying angel)\", \"composition\": [{\"compound\": \"α-amanitin\", \"amount\": \"unknown\", \"effect\": \"Potently inhibits RNA polymerase II, causing severe hepatotoxicity and often fatal liver failure.\"}, {\"compound\": \"β-amanitin\", \"amount\": \"unknown\", \"effect\": \"A toxic amatoxin that inhibits RNA polymerase II and contributes to liver and kidney damage.\"}, {\"compound\": \"phalloidin\", \"amount\": \"unknown\", \"effect\": \"Binds actin filaments and is hepatotoxic, though poorly absorbed from the gut.\"}, {\"compound\": \"phallacidin\", \"amount\": \"unknown\", \"effect\": \"A phallotoxin that stabilizes actin filaments and can damage liver cells.\"}, {\"compound\": \"water\", \"amount\": \"90 % of fresh weight\", \"effect\": \"Essential solvent with no specific toxic effect.\"}, {\"compound\": \"total protein\", \"amount\": \"unknown\", \"effect\": \"Nutritional macronutrient providing amino acids.\"}, {\"compound\": \"total carbohydrates\", \"amount\": \"unknown\", \"effect\": \"Nutritional energy source, mainly as glycogen and structural polysaccharides.\"}, {\"compound\": \"dietary fiber\", \"amount\": \"unknown\", \"effect\": \"Indigestible polysaccharides with no direct toxic effect.\"}, {\"compound\": \"ash (minerals)\", \"amount\": \"unknown\", \"effect\": \"Provides inorganic elements such as potassium and phosphorus.\"}, {\"compound\": \"ergosterol\", \"amount\": \"unknown\", \"effect\": \"Fungal sterol and provitamin D2 precursor with no direct toxicity.\"}, {\"compound\": \"tryptophan\", \"amount\": \"unknown\", \"effect\": \"Essential amino acid, a precursor of serotonin and niacin.\"}]}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "unknown",
+          "влияние": "Potently inhibits RNA polymerase II, causing severe hepatotoxicity and often fatal liver failure."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "unknown",
+          "влияние": "A toxic amatoxin that inhibits RNA polymerase II and contributes to liver and kidney damage."
+        },
+        {
+          "вещество": "phalloidin",
+          "содержание": "unknown",
+          "влияние": "Binds actin filaments and is hepatotoxic, though poorly absorbed from the gut."
+        },
+        {
+          "вещество": "phallacidin",
+          "содержание": "unknown",
+          "влияние": "A phallotoxin that stabilizes actin filaments and can damage liver cells."
+        },
+        {
+          "вещество": "water",
+          "содержание": "90 % of fresh weight",
+          "влияние": "Essential solvent with no specific toxic effect."
+        },
+        {
+          "вещество": "total protein",
+          "содержание": "unknown",
+          "влияние": "Nutritional macronutrient providing amino acids."
+        },
+        {
+          "вещество": "total carbohydrates",
+          "содержание": "unknown",
+          "влияние": "Nutritional energy source, mainly as glycogen and structural polysaccharides."
+        },
+        {
+          "вещество": "dietary fiber",
+          "содержание": "unknown",
+          "влияние": "Indigestible polysaccharides with no direct toxic effect."
+        },
+        {
+          "вещество": "ash (minerals)",
+          "содержание": "unknown",
+          "влияние": "Provides inorganic elements such as potassium and phosphorus."
+        },
+        {
+          "вещество": "ergosterol",
+          "содержание": "unknown",
+          "влияние": "Fungal sterol and provitamin D2 precursor with no direct toxicity."
+        },
+        {
+          "вещество": "tryptophan",
+          "содержание": "unknown",
+          "влияние": "Essential amino acid, a precursor of serotonin and niacin."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 11,
+      "thinking_len": 0,
+      "duration_s": 3.36,
+      "eval_count": 381,
+      "prompt_eval_count": 175,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Armillaria mellea\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"85-90% of fresh weight\",\n      \"effect\": \"Essential for hydration and serves as the medium for other compounds.\"\n    },\n    {\n      \"compound\": \"Carbohydrates\",\n      \"amount\": \"5-10% of fresh weight\",\n      \"effect\": \"Provide energy and dietary fiber.\"\n    },\n    {\n      \"compound\": \"Proteins\",\n      \"amount\": \"2-5% of fresh weight\",\n      \"effect\": \"Supply amino acids for nutrition.\"\n    },\n    {\n      \"compound\": \"Fat\",\n      \"amount\": \"0.5-2% of fresh weight\",\n      \"effect\": \"Provides energy and essential fatty acids.\"\n    },\n    {\n      \"compound\": \"Ash (minerals)\",\n      \"amount\": \"1-2% of fresh weight\",\n      \"effect\": \"Provides essential minerals like potassium and phosphorus.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A provitamin D2 that can be converted to vitamin D2 upon UV exposure.\"\n    },\n    {\n      \"compound\": \"Beta-glucans\",\n      \"amount\": \"unknown\",\n      \"effect\": \"May modulate immune function and have antitumor properties.\"\n    },\n    {\n      \"compound\": \"Amino acids (e.g., glutamic acid, aspartic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Contribute to umami flavor and nutritional value.\"\n    },\n    {\n      \"compound\": \"Fatty acids (e.g., linoleic acid, palmitic acid)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Essential fatty acids that support cardiovascular health.\"\n    },\n    {\n      \"compound\": \"Armillaric acid\",\n      \"amount\": \"unknown\",\n      \"effect\": \"An antibiotic compound with activity against gram-positive bacteria.\"\n    },\n    {\n      \"compound\": \"Melleolides (e.g., armillarin, armillatol)\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Cytotoxic and antimicrobial sesquiterpene aryl esters; may induce apoptosis in cancer cells.\"\n    },\n    {\n      \"compound\": \"Armillaramide\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A sphingolipid with potential anticancer activity.\"\n    },\n    {\n      \"compound\": \"Armillaridin\",\n      \"amount\": \"unknown\",\n      \"effect\": \"A sesquiterpene antibiotic effective against some bacteria.\"\n    },\n    {\n      \"compound\": \"Tannins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Can cause astringency and reduce nutrient absorption.\"\n    },\n    {\n      \"compound\": \"Hemolysins\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Proteins that can lyse red blood cells; destroyed by cooking.\"\n    },\n    {\n      \"compound\": \"Terpenoids\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Contribute to flavor and may have antimicrobial properties.\"\n    },\n    {\n      \"compound\": \"Steroids\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Include ergosterol and related compounds with various biological activities.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "85-90% of fresh weight",
+          "влияние": "Essential for hydration and serves as the medium for other compounds."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "5-10% of fresh weight",
+          "влияние": "Provide energy and dietary fiber."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "2-5% of fresh weight",
+          "влияние": "Supply amino acids for nutrition."
+        },
+        {
+          "вещество": "Fat",
+          "содержание": "0.5-2% of fresh weight",
+          "влияние": "Provides energy and essential fatty acids."
+        },
+        {
+          "вещество": "Ash (minerals)",
+          "содержание": "1-2% of fresh weight",
+          "влияние": "Provides essential minerals like potassium and phosphorus."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "A provitamin D2 that can be converted to vitamin D2 upon UV exposure."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "May modulate immune function and have antitumor properties."
+        },
+        {
+          "вещество": "Amino acids (e.g., glutamic acid, aspartic acid)",
+          "содержание": "unknown",
+          "влияние": "Contribute to umami flavor and nutritional value."
+        },
+        {
+          "вещество": "Fatty acids (e.g., linoleic acid, palmitic acid)",
+          "содержание": "unknown",
+          "влияние": "Essential fatty acids that support cardiovascular health."
+        },
+        {
+          "вещество": "Armillaric acid",
+          "содержание": "unknown",
+          "влияние": "An antibiotic compound with activity against gram-positive bacteria."
+        },
+        {
+          "вещество": "Melleolides (e.g., armillarin, armillatol)",
+          "содержание": "unknown",
+          "влияние": "Cytotoxic and antimicrobial sesquiterpene aryl esters; may induce apoptosis in cancer cells."
+        },
+        {
+          "вещество": "Armillaramide",
+          "содержание": "unknown",
+          "влияние": "A sphingolipid with potential anticancer activity."
+        },
+        {
+          "вещество": "Armillaridin",
+          "содержание": "unknown",
+          "влияние": "A sesquiterpene antibiotic effective against some bacteria."
+        },
+        {
+          "вещество": "Tannins",
+          "содержание": "unknown",
+          "влияние": "Can cause astringency and reduce nutrient absorption."
+        },
+        {
+          "вещество": "Hemolysins",
+          "содержание": "unknown",
+          "влияние": "Proteins that can lyse red blood cells; destroyed by cooking."
+        },
+        {
+          "вещество": "Terpenoids",
+          "содержание": "unknown",
+          "влияние": "Contribute to flavor and may have antimicrobial properties."
+        },
+        {
+          "вещество": "Steroids",
+          "содержание": "unknown",
+          "влияние": "Include ergosterol and related compounds with various biological activities."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 17,
+      "thinking_len": 0,
+      "duration_s": 4.32,
+      "eval_count": 699,
+      "prompt_eval_count": 176,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ]
+}

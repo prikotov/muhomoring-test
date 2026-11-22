@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RU vs EN: отвечает ли модель иначе на английском?</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+
+<h1>RU vs EN: отвечает ли модель иначе на английском?</h1>
+<p class="proto">Сравнение двух серий одной методики: вопросы и названия грибов на русском и английском. Одинаковые модели, уровни размышлений и судья; эталоны — языковые зеркала (одни и те же факты).</p>
+<div class="chip">Серии: <b>RU (v4.3)</b> и <b>EN (v4.3-en)</b></div><div class="chip">Эталоны: ethalon.json / ethalon-en.json (зеркала)</div>
+
+<h2>Модель × уровень: RU-серия vs EN-серия</h2>
+<div class="scroll"><table class="sx">
+<tr><th>Модель</th><th>think</th>
+<th>осн RU</th><th>осн EN</th>
+<th>галл RU</th><th>галл EN</th>
+<th>стаб RU</th><th>стаб EN</th>
+<th>балл RU</th><th>балл EN</th>
+<th>длин RU</th><th>длин EN</th>
+<th>пищев RU</th><th>пищев EN</th></tr>
+<tr><td>gemma4-26b</td><td>off</td><td>32.3%</td><td>30.2%</td><td>73.9%</td><td>45.5%</td><td>51.6%</td><td>52.4%</td><td>2.1</td><td>3.4</td><td>5.2</td><td>3.8</td><td>32.7%</td><td>19.3%</td></tr><tr><td>gemma4-26b</td><td>low</td><td>30.4%</td><td>28.9%</td><td>49.9%</td><td>42.9%</td><td>54.9%</td><td>62.1%</td><td>3.0</td><td>3.5</td><td>4.5</td><td>3.2</td><td>27.8%</td><td>18.7%</td></tr><tr><td>gemma4-26b</td><td>medium</td><td>30.9%</td><td>28.9%</td><td>51.0%</td><td>40.9%</td><td>48.2%</td><td>62.5%</td><td>3.0</td><td>3.5</td><td>4.5</td><td>3.3</td><td>29.9%</td><td>16.8%</td></tr><tr><td>gemma4-26b</td><td>xhigh</td><td>31.5%</td><td>29.7%</td><td>48.4%</td><td>41.4%</td><td>50.2%</td><td>60.1%</td><td>3.0</td><td>3.5</td><td>4.5</td><td>3.5</td><td>25.4%</td><td>22.6%</td></tr><tr><td>gemma4-31b-it-qat</td><td>off</td><td>25.3%</td><td>35.2%</td><td>69.5%</td><td>50.7%</td><td>43.8%</td><td>50.0%</td><td>2.2</td><td>3.5</td><td>4.8</td><td>4.2</td><td>28.7%</td><td>23.5%</td></tr><tr><td>gemma4-31b-it-qat</td><td>low</td><td>31.2%</td><td>30.9%</td><td>47.2%</td><td>42.4%</td><td>56.9%</td><td>61.3%</td><td>3.3</td><td>3.6</td><td>4.2</td><td>3.5</td><td>21.7%</td><td>8.6%</td></tr><tr><td>gemma4-31b-it-qat</td><td>medium</td><td>31.9%</td><td>32.7%</td><td>46.5%</td><td>40.1%</td><td>59.3%</td><td>59.8%</td><td>3.4</td><td>3.7</td><td>4.0</td><td>3.3</td><td>16.3%</td><td>12.2%</td></tr><tr><td>gemma4-31b-it-qat</td><td>xhigh</td><td>30.7%</td><td>30.9%</td><td>49.7%</td><td>40.3%</td><td>56.3%</td><td>61.5%</td><td>3.1</td><td>3.7</td><td>4.0</td><td>3.4</td><td>17.4%</td><td>8.8%</td></tr><tr><td>huihui-ai-pi-100k</td><td>off</td><td>25.1%</td><td>27.3%</td><td>75.0%</td><td>66.7%</td><td>12.1%</td><td>20.7%</td><td>1.8</td><td>2.5</td><td>6.4</td><td>5.4</td><td>16.7%</td><td>30.4%</td></tr><tr><td>huihui-ai-pi-100k</td><td>low</td><td>25.6%</td><td>29.4%</td><td>72.1%</td><td>70.6%</td><td>22.1%</td><td>26.3%</td><td>2.0</td><td>2.4</td><td>6.5</td><td>6.4</td><td>4.8%</td><td>10.8%</td></tr><tr><td>huihui-ai-pi-100k</td><td>medium</td><td>20.8%</td><td>33.2%</td><td>80.1%</td><td>71.5%</td><td>10.5%</td><td>25.1%</td><td>1.6</td><td>2.4</td><td>7.5</td><td>7.5</td><td>9.7%</td><td>11.6%</td></tr><tr><td>huihui-ai-pi-100k</td><td>xhigh</td><td>28.1%</td><td>32.5%</td><td>74.9%</td><td>68.7%</td><td>18.5%</td><td>32.1%</td><td>2.1</td><td>2.8</td><td>7.7</td><td>7.3</td><td>15.2%</td><td>21.1%</td></tr><tr><td>medgemma-27b</td><td>off</td><td>21.7%</td><td>22.9%</td><td>87.4%</td><td>76.3%</td><td>52.1%</td><td>35.9%</td><td>1.6</td><td>2.5</td><td>9.3</td><td>8.9</td><td>45.9%</td><td>38.4%</td></tr><tr><td>orcarouter-latest</td><td>off</td><td>28.7%</td><td>24.7%</td><td>70.9%</td><td>65.9%</td><td>12.6%</td><td>25.8%</td><td>1.9</td><td>2.4</td><td>5.5</td><td>4.8</td><td>21.9%</td><td>21.6%</td></tr><tr><td>orcarouter-latest</td><td>low</td><td>25.4%</td><td>29.9%</td><td>73.6%</td><td>66.4%</td><td>15.9%</td><td>30.7%</td><td>2.5</td><td>2.7</td><td>7.1</td><td>6.8</td><td>10.3%</td><td>12.8%</td></tr><tr><td>orcarouter-latest</td><td>medium</td><td>24.0%</td><td>29.7%</td><td>72.7%</td><td>69.2%</td><td>14.0%</td><td>27.9%</td><td>2.2</td><td>2.6</td><td>7.0</td><td>7.2</td><td>7.5%</td><td>11.5%</td></tr><tr><td>orcarouter-latest</td><td>xhigh</td><td>26.6%</td><td>31.8%</td><td>75.0%</td><td>70.5%</td><td>16.0%</td><td>29.2%</td><td>2.1</td><td>2.4</td><td>7.1</td><td>6.8</td><td>10.7%</td><td>12.0%</td></tr><tr><td>qwen3.8-latest</td><td>off</td><td>22.0%</td><td>28.9%</td><td>69.1%</td><td>63.0%</td><td>12.9%</td><td>20.7%</td><td>1.9</td><td>2.5</td><td>5.0</td><td>4.7</td><td>15.9%</td><td>21.0%</td></tr><tr><td>qwen3.8-latest</td><td>low</td><td>24.6%</td><td>29.7%</td><td>72.1%</td><td>69.2%</td><td>16.6%</td><td>31.4%</td><td>2.3</td><td>2.6</td><td>5.8</td><td>6.8</td><td>3.8%</td><td>9.4%</td></tr><tr><td>qwen3.8-latest</td><td>medium</td><td>21.4%</td><td>31.4%</td><td>69.2%</td><td>68.0%</td><td>16.3%</td><td>27.1%</td><td>2.4</td><td>2.5</td><td>6.9</td><td>7.2</td><td>9.4%</td><td>6.9%</td></tr><tr><td>qwen3.8-latest</td><td>xhigh</td><td>23.6%</td><td>31.4%</td><td>73.4%</td><td>64.8%</td><td>17.2%</td><td>27.4%</td><td>2.2</td><td>2.9</td><td>6.7</td><td>6.6</td><td>15.6%</td><td>21.6%</td></tr><tr><td>deepseek-flash</td><td>off</td><td>42.5%</td><td>54.5%</td><td>78.2%</td><td>66.9%</td><td>35.1%</td><td>36.3%</td><td>3.0</td><td>3.6</td><td>16.3</td><td>12.2</td><td>28.1%</td><td>25.1%</td></tr><tr><td>mimo-v2.6-pro</td><td>off</td><td>40.2%</td><td>55.7%</td><td>66.9%</td><td>61.3%</td><td>20.0%</td><td>30.5%</td><td>2.8</td><td>3.9</td><td>9.7</td><td>9.6</td><td>10.2%</td><td>14.8%</td></tr><tr><td>kimi-k3.1-pro</td><td>low</td><td>44.8%</td><td>57.6%</td><td>48.8%</td><td>35.3%</td><td>47.6%</td><td>55.9%</td><td>4.2</td><td>5.1</td><td>6.8</td><td>5.5</td><td>4.0%</td><td>5.1%</td></tr><tr><td>qwen4-max-preview</td><td>low</td><td>60.4%</td><td>67.0%</td><td>66.3%</td><td>61.2%</td><td>31.3%</td><td>33.9%</td><td>4.2</td><td>4.0</td><td>17.9</td><td>13.6</td><td>14.5%</td><td>10.0%</td></tr><tr><td>qwen4-max</td><td>low</td><td>59.0%</td><td>66.8%</td><td>68.4%</td><td>59.9%</td><td>33.3%</td><td>33.8%</td><td>3.9</td><td>4.4</td><td>17.5</td><td>12.6</td><td>14.6%</td><td>10.9%</td></tr><tr><td>gemini-4-neon</td><td>low</td><td>54.4%</td><td>58.4%</td><td>47.7%</td><td>44.5%</td><td>60.7%</td><td>59.9%</td><td>4.6</td><td>5.1</td><td>9.6</td><td>8.9</td><td>21.3%</td><td>25.3%</td></tr><tr><td>gpt-6.2-sol</td><td>low</td><td>43.8%</td><td>49.7%</td><td>60.1%</td><td>35.1%</td><td>72.6%</td><td>79.8%</td><td>3.7</td><td>5.0</td><td>7.4</td><td>5.6</td><td>13.5%</td><td>4.9%</td></tr>
+</table></div>
+<div class="legend" style="margin-top:10px"><span class="hint">
+осн — полнота эталонных «основных» (match по именам); галл — доля вердиктов
+«галлюцинация» (судья v2, строгий: нет в эталоне = галлюцинация);
+стаб — средний попарный Jaccard наборов между прогонами; балл — средний
+балл судьи 0–10; длин — среднее число веществ в ответе; пищев — доля
+позиций пищевого состава (RU- и EN-словари). RU = models/ (промпты v4.3,
+русские названия), EN = models-en/ (questions-composition-en.json,
+ethalon-en.json, те же модели и уровни)</span></div>
+
+<footer>построено compare-ru-en.py · 2026-11-21 16:05 UTC</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

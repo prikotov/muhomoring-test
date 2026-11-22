@@ -1,0 +1,381 @@
+{
+  "model": "huihui-ai:pi-100k",
+  "run": 4,
+  "started_at": "2026-11-20T11:04:44.548260+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {mushroom, composition[{compound, amount, effect}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 18.6,
+    "prompt_tokens": 1345,
+    "output_tokens": 2517,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita muscaria\",\n\"composition\": [\n{\n\"compound\": \"Ibotenic acid\",\n\"amount\": \"0.3% of dry weight\",\n\"effect\": \"Acts as an excitatory neurotransmitter and causes hallucinations and nausea.\"\n},\n{\n\"compound\": \"Muscimol\",\n\"amount\": \"0.5% of dry weight\",\n\"effect\": \"Potent GABA agonist that produces sedative and hallucinogenic effects.\"\n},\n{\n\"compound\": \"Muscimol\",\n\"amount\": \"0.5% of dry weight\",\n\"effect\": \"Potent GABA agonist that produces sedative and hallucinogenic effects.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.3% of dry weight",
+          "влияние": "Acts as an excitatory neurotransmitter and causes hallucinations and nausea."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.5% of dry weight",
+          "влияние": "Potent GABA agonist that produces sedative and hallucinogenic effects."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.5% of dry weight",
+          "влияние": "Potent GABA agonist that produces sedative and hallucinogenic effects."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 3.89,
+      "eval_count": 166,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n\"mushroom\": \"Panther cap (Amanita pantherina)\",\n\"composition\": [\n{\n\"compound\": \"Ibotenic acid\",\n\"amount\": \"0.5-2.0 % of dry weight\",\n\"effect\": \"Acts as a potent agonist at glutamate receptors, causing neurotoxicity such as confusion, hallucinations, and convulsions.\"\n},\n{\n\"compound\": \"Muscimol\",\n\"amount\": \"0.5-3.0 % of dry weight\",\n\"effect\": \"Serves as a GABA-A receptor agonist, producing sedation, CNS depression, and at higher doses, hallucinations and coma.\"\n},\n{\n\"compound\": \"Pantherin\",\n\"amount\": \"unknown\",\n\"effect\": \"A minor neurotoxic derivative that contributes to the overall GABAergic and glutamatergic effects of the mushroom.\"\n},\n{\n\"compound\": \"Muscarine\",\n\"amount\": \"variable, typically 1-5 mg/kg fresh weight\",\n\"effect\": \"Acts as a cholinergic agonist, leading to increased secretions, miosis, and bradycardia.\"\n},\n{\n\"compound\": \"Proteins\",\n\"amount\": \"5-10 % of dry weight\",\n\"effect\": \"Provide structural integrity and serve as a source of amino acids, generally having a neutral physiological effect unless in large quantities.\"\n},\n{\n\"compound\": \"Polysaccharides\",\n\"amount\": \"30-50 % of dry weight\",\n\"effect\": \"Contribute to the mushroom's bulk and may have mild immunomodulatory effects, though often indigestible for many humans.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.5-2.0 % of dry weight",
+          "влияние": "Acts as a potent agonist at glutamate receptors, causing neurotoxicity such as confusion, hallucinations, and convulsions."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.5-3.0 % of dry weight",
+          "влияние": "Serves as a GABA-A receptor agonist, producing sedation, CNS depression, and at higher doses, hallucinations and coma."
+        },
+        {
+          "вещество": "Pantherin",
+          "содержание": "unknown",
+          "влияние": "A minor neurotoxic derivative that contributes to the overall GABAergic and glutamatergic effects of the mushroom."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "variable, typically 1-5 mg/kg fresh weight",
+          "влияние": "Acts as a cholinergic agonist, leading to increased secretions, miosis, and bradycardia."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "5-10 % of dry weight",
+          "влияние": "Provide structural integrity and serve as a source of amino acids, generally having a neutral physiological effect unless in large quantities."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "30-50 % of dry weight",
+          "влияние": "Contribute to the mushroom's bulk and may have mild immunomodulatory effects, though often indigestible for many humans."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 2.57,
+      "eval_count": 381,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita phalloides\",\n\"composition\": [\n{\n\"compound\": \"alpha-amanitin\",\n\"amount\": \"0.3-2.5 % of dry weight\",\n\"effect\": \"Inhibits RNA polymerase II, causing severe liver and kidney damage.\"\n},\n{\n\"compound\": \"beta-amanitin\",\n\"amount\": \"0.2-1.0 % of dry weight\",\n\"effect\": \"Inhibits RNA polymerase I, contributing to cellular protein synthesis failure.\"\n},\n{\n\"compound\": \"gamma-amanitin\",\n\"amount\": \"0.1-0.5 % of dry weight\",\n\"effect\": \"Less toxic than alpha-amanitin but still affects nuclear RNA synthesis.\"\n},\n{\n\"compound\": \"phallotoxins (including alpha-phallotoxin)\",\n\"amount\": \"0.5-3.0 % of dry weight\",\n\"effect\": \"Disrupts the actin cytoskeleton, leading to cell shape changes and increased cell permeability.\"\n},\n{\n\"compound\": \"epoxysins\",\n\"amount\": \"0.5-1.5 % of dry weight\",\n\"effect\": \"Modulates immune responses and can contribute to inflammation and tissue damage.\"\n},\n{\n\"compound\": \"deoxy-amanitins\",\n\"amount\": \"0.1-0.8 % of dry weight\",\n\"effect\": \"Less potent than alpha-amanitin but still toxic through inhibition of RNA polymerase.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "alpha-amanitin",
+          "содержание": "0.3-2.5 % of dry weight",
+          "влияние": "Inhibits RNA polymerase II, causing severe liver and kidney damage."
+        },
+        {
+          "вещество": "beta-amanitin",
+          "содержание": "0.2-1.0 % of dry weight",
+          "влияние": "Inhibits RNA polymerase I, contributing to cellular protein synthesis failure."
+        },
+        {
+          "вещество": "gamma-amanitin",
+          "содержание": "0.1-0.5 % of dry weight",
+          "влияние": "Less toxic than alpha-amanitin but still affects nuclear RNA synthesis."
+        },
+        {
+          "вещество": "phallotoxins (including alpha-phallotoxin)",
+          "содержание": "0.5-3.0 % of dry weight",
+          "влияние": "Disrupts the actin cytoskeleton, leading to cell shape changes and increased cell permeability."
+        },
+        {
+          "вещество": "epoxysins",
+          "содержание": "0.5-1.5 % of dry weight",
+          "влияние": "Modulates immune responses and can contribute to inflammation and tissue damage."
+        },
+        {
+          "вещество": "deoxy-amanitins",
+          "содержание": "0.1-0.8 % of dry weight",
+          "влияние": "Less potent than alpha-amanitin but still toxic through inhibition of RNA polymerase."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 2.22,
+      "eval_count": 346,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita citrina\",\n  \"composition\": [\n    {\n      \"compound\": \"Water\",\n      \"amount\": \"88-92% of fresh weight\",\n      \"effect\": \"Provides the primary mass and hydrating property of the mushroom.\"\n    },\n    {\n      \"compound\": \"Proteins\",\n      \"amount\": \"3.0-4.0% of dry weight\",\n      \"effect\": \"Supplies essential amino acids for tissue repair and metabolic functions.\"\n    },\n    {\n      \"compound\": \"Carbohydrates\",\n      \"amount\": \"5.0-8.0% of dry weight\",\n      \"effect\": \"Serves as an energy source through the breakdown of sugars and polysaccharides.\"\n    },\n    {\n      \"compound\": \"Fats\",\n      \"amount\": \"1.5-2.5% of dry weight\",\n      \"effect\": \"Contributes to long-term energy storage and absorption of fat-soluble vitamins.\"\n    },\n    {\n      \"compound\": \"Ergosterol\",\n      \"amount\": \"0.5-1.0% of dry weight\",\n      \"effect\": \"Acts as a precursor to Vitamin D2 and supports cell membrane integrity.\"\n    },\n    {\n      \"compound\": \"Biotin\",\n      \"amount\": \"10-20 mg/kg of dry weight\",\n      \"effect\": \"Aids in the metabolism of fats, carbohydrates, and proteins as a B-vitamin cofactor.\"\n    },\n    {\n      \"compound\": \"Riboflavin\",\n      \"amount\": \"5-10 mg/kg of dry weight\",\n      \"effect\": \"Supports energy production and acts as an antioxidant in cellular processes.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88-92% of fresh weight",
+          "влияние": "Provides the primary mass and hydrating property of the mushroom."
+        },
+        {
+          "вещество": "Proteins",
+          "содержание": "3.0-4.0% of dry weight",
+          "влияние": "Supplies essential amino acids for tissue repair and metabolic functions."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "5.0-8.0% of dry weight",
+          "влияние": "Serves as an energy source through the breakdown of sugars and polysaccharides."
+        },
+        {
+          "вещество": "Fats",
+          "содержание": "1.5-2.5% of dry weight",
+          "влияние": "Contributes to long-term energy storage and absorption of fat-soluble vitamins."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "0.5-1.0% of dry weight",
+          "влияние": "Acts as a precursor to Vitamin D2 and supports cell membrane integrity."
+        },
+        {
+          "вещество": "Biotin",
+          "содержание": "10-20 mg/kg of dry weight",
+          "влияние": "Aids in the metabolism of fats, carbohydrates, and proteins as a B-vitamin cofactor."
+        },
+        {
+          "вещество": "Riboflavin",
+          "содержание": "5-10 mg/kg of dry weight",
+          "влияние": "Supports energy production and acts as an antioxidant in cellular processes."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 0,
+      "duration_s": 2.26,
+      "eval_count": 405,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita rubescens\",\n\"composition\": [\n{\n\"compound\": \"Water\",\n\"amount\": \"80-90% of fresh weight\",\n\"effect\": \"Provides hydration and acts as a solvent for intracellular processes.\"\n},\n{\n\"compound\": \"Protein\",\n\"amount\": \"20-30% of dry weight\",\n\"effect\": \"Supplies amino acids essential for muscle repair and body maintenance.\"\n},\n{\n\"compound\": \"Mannitol\",\n\"amount\": \"0.5-2% of fresh weight\",\n\"effect\": \"Acts as a mild diuretic and sugar alcohol that contributes to a slightly sweet aftertaste.\"\n},\n{\n\"compound\": \"Trehalose\",\n\"amount\": \"1-5% of dry weight\",\n\"effect\": \"Serves as a stable energy reserve and protects fungal cells during desiccation.\"\n},\n{\n\"compound\": \"Cholesterol\",\n\"amount\": \"10-15 mg/g dry weight\",\n\"effect\": \"Regulates cell membrane fluidity in the mushroom, which may support human cell membrane integrity when consumed.\"\n},\n{\n\"compound\": \"Ergosterol\",\n\"amount\": \"1-3 mg/g dry weight\",\n\"effect\": \"Converts to Vitamin D2 upon exposure to UV light, aiding in calcium absorption.\"\n},\n{\n\"compound\": \"Fructose\",\n\"amount\": \"0.1-0.5% of fresh weight\",\n\"effect\": \"Provides a rapid source of energy and contributes to the mushroom's flavor profile.\"\n},\n{\n\"compound\": \"Glucose\",\n\"amount\": \"0.05-0.3% of fresh weight\",\n\"effect\": \"Serves as an immediate source of cellular energy in the human body.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "80-90% of fresh weight",
+          "влияние": "Provides hydration and acts as a solvent for intracellular processes."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "20-30% of dry weight",
+          "влияние": "Supplies amino acids essential for muscle repair and body maintenance."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "0.5-2% of fresh weight",
+          "влияние": "Acts as a mild diuretic and sugar alcohol that contributes to a slightly sweet aftertaste."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "1-5% of dry weight",
+          "влияние": "Serves as a stable energy reserve and protects fungal cells during desiccation."
+        },
+        {
+          "вещество": "Cholesterol",
+          "содержание": "10-15 mg/g dry weight",
+          "влияние": "Regulates cell membrane fluidity in the mushroom, which may support human cell membrane integrity when consumed."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "1-3 mg/g dry weight",
+          "влияние": "Converts to Vitamin D2 upon exposure to UV light, aiding in calcium absorption."
+        },
+        {
+          "вещество": "Fructose",
+          "содержание": "0.1-0.5% of fresh weight",
+          "влияние": "Provides a rapid source of energy and contributes to the mushroom's flavor profile."
+        },
+        {
+          "вещество": "Glucose",
+          "содержание": "0.05-0.3% of fresh weight",
+          "влияние": "Serves as an immediate source of cellular energy in the human body."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 8,
+      "thinking_len": 0,
+      "duration_s": 2.65,
+      "eval_count": 412,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n\"mushroom\": \"Amanita caesarea\",\n\"composition\": [\n{\n\"compound\": \"Protein\",\n\"amount\": \"3-5% of fresh weight\",\n\"effect\": \"Provides amino acids essential for tissue repair and growth.\"\n},\n{\n\"compound\": \"Polysaccharides (Beta-glucans)\",\n\"amount\": \"2-4% of dry weight\",\n\"effect\": \"Modulates the immune system and may have anti-inflammatory properties.\"\n},\n{\n\"compound\": \"Essential Fatty Acids (Oleic and Linoleic acid)\",\n\"amount\": \"30-50% of total lipids\",\n\"effect\": \"Supports cardiovascular health and cell membrane integrity.\"\n},\n{\n\"compound\": \"B-Vitamins (Thiamine, Riboflavin, Niacin)\",\n\"amount\": \"1-5 mg per 100g fresh weight\",\n\"effect\": \"Facilitates energy metabolism and nerve function.\"\n},\n{\n\"compound\": \"Minerals (Potassium, Phosphorus, Magnesium)\",\n\"amount\": \"200-500 mg per 100g fresh weight\",\n\"effect\": \"Regulates fluid balance, muscle contraction, and bone health.\"\n},\n{\n\"compound\": \"Antioxidants (Ascorbic acid and Carotenoids)\",\n\"amount\": \"1-3 mg per 100g fresh weight\",\n\"effect\": \"Protects cells from oxidative stress and supports immune defense.\"\n}\n]\n}",
+      "composition": [
+        {
+          "вещество": "Protein",
+          "содержание": "3-5% of fresh weight",
+          "влияние": "Provides amino acids essential for tissue repair and growth."
+        },
+        {
+          "вещество": "Polysaccharides (Beta-glucans)",
+          "содержание": "2-4% of dry weight",
+          "влияние": "Modulates the immune system and may have anti-inflammatory properties."
+        },
+        {
+          "вещество": "Essential Fatty Acids (Oleic and Linoleic acid)",
+          "содержание": "30-50% of total lipids",
+          "влияние": "Supports cardiovascular health and cell membrane integrity."
+        },
+        {
+          "вещество": "B-Vitamins (Thiamine, Riboflavin, Niacin)",
+          "содержание": "1-5 mg per 100g fresh weight",
+          "влияние": "Facilitates energy metabolism and nerve function."
+        },
+        {
+          "вещество": "Minerals (Potassium, Phosphorus, Magnesium)",
+          "содержание": "200-500 mg per 100g fresh weight",
+          "влияние": "Regulates fluid balance, muscle contraction, and bone health."
+        },
+        {
+          "вещество": "Antioxidants (Ascorbic acid and Carotenoids)",
+          "содержание": "1-3 mg per 100g fresh weight",
+          "влияние": "Protects cells from oxidative stress and supports immune defense."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 2.09,
+      "eval_count": 346,
+      "prompt_eval_count": 169,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n  \"mushroom\": \"Amanita virosa\",\n  \"composition\": [\n    {\n      \"compound\": \"Amatoxin (specifically alpha-amanitin)\",\n      \"amount\": \"0.1-0.5% of dry weight\",\n      \"effect\": \"Inhibits RNA polymerase II in liver and kidney cells, leading to severe hepatotoxicity and renal failure.\"\n    },\n    {\n      \"compound\": \"Beta-amanitin\",\n      \"amount\": \"2-10% of dry weight\",\n      \"effect\": \"Acts as a potent inhibitor of RNA polymerase II, contributing to the toxic effects of the mushroom.\"\n    },\n    {\n      \"compound\": \"Epi-amanitin\",\n      \"amount\": \"Unknown\",\n      \"effect\": \"Exhibits toxic properties similar to other amatoxins, contributing to cellular damage.\"\n    },\n    {\n      \"compound\": \"Vestal toxin\",\n      \"amount\": \"Unknown\",\n      \"effect\": \"Possesses cytotoxic properties that contribute to the overall toxicity of the mushroom.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Amatoxin (specifically alpha-amanitin)",
+          "содержание": "0.1-0.5% of dry weight",
+          "влияние": "Inhibits RNA polymerase II in liver and kidney cells, leading to severe hepatotoxicity and renal failure."
+        },
+        {
+          "вещество": "Beta-amanitin",
+          "содержание": "2-10% of dry weight",
+          "влияние": "Acts as a potent inhibitor of RNA polymerase II, contributing to the toxic effects of the mushroom."
+        },
+        {
+          "вещество": "Epi-amanitin",
+          "содержание": "Unknown",
+          "влияние": "Exhibits toxic properties similar to other amatoxins, contributing to cellular damage."
+        },
+        {
+          "вещество": "Vestal toxin",
+          "содержание": "Unknown",
+          "влияние": "Possesses cytotoxic properties that contribute to the overall toxicity of the mushroom."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 1.58,
+      "eval_count": 250,
+      "prompt_eval_count": 167,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"mushroom\": \"Armillaria mellea\",\n  \"composition\": [\n    {\n      \"compound\": \"Protein\",\n      \"amount\": \"~20% of dry weight\",\n      \"effect\": \"Provides essential amino acids and nutritional value.\"\n    },\n    {\n      \"compound\": \"Carbohydrates (Glucan/Chitin)\",\n      \"amount\": \"~50-60% of dry weight\",\n      \"effect\": \"Serves as a dietary fiber source and energy substrate.\"\n    },\n    {\n      \"compound\": \"Ergothioneine\",\n      \"amount\": \"unknown\",\n      \"effect\": \"Acts as an antioxidant and may contribute to cellular protection.\"\n    },\n    {\n      \"compound\": \"Polysaccharides\",\n      \"amount\": \"unknown\",\n      \"effect\": \"May exhibit immunomodulatory and antimicrobial properties.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Protein",
+          "содержание": "~20% of dry weight",
+          "влияние": "Provides essential amino acids and nutritional value."
+        },
+        {
+          "вещество": "Carbohydrates (Glucan/Chitin)",
+          "содержание": "~50-60% of dry weight",
+          "влияние": "Serves as a dietary fiber source and energy substrate."
+        },
+        {
+          "вещество": "Ergothioneine",
+          "содержание": "unknown",
+          "влияние": "Acts as an antioxidant and may contribute to cellular protection."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "unknown",
+          "влияние": "May exhibit immunomodulatory and antimicrobial properties."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 1.31,
+      "eval_count": 211,
+      "prompt_eval_count": 168,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Эталонные составы и источники</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+
+<h1>Эталонные составы и источники</h1>
+<p class="proto">Эталон — опорная справка состава (ethalon.json, v7), по которой судья glm-5.3-flash (thinking low) сверяет ответы моделей; собран из рецензируемой литературы и вики-статей с трассировкой к первоисточникам. English version: ethalon-en.html.</p>
+<div class="chip">Язык: <b>RU</b></div><div class="chip">English version: <a class="report-link" target="_blank" rel="noopener" href="ethalon-en.html">ethalon-en.html</a></div>
+<h2>Эталонные составы и источники</h2>
+<div class="eth">
+<p class="intro">Эталон — опорная справка состава, с которой судья (glm-5.3-flash, thinking low) сверяет каждый ответ модели. Собран из рецензируемой литературы (обзоры Michelot & Melendez-Howell 2003, Wieland 1983/1986, Carboué & Lopez 2021) и вики-статей с трассировкой к первоисточникам; слабо подтверждённое помечено «спорная» и штрафуется судьёй мягче. Группы: <b>основные</b> — входят в «пропущено важное» (штраф за пропуск), <b>следовые</b> — вклад в полноту, <b>спорные</b> — присутствие оспаривается литературой.</p>
+<h3>Источники эталона</h3><table class="sx"><tr><th style="width:44%">Источник</th><th>Что взято</th></tr>
+<tr><td><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot D., Melendez-Howell L.M. «Amanita muscaria: Chemistry, Biology, Toxicology, and Ethnomycology» // Mycological Research 107, 2003, 131–146</a></td><td>Главный обзор химии красного мухомора: изоксазолы (иботеновая → мусцимол), мускарин в следовых количествах, стизолобовая/стизолобиновая кислоты, холин и ацетилхолин, спорность буфотенина, амавадин</td></tr>
+<tr><td><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">Carboué Q., Lopez M. «Amanita muscaria: Ecology, Chemistry, Myths» // Encyclopedia 1(3), MDPI, 2021, 905–914</a></td><td>Полный текст и Table 1: мускарин 0,02 % сух. веса, иботеновая ~1 % сух. (до 70 мг на тело), мусцимол 0,09 % сух. (~6 мг); спорность тропановых алкалоидов; летальная доза ~15 шляпок; следы аматоксинов в отдельных образцах (оспаривается)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso H. «The pigments of fly agaric» (1979) + работы Michelot 2003 о пигментах</a></td><td>Пигменты шляпки красного мухомора: мускафлавин (жёлтый), мускаурины (оранжевые), мускапурпурин (красно-фиолетовый) — беталаинового типа от беталаминовой кислоты; старая атрибуция пульвиновой кислотой пересмотрена</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland T. «The toxic peptides from Amanita mushrooms» (Int. J. Pept. Protein Res. 22, 1983) + «Peptides of Poisonous Amanita Mushrooms» (Springer, 1986)</a></td><td>Таксономия пептидов Phalloideae: 9 аматоксинов + 7 фаллотоксинов (октапептиды) + 6 виротоксинов (гептапептиды, названы по A. virosa); триптатиониновое кольцо; механизм РНК-полимеразы II; антаманид</td></tr>
+<tr><td>en.wikipedia: Amatoxin; Amanita muscaria / pantherina / citrina / rubescens / caesarea / virosa; Armillaria mellea (сняты 2026-11-17/18) <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">Amatoxin</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">Amanita muscaria</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">Amanita pantherina</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">Amanita citrina</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">Amanita rubescens</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">Amanita caesarea</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">Amanita virosa</a> · <a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">Armillaria mellea</a></td><td>Агрегатор с трассировкой к первоисточникам: LD50 α-аманитина 0,1 мг/кг; токсичность приписана иботеновой у пантерного; буфотенин/5-MeO-ДМТ/серотонин у лимонного (хроматография), следы α-аманитина в лимонном (Cambridge); гемолитический белок серо-розового, rubescenslysin; органические кислоты цезарского ~6 г/кг и биоаккумуляция Cd/Pb; 6 виротоксинов и запах редьки у вонючего; меллеолиды и биолюминесценция Armillaria</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Dorfer+Gressler+Hoffmeister+diversity+bioactivity+Armillaria+sesquiterpene+aryl+ester" target="_blank" rel="noopener">Dörfer J., Gressler S., Hoffmeister D. // Mycological Progress 18, 2019 + Pfütze et al. 2024</a></td><td>Меллеолиды Armillaria: ~60 производных (2019) → &gt;80 (2024); сесквитерпеновые ариловые эфиры орселлиновой кислоты, часть хлорирована</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux D.G. «Medical Toxicology of Natural Substances», Wiley, 2008</a></td><td>Токсикология пантерного/красного: изоксазолы обоих видов, «иботенический/пантериновый синдром»</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Voynova+Toxicological+and+Pharmacological+Profile+of+Amanita+muscaria+Pharmacia" target="_blank" rel="noopener">Voynova M. et al. «Toxicological and Pharmacological Profile of Amanita muscaria» // Pharmacia 67, 2020 + Savickaitė et al. 2025</a></td><td>Фармакологический профиль красного: мусцимол — ГАМК_A-агонист, иботеновая — NMDA; подтверждение холина, ацетилхолина, мускарона, бетанина и следовых тропанов</td></tr>
+<tr><td><a class="srclink" href="https://ru.wikipedia.org/wiki/%D0%9C%D1%83%D1%85%D0%BE%D0%BC%D0%BE%D1%80_%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D1%8B%D0%B9" target="_blank" rel="noopener">ru.wikipedia «Мухомор красный» (снят 2026-11-17)</a></td><td>Декарбоксилирование иботеновой при сушке «но не до конца»; мусказон — продукт УФ-разложения иботеновой, слабая активность; мускарин «слишком мало для роли в симптомах»</td></tr>
+<tr><td>Вишневский М.В. «Мухомор: Микродозинг» — Самарканд: БИО-Пресс, 2024 (544 с., ISBN 978-5-907522-10-7)</td><td>Соединения красного мухомора, отсутствовавшие в эталоне: МТгК (β-карболин, ингибитор МАО), гетероауксин (индол-3-уксусная кислота), эрготионеин, гидроксипирролидинон, герцинин, мускаридин; подтверждение изоксазолов, стизолобовых кислот, мусказона, пигментов, маннитола/трегалозы. Позиционная монография известного миколога (к.б.н.) — уверенность записей «низкая»</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1002/anie.202001870" target="_blank" rel="noopener">Obermaier S., Müller M. «Ibotenic Acid Biosynthesis in the Fly Agaric Is Initiated by Glutamate Hydroxylation» // Angew. Chem. Int. Ed. 59, 2020</a></td><td>Биосинтез иботеновой кислоты: из глутамата, ген-кластер ibo, декарбоксилаза → мусцимол с выходом ~20%</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1515/znc-2007-11-1201" target="_blank" rel="noopener">Stintzing F., Schliemann W. «Pigments of fly agaric (Amanita muscaria)» // Z. Naturforsch. C 62, 2007</a></td><td>Пигменты шляпки — современный пересмотр <a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a></td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Kuehnelt+Goessler+Irgolic+arsenocholine+mushroom+Amanita+muscaria" target="_blank" rel="noopener">Kuehnelt D., Goessler W., Irgolic K.J. «Arsenocholine in the Mushroom Amanita muscaria» // Applied Organometallic Chemistry 11, 1997</a></td><td>Арсенохолин (мышьяксодержащий аналог холина) — соединение, отсутствовавшее в эталоне</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Lipka+Falandysz+accumulation+metallic+elements+Amanita+muscaria" target="_blank" rel="noopener">Lipka K., Falandysz J. «Accumulation of metallic elements by Amanita muscaria from rural and industrial regions» // J. Environ. Sci. Health B</a></td><td>Биоаккумуляция металлов (подтверждение амавадина/ванадия и металлов в эталоне)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=bufotenine+concentrations+carpophores+Amanita+citrina" target="_blank" rel="noopener">Stijve T. «Bufotenine Concentrations in Carpophores of Amanita citrina (Schff.) S.F. Gray» // Trav. Chim. Aliment. Hyg. 70, 1979</a></td><td>Прямое количественное определение буфотенина в плодовых телах лимонного мухомора (ACIT)</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1080/00275514.1983.12023789" target="_blank" rel="noopener">«Chromatographic and Taxonomic Evaluation of Amanita citrina» // Mycologia 75(6), 1983</a></td><td>Хроматографический профиль лимонного мухомора (индольные алкалоиды)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=Shinozaki+Ishida+stizolobic+acid+competitive+antagonist+quisqualate" target="_blank" rel="noopener">Shinozaki H., Ishida M. «Stizolobic acid, a competitive antagonist of the quisqualate-type receptor» // Brain Research 451, 1988</a></td><td>Фармакология стизолобовой кислоты (антагонист квисквалатных рецепторов)</td></tr>
+<tr><td><a class="srclink" href="https://scholar.google.com/scholar?q=occurrence+muscarine+muscimol+various+fungi+Coolia" target="_blank" rel="noopener">Stiive T. «The occurrence of muscarine and muscimol in various fungi» // Coolia 25, 1982</a></td><td>Распределение мускарина и мусцимола по видам грибов</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.1080/02791072.2010.10400712" target="_blank" rel="noopener">Feeney K. «Revisiting Wasson&#x27;s Soma: exploring the effects of preparation on the chemistry of Amanita muscaria» // J. Psychoactive Drugs 42, 2010</a></td><td>Влияние подготовки (сушка и пр.) на химию красного мухомора — поддержка декарбоксилирования иботеновой</td></tr>
+<tr><td><a class="srclink" href="https://doi.org/10.3390/toxins17050247" target="_blank" rel="noopener">Zhang Y.-Z. et al. «Toxin Profiling of Amanita citrina and A. sinocitrina: First Report of Bufotenine Detection» // Toxins 17(5):247, 2025</a> <a class="srclink" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12115419" target="_blank" rel="noopener">PMC (полный текст)</a></td><td>Буфотенин в лимонном мухоморе: 2,90 ± 0,27 г/кг сух. веса; LC-MS/MS-скрининг 11 токсинов (мускарин, аманитины, фаллотоксины, изоксазолы, псилоцибин/цин) — ни один не обнаружен; buffotenin ранее: 1,6–7,5 мг/г (Wieland 1968)</td></tr>
+<tr><td><a class="srclink" href="https://www.samorini.it/doc1/alt_aut/sz/stijve-bufotenine-concentrations-in-carpophores-of-amanita-citrina.pdf" target="_blank" rel="noopener">Stijve T. «Bufotenine Concentrations in Carpophores of Amanita citrina» // Trav. Chim. Aliment. Hyg. 70, 1979</a></td><td>~45 мг/кг свободного основания буфотенина в европейских образцах лимонного мухомора</td></tr>
+<tr><td><a class="srclink" href="https://pubmed.ncbi.nlm.nih.gov/17317341" target="_blank" rel="noopener">Tsujikawa K. et al. «Determination of muscimol and ibotenic acid in Amanita mushrooms by LC-MS/MS» // Forensic Science International 169, 2007</a></td><td>Количественное определение мусцимола и иботеновой в A. muscaria / A. pantherina (LC-MS/MS); справочные диапазоны: у красного иботеновая 0,29–6,6 мг/г сух., мусцимол 0,07–2,4 мг/г сух.</td></tr>
+</table>
+<h3>Красный мухомор (Amanita muscaria)</h3>
+<p class="note">Мускарин исторически считали главным токсином — миф; реальные действующие вещества — изоксазолы (иботеновая кислота → мусцимол при сушке).</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">изоксазолы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Иботеновая_кислота" target="_blank" rel="noopener">иботеновая кислота</a></td><td class="cont">~1 % сухого веса (по MDPI 2021, Table 1; до 70 мг на плодовое тело 50–70 г свежего); в свежем весе ~0,1 % (влажность ~90 %)</td><td class="eff">нейротоксин, агонист NMDA/AMPA-глутаматных рецепторов: возбуждение, судороги, атаксия; в экспериментах вызывает гибель нейронов</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; Obermaier &amp; Müller 2020 (биосинтез: ibo-кластер из глутамата через трихоломичевую кислоту)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мусцимол" target="_blank" rel="noopener">мусцимол</a></td><td class="cont">~0,09 % сухого веса (MDPI 2021, ≈6 мг на плодовое тело 50–70 г свежего); растёт при сушке за счёт декарбоксилирования иботеновой</td><td class="eff">мощный агонист ГАМК_A-рецепторов: седация, сонливость, гипнотический эффект</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мусказон" target="_blank" rel="noopener">мусказон</a></td><td class="cont">следовые количества (в европейских образцах)</td><td class="eff">продукт разложения иботеновой кислоты под УФ; фармакологическая активность слабая, слабее мусцимола</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">алкалоиды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мускарин" target="_blank" rel="noopener">мускарин</a></td><td class="cont">0,02 % сухого веса (MDPI 2021); следовые, клинически не значим</td><td class="eff">М-холиномиметик (теоретически), но концентрация слишком мала для холинергического отравления — клинически не значим</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> Table 1 (0,02 % сух.); <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscarone" target="_blank" rel="noopener">мускарон</a></td><td class="cont">следовые</td><td class="eff">мускариновый агонист (активнее мускарина)</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мускаридин" target="_blank" rel="noopener">мускаридин</a></td><td class="cont">присутствует</td><td class="eff">нецикличный изомер мускарина; холиномиметик</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">холины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Холин" target="_blank" rel="noopener">холин</a></td><td class="cont">присутствует (витаминоподобное вещество)</td><td class="eff">холиномиметики слабого действия; исторически их путали с мускарином</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Ацетилхолин" target="_blank" rel="noopener">ацетилхолин</a></td><td class="cont">присутствует (нейромедиатор)</td><td class="eff">холиномиметики слабого действия; исторически их путали с мускарином</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Savickaite+Amanita+muscaria+alkaloids" target="_blank" rel="noopener">Savickaitė 2025</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">небелковые аминокислоты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=stizolobic acid" target="_blank" rel="noopener">стизолобовая кислота</a></td><td class="cont">следовые</td><td class="eff">небелковые аминокислоты (изначально выделены из Stizolobium hassjoo); влияние на человека мало изучено</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=stizolobinic acid" target="_blank" rel="noopener">стизолобиновая кислота</a></td><td class="cont">следовые</td><td class="eff">небелковые аминокислоты (изначально выделены из Stizolobium hassjoo); влияние на человека мало изучено</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">пигменты (беталаины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaflavin" target="_blank" rel="noopener">мускафлавин</a></td><td class="cont">жёлтый пигмент</td><td class="eff">пигменты беталаинового типа (производные беталаминовой кислоты); токсического действия на человека не имеют</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscaurin" target="_blank" rel="noopener">мускаурины</a></td><td class="cont">оранжевые пигменты</td><td class="eff">пигменты беталаинового типа (производные беталаминовой кислоты); токсического действия на человека не имеют</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=muscapurpurin" target="_blank" rel="noopener">мускапурпурин</a></td><td class="cont">красно-фиолетовый пигмент</td><td class="eff">пигменты беталаинового типа (производные беталаминовой кислоты); токсического действия на человека не имеют</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Musso+pigments+of+fly+agaric+Amanita+muscaria" target="_blank" rel="noopener">Musso 1979</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">комплексы ванадия</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amavadine" target="_blank" rel="noopener">амавадин</a></td><td class="cont">биоаккумуляция ванадия до 400-кратной концентрации</td><td class="eff"><i>комплексное соединение ванадия.</i> на человека не установлено</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (до 0,1 % сух. в ножке); <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">липиды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=1,3-diolein" target="_blank" rel="noopener">1,3-диолеин</a></td><td class="cont">липидный компонент</td><td class="eff">привлекает насекомых (основа «мухоморности»); на человека не рассматривается</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a>; <a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a></td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">β-карболины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=MTHCC" target="_blank" rel="noopener">МТгК</a></td><td class="cont">присутствует (азотсодержащий гетероцикл)</td><td class="eff"><i>метилтетрагидрокарболинкарбоновая кислота, β-карболин.</i> ингибитор МАО — может усиливать действие мусцимола</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">индольные соединения</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Гетероауксин" target="_blank" rel="noopener">гетероауксин</a></td><td class="cont">присутствует постоянно (на пути синтеза триптофана)</td><td class="eff"><i>индол-3-уксусная кислота, ИУК.</i> растительный гормон роста; влияние на человека не установлено</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">аминокислоты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Ergothioneine" target="_blank" rel="noopener">эрготионеин</a></td><td class="cont">присутствует</td><td class="eff">природный антиоксидант (витаминоподобная аминокислота)</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">азотсодержащие гетероциклы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=hydroxypyrrolidinone" target="_blank" rel="noopener">гидроксипирролидинон</a></td><td class="cont">присутствует (азотсодержащий гетероцикл)</td><td class="eff">антибактериальная/антигрибковая активность в составе комплекса; влияние на человека не установлено</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=hercynine" target="_blank" rel="noopener">герцинин</a></td><td class="cont">присутствует (азотсодержащий гетероцикл)</td><td class="eff">влияние на человека не установлено</td><td class="src-c">Вишневский 2024, гл. 1</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">мышьякорганические соединения</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Kuehnelt+arsenocholine+Amanita+muscaria" target="_blank" rel="noopener">арсенохолин</a></td><td class="cont">следовые количества; обнаружены у грибов из районов мышьяковых производств (Австрия); там же найден гомоарсенохолин</td><td class="eff">органическое соединение мышьяка; экологическая биоаккумуляция в загрязнённых районах, а не видовая особенность</td><td class="src-c">Kuehnelt et al. 1997; Вишневский 2024</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="grouphd"><td colspan="5">спорные</td></tr>
+<tr class="classhd"><td colspan="5">индольные алкалоиды (триптамины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Буфотенин" target="_blank" rel="noopener">буфотенин</a></td><td class="cont">старые работы сообщали следовые количества; современные обзоры не подтверждают достоверное обнаружение</td><td class="eff">серотонинергический (5-HT) алкалоид</td><td class="src-c"><a class="srclink" href="https://davidmoore.org.uk/21st_Century_Guidebook_to_Fungi_PLATINUM/REPRINT_collection/Michelot_etal_A.muscaria_chemistry_biology_toxicology.pdf" target="_blank" rel="noopener">Michelot &amp; Melendez-Howell 2003</a> (старые работы); <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (спорность)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr class="classhd"><td colspan="5">алкалоиды (тропановые)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Тропановые_алкалоиды" target="_blank" rel="noopener">тропановые алкалоиды</a></td><td class="cont">следы, если присутствуют</td><td class="eff"><i>гиосциамин, скополамин, атропин.</i> холинолитики; присутствие в A. muscaria спорно: одни работы находят следовые количества, другие отвергают (Carboué &amp; Lopez 2021)</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> («presence is unclear»)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr class="classhd"><td colspan="5">аматоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аматоксины" target="_blank" rel="noopener">аматоксины</a></td><td class="cont">следовые количества, сообщавшиеся в отдельных образцах</td><td class="eff"><i>следы.</i> оспаривается; клинически не значимы</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (отдельные образцы; оспаривается)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">α-аманитин</a></td><td class="cont">следы в отдельных образцах; варьирует по популяциям и анализам</td><td class="eff">ингибиторы РНК-полимеразы II — концентрации ничтожны, отравления не описаны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a> (единичные сообщения о следовых количествах аматоксинов)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">β-аманитин</a></td><td class="cont">следы в отдельных образцах; варьирует по популяциям и анализам</td><td class="eff">ингибиторы РНК-полимеразы II — концентрации ничтожны, отравления не описаны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_muscaria" target="_blank" rel="noopener">en-wiki Amanita muscaria</a> (единичные сообщения о следовых количествах аматоксинов)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr class="classhd"><td colspan="5">фаллотоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллотоксины" target="_blank" rel="noopener">фаллотоксины</a></td><td class="cont">следовые количества, сообщавшиеся в отдельных образцах</td><td class="eff"><i>следы.</i> оспаривается; клинически не значимы</td><td class="src-c"><a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (отдельные образцы; оспаривается)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+</table>
+<h3>Пантерный мухомор (Amanita pantherina)</h3>
+<p class="note">«Пантериновый синдром» — изоксазольный: в пантерном ПРЕОБЛАДАЕТ мусцимол (сомнолентная фаза), поэтому он считается токсичнее красного. Секция Validae. Буфотенин — не подтверждён.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">изоксазолы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Иботеновая_кислота" target="_blank" rel="noopener">иботеновая кислота</a></td><td class="cont">присутствует; соотношение обратное красному — здесь мусцимол преобладает (у красного иботеновой больше: 0,29–6,6 мг/г сух. против мусцимола 0,07–2,4 мг/г)</td><td class="eff">агонист NMDA-глутаматных рецепторов: возбуждение, атаксия, галлюцинации — возбуждающая фаза пантеринового синдрома</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a>; Obermaier &amp; Müller 2020 (ibo-кластер подтверждён в A. pantherina); Tsujikawa 2007 (LC-MS/MS); <a class="srclink" href="https://www.mdpi.com/2673-8392/1/3/69" target="_blank" rel="noopener">MDPI 2021</a> (соотношение мусцимол&gt;иботеновая)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мусцимол" target="_blank" rel="noopener">мусцимол</a></td><td class="cont">ПРЕОБЛАДАЕТ над иботеновой — мусцимол главный компонент пантерного (MDPI 2021; Вишневский 2024); для сравнения у красного мусцимол 0,07–2,4 мг/г сух.</td><td class="eff">агонист ГАМК_A: сомноленция и коматозное состояние — основа «пантеринового синдрома» (в отличие от возбуждающего красного)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мусказон" target="_blank" rel="noopener">мусказон</a></td><td class="cont">следовые</td><td class="eff">слабая активность (слабее мусцимола)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Barceloux+Medical+Toxicology+of+Natural+Substances" target="_blank" rel="noopener">Barceloux 2008</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">алкалоиды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мускарин" target="_blank" rel="noopener">мускарин</a></td><td class="cont">следовые количества</td><td class="eff">клинически не значим</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a> (следы)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мускаридин" target="_blank" rel="noopener">мускаридин</a></td><td class="cont">присутствует</td><td class="eff">нецикличный изомер мускарина; холиномиметик</td><td class="src-c">Вишневский 2024 (гл. 1, для красного и пантерного)</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">холины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Холин" target="_blank" rel="noopener">холин</a></td><td class="cont">следовые</td><td class="eff">слабый холиномиметик</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_pantherina" target="_blank" rel="noopener">en-wiki Amanita pantherina</a></td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="classhd"><td colspan="5">небелковые аминокислоты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=stizolobic acid" target="_blank" rel="noopener">стизолобовая кислота</a></td><td class="cont">присутствует</td><td class="eff">стимулянт-«энергетик»; по экспериментам ~5× мощнее стизолобиновой; антагонист квисквалатных рецепторов</td><td class="src-c">Вишневский 2024 (гл. 1, для красного и пантерного)</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=stizolobinic acid" target="_blank" rel="noopener">стизолобиновая кислота</a></td><td class="cont">присутствует</td><td class="eff">как у стизолобовой, но слабее (~5×)</td><td class="src-c">Вишневский 2024 (гл. 1, для красного и пантерного)</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="grouphd"><td colspan="5">спорные</td></tr>
+<tr class="classhd"><td colspan="5">индольные алкалоиды (триптамины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Буфотенин" target="_blank" rel="noopener">буфотенин</a></td><td class="cont">приписывается лишь единичными старыми работами</td><td class="eff">серотонинергический алкалоид</td><td class="src-c">проверенными источниками не подтверждается (en-wiki не упоминает)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+</table>
+<h3>Бледная поганка (Amanita phalloides)</h3>
+<p class="note">Отравление — фаллоидиновый синдром, обусловленный аматоксинами (ингибиторы РНК-полимеразы II, термостабильны).</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">аматоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">α-аманитин</a></td><td class="cont">летальная доза ~0,1 мг/кг (7–10 мг у взрослого ≈ одно плодовое тело); в плодовом теле — единицы мг на грамм сухого веса</td><td class="eff">избирательный ингибитор РНК-полимеразы II: прекращение синтеза мРНК → цитолиз клеток печени и почек; фаза мнимого выздоровления, летальность без лечения высокая; термостабилен (варка/сушка не помогают)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">β-аманитин</a></td><td class="cont">присутствуют, β-аманитин сопоставим по количеству с α</td><td class="eff">аматоксины того же класса; β-аманитин также ингибирует РНК-полимеразу III</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">γ-аманитин</a></td><td class="cont">присутствуют, β-аманитин сопоставим по количеству с α</td><td class="eff">аматоксины того же класса; β-аманитин также ингибирует РНК-полимеразу III</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">фаллотоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллоидин" target="_blank" rel="noopener">фаллоидин</a></td><td class="cont">присутствует, фаллотоксинов в теле больше аматоксинов</td><td class="eff">гепатотоксичен при инъекции/внутривенно (стабилизирует актин), но при приёме внутрь плохо всасывается — вклад в отравление мал</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">en-wiki Amatoxin</a> (входит в фаллотоксины)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">фаллотоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллотоксины" target="_blank" rel="noopener">фаллоин</a></td><td class="cont">меньшие фракции фаллотоксинов</td><td class="eff">как у фаллоидина (октапептиды, связка с актином)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллотоксины" target="_blank" rel="noopener">фаллацин</a></td><td class="cont">меньшие фракции фаллотоксинов</td><td class="eff">как у фаллоидина (октапептиды, связка с актином)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Phallotoxin" target="_blank" rel="noopener">фаллацидин</a></td><td class="cont">меньшие фракции фаллотоксинов</td><td class="eff">как у фаллоидина (октапептиды, связка с актином)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллотоксины" target="_blank" rel="noopener">фаллисацин</a></td><td class="cont">меньшие фракции фаллотоксинов</td><td class="eff">как у фаллоидина (октапептиды, связка с актином)</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">виротоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">виротоксины</a></td><td class="cont">малые количества (гептапептиды)</td><td class="eff">родственны фаллотоксинам, гепатотоксичность при парентеральном введении</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a>; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">белки (гемолизины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=phallolysin" target="_blank" rel="noopener">фаллолизин</a></td><td class="cont">гемолитический белок</td><td class="eff">гемолиз эритроцитов in vitro; разрушается при нагревании и в ЖКТ</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_phalloides" target="_blank" rel="noopener">en-wiki Amanita phalloides</a> / Amatoxin</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">циклические декапептиды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Антаманид" target="_blank" rel="noopener">антаманид</a></td><td class="cont">циклический декапептид, выделен из бледной поганки</td><td class="eff">в опытах ослабляет действие α-аманитина; практического применения как противоядие не получил</td><td class="src-c"><a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+</table>
+<h3>Лимонный мухомор (Amanita citrina, он же поганковидный)</h3>
+<p class="note">Слегка токсичен (возможны тошнота, дискомфорт), НЕ смертельно ядовит; главная опасность — сходство с бледной поганкой.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">индольные алкалоиды (триптамины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Буфотенин" target="_blank" rel="noopener">буфотенин</a></td><td class="cont">мг-граммы на грамм сухого веса: 1,6–7,5 мг/г (Wieland 1968); 2,90 ± 0,27 г/кг сух. (Zhang 2025, образец из Китая); ~45 мг/кг свободного основания (Stijve 1979, европейские образцы)</td><td class="eff"><i>5-гидрокси-N,N-диметилтриптамин.</i> серотонинергический агонист (5-HT-рецепторы) — главный активный компонент этого вида; в количествах гриба источник возможной тошноты/дискомфорта</td><td class="src-c">Zhang 2025 (Toxins 17:247, LC-MS/MS); Stijve 1979; <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Буфотенин" target="_blank" rel="noopener">буфотенин-N-оксид</a></td><td class="cont">рядом с буфотенином, малые количества</td><td class="eff">то же направление (серотонинергический)</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">стеролы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Эргостерол" target="_blank" rel="noopener">эргостерол</a></td><td class="cont">присутствует</td><td class="eff"><i>провитамин D2.</i> безвреден; стандартный стерол грибов</td><td class="src-c">универсальный стерол базидиомицетов (Wikipedia Ergosterol); в эталоне ACAE — <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">органические кислоты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Органические_кислоты" target="_blank" rel="noopener">органические кислоты</a></td><td class="cont">присутствуют</td><td class="eff"><i>яблочная, лимонная, янтарная и др..</i> безвредны — обычные метаболиты грибных тканей</td><td class="src-c">общая химия базидиомицетов; профиль кислот описан для рода Amanita (в эталоне ACAE — <a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a>, ~6 г/кг)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">индольные алкалоиды (триптамины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Серотонин" target="_blank" rel="noopener">серотонин</a></td><td class="cont">следовые</td><td class="eff">не являются главными токсинами — просто компоненты индольного профиля</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Серотонин" target="_blank" rel="noopener">N-метилсеротонин</a></td><td class="cont">следовые</td><td class="eff">не являются главными токсинами — просто компоненты индольного профиля</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Диметилтриптамин" target="_blank" rel="noopener">5-MeO-ДМТ</a></td><td class="cont">следовые (обнаружены хроматографией)</td><td class="eff">триптаминовые алкалоиды; в количествах гриба значимого действия нет</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Диметилтриптамин" target="_blank" rel="noopener">ДМТ</a></td><td class="cont">следовые (обнаружены хроматографией)</td><td class="eff">триптаминовые алкалоиды; в количествах гриба значимого действия нет</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">спорные</td></tr>
+<tr class="classhd"><td colspan="5">аматоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">α-аманитин</a></td><td class="cont">следовые количества (исследование Cambridge); обнаруживается не во всех популяциях и анализах</td><td class="eff">ингибитор РНК-полимеразы II — но концентрация ничтожна</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_citrina" target="_blank" rel="noopener">en-wiki Amanita citrina</a> (исследование Cambridge, следовые количества)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+</table>
+<h3>Мухомор серо-розовый (Amanita rubescens) — условно съедобный, контрольная группа <span class="badge">контрольная группа</span></h3>
+<p class="note">Условно съедобен после обязательного отваривания; мякоть розовеет на срезе.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">белки (гемолизины)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">гемолитический белок</a></td><td class="cont">присутствует в сыром плодовом теле, разрушается при варке</td><td class="eff"><i>rubescenslysin.</i> в сыром виде повреждает эритроциты: употребление сырым (особенно в большом количестве) — желудочно-кишечное расстройство и риск гемолитической анемии; термообработка полностью обезвреживает</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">лектины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Лектины" target="_blank" rel="noopener">лектины</a></td><td class="cont">следовые/малые количества</td><td class="eff"><i>агглютинины.</i> лабораторный интерес (специфичное связывание углеводов); токсического действия на человека не установлено</td><td class="src-c">биохимическая литература; проверенными обзорами не подтверждено</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">фаллотоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллоидин" target="_blank" rel="noopener">фаллоидин</a></td><td class="cont">следовые количества (обнаруживается, как у ряда других съедобных Amanita)</td><td class="eff"><i>следы.</i> не всасывается в ЖКТ — клинически не значим</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a> (упоминание следов у съедобных Amanita)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">спорные</td></tr>
+<tr class="classhd"><td colspan="5">алкалоиды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Мускарин" target="_blank" rel="noopener">мускарин</a></td><td class="cont">следовые количества (если присутствует)</td><td class="eff">клинически не значим</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a> (не упомянут)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+<tr class="classhd"><td colspan="5">изоксазолы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Изоксазолы" target="_blank" rel="noopener">изоксазолы</a></td><td class="cont">для этого вида не описаны</td><td class="eff"><i>иботеновая кислота, мусцимол.</i> упоминание — обычно путаница с секцией Validae (пантерный/красный)</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_rubescens" target="_blank" rel="noopener">en-wiki Amanita rubescens</a> (не упомянуты)</td><td><span class="conf conf-dis">спорная</span></td></tr>
+</table>
+<h3>Цезарский гриб (Amanita caesarea, мухомор Цезаря, царский) — съедобный, контрольная группа <span class="badge">контрольная группа</span></h3>
+<p class="note">Контрольная группа: токсинов нет (подтверждено проверенными источниками), съедобен даже сырым — деликатес; содержит органические кислоты и эргостерол, накапливает кадмий/свинец из почвы. Приписывание ему ядов — грубая ошибка модели.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">органические кислоты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Яблочная_кислота" target="_blank" rel="noopener">яблочная кислота</a></td><td class="cont">преобладает</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аскорбиновая_кислота" target="_blank" rel="noopener">аскорбиновая кислота</a></td><td class="cont">присутствует</td><td class="eff"><i>витамин C.</i> безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Лимонная_кислота" target="_blank" rel="noopener">лимонная кислота</a></td><td class="cont">присутствует</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фумаровая_кислота" target="_blank" rel="noopener">фумаровая кислота</a></td><td class="cont">присутствует</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Шикимовая_кислота" target="_blank" rel="noopener">шикимовая кислота</a></td><td class="cont">присутствует</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Янтарная_кислота" target="_blank" rel="noopener">янтарная кислота</a></td><td class="cont">следы</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">прочие соединения</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=ketoglutaric acid" target="_blank" rel="noopener">α-кетоглутаровая кислота</a></td><td class="cont">присутствует</td><td class="eff">безвредны — обычные пищевые кислоты</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (~6 г/кг; яблочная и аскорбиновая преобладают)</td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">стеролы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Эргостерол" target="_blank" rel="noopener">эргостерол</a></td><td class="cont">присутствует</td><td class="eff"><i>провитамин D2.</i> безвреден; стандартный стерол грибов</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">металлы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Тяжёлые_металлы" target="_blank" rel="noopener">тяжёлые металлы</a></td><td class="cont">вид-специфичная биоаккумуляция: в исследованиях Cd в ~4 раза выше нормы ЕС для культивируемых грибов, Pb также выше нормы (зависит от почвы)</td><td class="eff"><i>кадмий, свинец.</i> экологическая характеристика места сбора, не свойство вида; накопление — потенциальный вред при регулярном употреблении из загрязнённых мест</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (Cd ~4× нормы ЕС, Pb также выше)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">пигменты</td></tr>
+<tr><td class="name-c">пигменты оранжево-красной окраски шляпки</td><td class="cont">присутствуют (конкретные соединения в источнике не идентифицированы)</td><td class="eff">безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_caesarea" target="_blank" rel="noopener">en-wiki Amanita caesarea</a> (конкретные соединения не идентифицированы)</td><td><span class="conf conf-lo">низкая</span></td></tr>
+</table>
+<h3>Мухомор вонючий (Amanita virosa, белая поганка) — смертельно ядовитый</h3>
+<p class="note">Смертельно ядовит (секция Phalloideae): одной шляпки достаточно для гибели взрослого; запах редьки. Клиника отравления — как у бледной поганки.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">аматоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">α-аманитин</a></td><td class="cont">летальная доза ~0,1 мг/кг (7–10 мг у взрослого ≈ одна шляпка); уровень сопоставим с бледной поганкой</td><td class="eff"><i>главный аматоксин.</i> избирательный ингибитор РНК-полимеразы II; мишени — печень и почки; тот же фаллоидиновый синдром, что у бледной поганки; термостабилен (варка/сушка не помогают)</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Аманитин" target="_blank" rel="noopener">β-аманитин</a></td><td class="cont">присутствует вместе с α-аманитином</td><td class="eff">аматоксин того же механизма</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">фаллотоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Фаллотоксины" target="_blank" rel="noopener">фаллотоксины</a></td><td class="cont">присутствуют</td><td class="eff"><i>фаллоидин и др..</i> гепатотоксичны в чистом виде, но не всасываются в ЖКТ — вклад в отравление при приёме внутрь мал</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">виротоксины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amatoxin" target="_blank" rel="noopener">виротоксины</a></td><td class="cont">6 монциклических гептапептидов (вироизин, дезоксивироизин, вироидин, дезоксивироидин, алавироидин, ала-дезоксивироидин) — Wieland 1983/1986</td><td class="eff"><i>вироидин, вироизин, дезоксивироидин, алавироидин и др..</i> как фаллотоксины: при приёме внутрь острой токсичности не дают</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Amanita_virosa" target="_blank" rel="noopener">en-wiki Amanita virosa</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Wieland+toxic+peptides+from+Amanita+mushrooms+1983" target="_blank" rel="noopener">Wieland 1983/1986</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+</table>
+<h3>Опёнок осенний (Armillaria mellea s.l.) — условно съедобный, контрольная группа <span class="badge">контрольная группа</span></h3>
+<p class="note">Условно съедобен: требует обязательного отваривания со сливом отвара. Смертельные отравления «опятами» — ложные опёнки (Hypholoma и др.) или недоваренность.</p>
+<table class="sx eth-t"><tr><th>Соединение</th><th>Содержание</th><th>Краткое описание и влияние на человека</th><th>Источник</th><th>Уверенность</th></tr>
+<tr class="grouphd"><td colspan="5">основные</td></tr>
+<tr class="classhd"><td colspan="5">белки (термолабильные ирританты)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">термолабильные желудочно-кишечные ирританты</a></td><td class="cont">присутствуют в сырых плодовых телах, снижаются при отваривании</td><td class="eff"><i>белковой природы.</i> сырой или недоваренный — тошнота, рвота, диарея; после обязательного отваривания (отвар слить) съедобен; экземпляры с некоторых деревьев (например, конский каштан) опаснее</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">сесквитерпеноиды (меллеолиды)</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://pubchem.ncbi.nlm.nih.gov/#query=melleolide" target="_blank" rel="noopener">меллеолиды</a></td><td class="cont">присутствуют как метаболиты; крупнейшее семейство метаболитов Armillaria — &gt;80 охарактеризованных производных (Dörfer 2019: ~60; Pfütze 2024: &gt;80)</td><td class="eff"><i>сесквитерпеноидные антибиотики: эфиры орселлиновой кислоты и протоиллудановых спиртов, часть хлорирована.</i> цитотоксичны в чистом виде (исследуются как противоопухолевые/антибактериальные агенты); при обычном употреблении гриба значимой роли не играют</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a>; <a class="srclink" href="https://scholar.google.com/scholar?q=Dorfer+Gressler+Hoffmeister+diversity+bioactivity+Armillaria+sesquiterpene+aryl+ester" target="_blank" rel="noopener">Dörfer 2019</a> (~60); <a class="srclink" href="https://scholar.google.com/scholar?q=Pfutze+depicting+chemical+diversity+bioactive+melleolides+Armillaria+ostoyae" target="_blank" rel="noopener">Pfütze 2024</a> (&gt;80)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="grouphd"><td colspan="5">следовые</td></tr>
+<tr class="classhd"><td colspan="5">индольные соединения</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Триптамин" target="_blank" rel="noopener">триптамин</a></td><td class="cont">следовые количества</td><td class="eff">обычные биогенные амины, без значимого действия в количествах гриба</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Серотонин" target="_blank" rel="noopener">серотонин</a></td><td class="cont">следовые количества</td><td class="eff">обычные биогенные амины, без значимого действия в количествах гриба</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">прочие соединения</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Триптофан" target="_blank" rel="noopener">L-триптофан</a></td><td class="cont">следовые количества</td><td class="eff">обычные биогенные амины, без значимого действия в количествах гриба</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">тритерпены</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Тритерпены" target="_blank" rel="noopener">тритерпены</a></td><td class="cont">следовые количества</td><td class="eff"><i>фриделин и др..</i> без значимого действия</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">полисахариды</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Beta-glucan" target="_blank" rel="noopener">β-глюканы</a></td><td class="cont">иммуномодулирующие полисахариды</td><td class="eff">пищевые углеводы и клетчатка, безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Гликоген" target="_blank" rel="noopener">гликоген</a></td><td class="cont">основная часть сухого вещества</td><td class="eff">пищевые углеводы и клетчатка, безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Хитин" target="_blank" rel="noopener">хитин</a></td><td class="cont">основная часть сухого вещества</td><td class="eff">пищевые углеводы и клетчатка, безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">сахара и сахарные спирты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Трегалоза" target="_blank" rel="noopener">трегалоза</a></td><td class="cont">основная часть сухого вещества</td><td class="eff">пищевые углеводы и клетчатка, безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Маннит" target="_blank" rel="noopener">маннит</a></td><td class="cont">основная часть сухого вещества</td><td class="eff">пищевые углеводы и клетчатка, безвредны</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a></td><td><span class="conf conf-hi">высокая</span></td></tr>
+<tr class="classhd"><td colspan="5">фотогенные пигменты</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Люциферин" target="_blank" rel="noopener">фотогенные соединения мицелия</a></td><td class="cont">в активном мицелии и ризоморфах (плодовые тела не светятся)</td><td class="eff"><i>путь гиспидин → люциферин.</i> биолюминесценция («огниво») — характеристика вида, не токсичность</td><td class="src-c"><a class="srclink" href="https://en.wikipedia.org/wiki/Armillaria_mellea" target="_blank" rel="noopener">en-wiki Armillaria mellea</a> (путь гиспидин → люциферин)</td><td><span class="conf conf-mid">средняя</span></td></tr>
+<tr class="classhd"><td colspan="5">металлы</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Тяжёлые_металлы" target="_blank" rel="noopener">тяжёлые металлы</a></td><td class="cont">зависит от субстрата (древесина, почва)</td><td class="eff"><i>кадмий и др..</i> экологическое накопление, не свойство вида</td><td class="src-c">проверенными источниками не подтверждено (частое утверждение в популярной литературе)</td><td><span class="conf conf-lo">низкая</span></td></tr>
+<tr class="grouphd"><td colspan="5">спорные</td></tr>
+<tr class="classhd"><td colspan="5">лектины</td></tr>
+<tr><td class="name-c"><a class="srclink" href="https://ru.wikipedia.org/wiki/Лектины" target="_blank" rel="noopener">лектины</a></td><td class="cont">описаны в биохимической литературе, справкой не подтверждены</td><td class="eff"><i>гемагглютинины.</i> токсического действия на человека не установлено</td><td class="src-c">биохимическая литература; проверенными обзорами не подтверждено</td><td><span class="conf conf-dis">спорная</span></td></tr>
+</table>
+</div>
+<footer>built by build_mush_report.py</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+{
+  "model": "qwen3.8:latest",
+  "run": 20,
+  "started_at": "2026-11-20T08:59:26.657998+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {гриб, состав[{вещество, содержание, влияние}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "xhigh",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"гриб\": \"...\", \"состав\": [{\"вещество\": \"...\", \"содержание\": \"...\", \"влияние\": \"...\"}]} (mushroom / composition list / compound / amount / effect). In «содержание» give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write «неизвестно». In «влияние» give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. No text outside the JSON.",
+  "totals": {
+    "duration_s": 373.0,
+    "prompt_tokens": 1817,
+    "output_tokens": 49769,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"гриб\": \"мухомор красный (Amanita muscaria)\",\n  \"состав\": [\n    {\n      \"вещество\": \"иботеновая кислота\",\n      \"содержание\": \"0,3–2,0 % сухого веса\",\n      \"влияние\": \"нейротоксичный антагонист ГАМК, может вызывать спутанность сознания и судороги.\"\n    },\n    {\n      \"вещество\": \"мусцимол\",\n      \"содержание\": \"0,05–1,5 % сухого веса\",\n      \"влияние\": \"агонист ГАМК-А, может вызывать седацию, галлюцинации и мышечную слабость.\"\n    },\n    {\n      \"вещество\": \"мускарин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"может усиливать парасимпатические эффекты, такие как слюнотечение и изменения сердечного ритма.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "иботеновая кислота",
+          "содержание": "0,3–2,0 % сухого веса",
+          "влияние": "нейротоксичный антагонист ГАМК, может вызывать спутанность сознания и судороги."
+        },
+        {
+          "вещество": "мусцимол",
+          "содержание": "0,05–1,5 % сухого веса",
+          "влияние": "агонист ГАМК-А, может вызывать седацию, галлюцинации и мышечную слабость."
+        },
+        {
+          "вещество": "мускарин",
+          "содержание": "неизвестно",
+          "влияние": "может усиливать парасимпатические эффекты, такие как слюнотечение и изменения сердечного ритма."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 13275,
+      "duration_s": 34.42,
+      "eval_count": 4099,
+      "prompt_eval_count": 227,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n  \"гриб\": \"Panther cap (Amanita pantherina)\",\n  \"состав\": [\n    {\n      \"вещество\": \"Ibotenic acid\",\n      \"содержание\": \"0.1-0.4 % dry weight\",\n      \"влияние\": \"An excitatory amino acid receptor agonist that can cause seizures, delirium and autonomic disturbances.\"\n    },\n    {\n      \"вещество\": \"Muscimol\",\n      \"содержание\": \"0.05-0.3 % dry weight\",\n      \"влияние\": \"A GABA-A receptor agonist that can cause sedation, ataxia, hallucinations and gastrointestinal symptoms.\"\n    },\n    {\n      \"вещество\": \"Noribotenic acid\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"A related excitatory amino acid compound that may contribute to neurotoxicity, though it is less well characterized.\"\n    },\n    {\n      \"вещество\": \"Nor-muscimol\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"A GABAergic amino acid derivative that may add to the sedative and neuromuscular effects of muscimol.\"\n    },\n    {\n      \"вещество\": \"Panterin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Reported as a toxic constituent of panther cap, with its specific effect in humans not firmly established.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.1-0.4 % dry weight",
+          "влияние": "An excitatory amino acid receptor agonist that can cause seizures, delirium and autonomic disturbances."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.05-0.3 % dry weight",
+          "влияние": "A GABA-A receptor agonist that can cause sedation, ataxia, hallucinations and gastrointestinal symptoms."
+        },
+        {
+          "вещество": "Noribotenic acid",
+          "содержание": "неизвестно",
+          "влияние": "A related excitatory amino acid compound that may contribute to neurotoxicity, though it is less well characterized."
+        },
+        {
+          "вещество": "Nor-muscimol",
+          "содержание": "неизвестно",
+          "влияние": "A GABAergic amino acid derivative that may add to the sedative and neuromuscular effects of muscimol."
+        },
+        {
+          "вещество": "Panterin",
+          "содержание": "неизвестно",
+          "влияние": "Reported as a toxic constituent of panther cap, with its specific effect in humans not firmly established."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 27023,
+      "duration_s": 57.54,
+      "eval_count": 7624,
+      "prompt_eval_count": 228,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita phalloides (бледная поганка)\",\n  \"состав\": [\n    {\n      \"вещество\": \"α-аматоксин (α-аманицин)\",\n      \"содержание\": \"≈0,002–0,004 % массы свежего гриба (≈20–40 мг/кг)\",\n      \"влияние\": \"Ингибирует РНК-полимеразу II и вызывает тяжёлые повреждения печени и почек.\"\n    },\n    {\n      \"вещество\": \"β-аматоксин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Подавляет РНК-полимеразу II, но менее токсичен, чем α-аматоксин.\"\n    },\n    {\n      \"вещество\": \"γ-аматоксин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Подавляет синтез РНК и способствует развитию тяжёлого отравления.\"\n    },\n    {\n      \"вещество\": \"фаллотоксины (α-, β-, γ-)\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Нарушают клеточные мембраны и могут вызывать гемолиз и повреждение тканей.\"\n    },\n    {\n      \"вещество\": \"фаллоидин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Нарушает филаментозный актин и усиливает цитотоксическое действие.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "α-аматоксин (α-аманицин)",
+          "содержание": "≈0,002–0,004 % массы свежего гриба (≈20–40 мг/кг)",
+          "влияние": "Ингибирует РНК-полимеразу II и вызывает тяжёлые повреждения печени и почек."
+        },
+        {
+          "вещество": "β-аматоксин",
+          "содержание": "неизвестно",
+          "влияние": "Подавляет РНК-полимеразу II, но менее токсичен, чем α-аматоксин."
+        },
+        {
+          "вещество": "γ-аматоксин",
+          "содержание": "неизвестно",
+          "влияние": "Подавляет синтез РНК и способствует развитию тяжёлого отравления."
+        },
+        {
+          "вещество": "фаллотоксины (α-, β-, γ-)",
+          "содержание": "неизвестно",
+          "влияние": "Нарушают клеточные мембраны и могут вызывать гемолиз и повреждение тканей."
+        },
+        {
+          "вещество": "фаллоидин",
+          "содержание": "неизвестно",
+          "влияние": "Нарушает филаментозный актин и усиливает цитотоксическое действие."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 14871,
+      "duration_s": 37.43,
+      "eval_count": 5249,
+      "prompt_eval_count": 227,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"гриб\": \"ложная бледная поганка (Amanita citrina)\",\n  \"состав\": [\n    {\n      \"вещество\": \"альфа-аматоксин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Подавляет РНК-полимеразу II и вызывает тяжёлое повреждение печени.\"\n    },\n    {\n      \"вещество\": \"бета-аматоксин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Ингибирует синтез РНК и участвует в развитии гепато- и нефротоксичности.\"\n    },\n    {\n      \"вещество\": \"эпидермин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Оказывает токсическое действие, связанное с подавлением РНК-полимеразы.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "альфа-аматоксин",
+          "содержание": "неизвестно",
+          "влияние": "Подавляет РНК-полимеразу II и вызывает тяжёлое повреждение печени."
+        },
+        {
+          "вещество": "бета-аматоксин",
+          "содержание": "неизвестно",
+          "влияние": "Ингибирует синтез РНК и участвует в развитии гепато- и нефротоксичности."
+        },
+        {
+          "вещество": "эпидермин",
+          "содержание": "неизвестно",
+          "влияние": "Оказывает токсическое действие, связанное с подавлением РНК-полимеразы."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 26736,
+      "duration_s": 58.51,
+      "eval_count": 7704,
+      "prompt_eval_count": 227,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita rubescens (blusher)\",\n  \"состав\": [\n    {\n      \"вещество\": \"вода\",\n      \"содержание\": \"90% fresh weight\",\n      \"влияние\": \"Поддерживает гидратацию и служит средой для биохимических реакций.\"\n    },\n    {\n      \"вещество\": \"белки\",\n      \"содержание\": \"3% fresh weight\",\n      \"влияние\": \"Поставляют аминокислоты и могут вызывать аллергию у предрасположенных людей.\"\n    },\n    {\n      \"вещество\": \"углеводы (β-глюканы, хитин)\",\n      \"содержание\": \"3% fresh weight\",\n      \"влияние\": \"Служат источником энергии и могут оказывать пребиотическое действие.\"\n    },\n    {\n      \"вещество\": \"липиды\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Участвуют в построении мембран и могут быть источником жирных кислот.\"\n    },\n    {\n      \"вещество\": \"калий\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Влияет на электролитный баланс и может усиливать диурез.\"\n    },\n    {\n      \"вещество\": \"мускарин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Стимулирует мускариновые рецепторы и может вызывать слюнотечение, потливость и расстройство ЖКТ.\"\n    },\n    {\n      \"вещество\": \"фенольные соединения\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Могут оказывать антиоксидантное и противовоспалительное действие.\"\n    },\n    {\n      \"вещество\": \"эргостерол\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Является предшественником витамина D и может влиять на кальциево-фосфорный обмен.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "вода",
+          "содержание": "90% fresh weight",
+          "влияние": "Поддерживает гидратацию и служит средой для биохимических реакций."
+        },
+        {
+          "вещество": "белки",
+          "содержание": "3% fresh weight",
+          "влияние": "Поставляют аминокислоты и могут вызывать аллергию у предрасположенных людей."
+        },
+        {
+          "вещество": "углеводы (β-глюканы, хитин)",
+          "содержание": "3% fresh weight",
+          "влияние": "Служат источником энергии и могут оказывать пребиотическое действие."
+        },
+        {
+          "вещество": "липиды",
+          "содержание": "неизвестно",
+          "влияние": "Участвуют в построении мембран и могут быть источником жирных кислот."
+        },
+        {
+          "вещество": "калий",
+          "содержание": "неизвестно",
+          "влияние": "Влияет на электролитный баланс и может усиливать диурез."
+        },
+        {
+          "вещество": "мускарин",
+          "содержание": "неизвестно",
+          "влияние": "Стимулирует мускариновые рецепторы и может вызывать слюнотечение, потливость и расстройство ЖКТ."
+        },
+        {
+          "вещество": "фенольные соединения",
+          "содержание": "неизвестно",
+          "влияние": "Могут оказывать антиоксидантное и противовоспалительное действие."
+        },
+        {
+          "вещество": "эргостерол",
+          "содержание": "неизвестно",
+          "влияние": "Является предшественником витамина D и может влиять на кальциево-фосфорный обмен."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 8,
+      "thinking_len": 29564,
+      "duration_s": 64.99,
+      "eval_count": 8663,
+      "prompt_eval_count": 227,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\"гриб\":\"Amanita caesarea\",\"состав\":[{\"вещество\":\"Water\",\"содержание\":\"88 % of fresh weight\",\"влияние\":\"Gives the mushroom its high moisture content and soft texture without a specific nutritional effect.\"},{\"вещество\":\"Protein\",\"содержание\":\"25 % of dry weight\",\"влияние\":\"Provides amino acids and nitrogen for human nutrition.\"},{\"вещество\":\"Chitin\",\"содержание\":\"неизвестно\",\"влияние\":\"Acts as a dietary fiber component and may support gut health.\"},{\"вещество\":\"Beta-glucans\",\"содержание\":\"неизвестно\",\"влияние\":\"May have immunomodulatory effects in some studies.\"},{\"вещество\":\"Ergosterol\",\"содержание\":\"0.05 % of dry weight\",\"влияние\":\"Serves as a provitamin D2 precursor and can be converted to ergocalciferol.\"},{\"вещество\":\"Carotenoids\",\"содержание\":\"неизвестно\",\"влияние\":\"Antioxidant pigments that contribute to the mushroom's orange-yellow color and may protect cells from oxidative stress.\"},{\"вещество\":\"Saponins\",\"содержание\":\"неизвестно\",\"влияние\":\"May have anti-inflammatory or membrane-active effects depending on the specific compound.\"},{\"вещество\":\"Mineral elements\",\"содержание\":\"12 % of dry weight\",\"влияние\":\"Supplies essential minerals such as potassium, phosphorus, and zinc.\"}]}",
+      "composition": [
+        {
+          "вещество": "Water",
+          "содержание": "88 % of fresh weight",
+          "влияние": "Gives the mushroom its high moisture content and soft texture without a specific nutritional effect."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "25 % of dry weight",
+          "влияние": "Provides amino acids and nitrogen for human nutrition."
+        },
+        {
+          "вещество": "Chitin",
+          "содержание": "неизвестно",
+          "влияние": "Acts as a dietary fiber component and may support gut health."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "неизвестно",
+          "влияние": "May have immunomodulatory effects in some studies."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "0.05 % of dry weight",
+          "влияние": "Serves as a provitamin D2 precursor and can be converted to ergocalciferol."
+        },
+        {
+          "вещество": "Carotenoids",
+          "содержание": "неизвестно",
+          "влияние": "Antioxidant pigments that contribute to the mushroom's orange-yellow color and may protect cells from oxidative stress."
+        },
+        {
+          "вещество": "Saponins",
+          "содержание": "неизвестно",
+          "влияние": "May have anti-inflammatory or membrane-active effects depending on the specific compound."
+        },
+        {
+          "вещество": "Mineral elements",
+          "содержание": "12 % of dry weight",
+          "влияние": "Supplies essential minerals such as potassium, phosphorus, and zinc."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 8,
+      "thinking_len": 26468,
+      "duration_s": 57.13,
+      "eval_count": 7602,
+      "prompt_eval_count": 228,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita virosa (destroying angel)\",\n  \"состав\": [\n    {\n      \"вещество\": \"alpha-amanitin\",\n      \"содержание\": \"0.1 % dry weight\",\n      \"влияние\": \"Inhibits RNA polymerase II and causes acute liver and kidney failure.\"\n    },\n    {\n      \"вещество\": \"beta-amanitin\",\n      \"содержание\": \"0.02 % dry weight\",\n      \"влияние\": \"Less potent RNA polymerase II inhibitor that contributes to amatoxin poisoning.\"\n    },\n    {\n      \"вещество\": \"gamma-amanitin\",\n      \"содержание\": \"0.005 % dry weight\",\n      \"влияние\": \"Weaker amatoxin that adds to the overall hepatotoxic risk.\"\n    },\n    {\n      \"вещество\": \"epsilon-amanitin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Trace amatoxin with much lower toxicity than alpha-amanitin.\"\n    },\n    {\n      \"вещество\": \"virotoxin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Cyclic peptide characteristic of Amanita virosa but not the main acute human toxin.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "alpha-amanitin",
+          "содержание": "0.1 % dry weight",
+          "влияние": "Inhibits RNA polymerase II and causes acute liver and kidney failure."
+        },
+        {
+          "вещество": "beta-amanitin",
+          "содержание": "0.02 % dry weight",
+          "влияние": "Less potent RNA polymerase II inhibitor that contributes to amatoxin poisoning."
+        },
+        {
+          "вещество": "gamma-amanitin",
+          "содержание": "0.005 % dry weight",
+          "влияние": "Weaker amatoxin that adds to the overall hepatotoxic risk."
+        },
+        {
+          "вещество": "epsilon-amanitin",
+          "содержание": "неизвестно",
+          "влияние": "Trace amatoxin with much lower toxicity than alpha-amanitin."
+        },
+        {
+          "вещество": "virotoxin",
+          "содержание": "неизвестно",
+          "влияние": "Cyclic peptide characteristic of Amanita virosa but not the main acute human toxin."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 16056,
+      "duration_s": 35.48,
+      "eval_count": 4970,
+      "prompt_eval_count": 226,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"гриб\": \"Armillaria mellea (honey fungus)\",\n  \"состав\": [\n    {\n      \"вещество\": \"вода\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Обеспечивает гидратацию и участвует в обмене веществ.\"\n    },\n    {\n      \"вещество\": \"бета-глюканы\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Могут модулировать иммунитет, но клинический эффект не подтвержден.\"\n    },\n    {\n      \"вещество\": \"хитин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Служит структурным полисахаридом и может действовать как пищевое волокно.\"\n    },\n    {\n      \"вещество\": \"тралаоза\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Гидролизуется до глюкозы и может повышать доступность углеводов.\"\n    },\n    {\n      \"вещество\": \"маннитол\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"В малых количествах обычно не оказывает выраженного воздействия на человека.\"\n    },\n    {\n      \"вещество\": \"армилларисин А\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Токсичность и влияние на человека не установлены.\"\n    },\n    {\n      \"вещество\": \"армилларин А\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Имеет антибактериальную активность, но влияние на человека при употреблении грибов не подтверждено.\"\n    },\n    {\n      \"вещество\": \"армилларин В\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Имеет биологическую активность, но влияние на человека неизвестно.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "вода",
+          "содержание": "неизвестно",
+          "влияние": "Обеспечивает гидратацию и участвует в обмене веществ."
+        },
+        {
+          "вещество": "бета-глюканы",
+          "содержание": "неизвестно",
+          "влияние": "Могут модулировать иммунитет, но клинический эффект не подтвержден."
+        },
+        {
+          "вещество": "хитин",
+          "содержание": "неизвестно",
+          "влияние": "Служит структурным полисахаридом и может действовать как пищевое волокно."
+        },
+        {
+          "вещество": "тралаоза",
+          "содержание": "неизвестно",
+          "влияние": "Гидролизуется до глюкозы и может повышать доступность углеводов."
+        },
+        {
+          "вещество": "маннитол",
+          "содержание": "неизвестно",
+          "влияние": "В малых количествах обычно не оказывает выраженного воздействия на человека."
+        },
+        {
+          "вещество": "армилларисин А",
+          "содержание": "неизвестно",
+          "влияние": "Токсичность и влияние на человека не установлены."
+        },
+        {
+          "вещество": "армилларин А",
+          "содержание": "неизвестно",
+          "влияние": "Имеет антибактериальную активность, но влияние на человека при употреблении грибов не подтверждено."
+        },
+        {
+          "вещество": "армилларин В",
+          "содержание": "неизвестно",
+          "влияние": "Имеет биологическую активность, но влияние на человека неизвестно."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 8,
+      "thinking_len": 12080,
+      "duration_s": 27.51,
+      "eval_count": 3858,
+      "prompt_eval_count": 227,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "model": "gemma4:31b-it-qat",
+  "run": 1,
+  "started_at": "2026-11-20T06:31:42.319721+00:00",
+  "base_url": "http://nserv:11434",
+  "protocol": "chat (ollama /api/chat)",
+  "provider": "ollama",
+  "format": "json-schema (structured outputs): {гриб, состав[{вещество, содержание, влияние}], maxItems 100}",
+  "keep_alive": "10m",
+  "think": "off",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"гриб\": \"...\", \"состав\": [{\"вещество\": \"...\", \"содержание\": \"...\", \"влияние\": \"...\"}]} (mushroom / composition list / compound / amount / effect). In «содержание» give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write «неизвестно». In «влияние» give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. No text outside the JSON.",
+  "totals": {
+    "duration_s": 49.2,
+    "prompt_tokens": 1518,
+    "output_tokens": 2168,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita muscaria\",\n  \"состав\": [\n    {\n      \"вещество\": \"Иботеновая кислота\",\n      \"содержание\": \"0.1% - 0.5% of fresh weight\",\n      \"влияние\": \"Сильное нейротоксическое и психоактивное действие.\"\n    },\n    {\n      \"вещество\": \"Мусцимол\",\n      \"содержание\": \"0.05% - 0.3% of fresh weight\",\n      \"влияние\": \"Вызывает галлюцинации, седацию и эйфорию.\"\n    },\n    {\n      \"вещество\": \"Мусцимолин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Обладает слабым психоактивным действием.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Иботеновая кислота",
+          "содержание": "0.1% - 0.5% of fresh weight",
+          "влияние": "Сильное нейротоксическое и психоактивное действие."
+        },
+        {
+          "вещество": "Мусцимол",
+          "содержание": "0.05% - 0.3% of fresh weight",
+          "влияние": "Вызывает галлюцинации, седацию и эйфорию."
+        },
+        {
+          "вещество": "Мусцимолин",
+          "содержание": "неизвестно",
+          "влияние": "Обладает слабым психоактивным действием."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 9.95,
+      "eval_count": 208,
+      "prompt_eval_count": 190,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita pantherina\",\n  \"состав\": [\n    {\n      \"вещество\": \"Ibotenic acid\",\n      \"содержание\": \"0.02% of fresh weight\",\n      \"влияние\": \"Powerful neurotoxic glutamate agonist causing confusion and agitation.\"\n    },\n    {\n      \"вещество\": \"Muscimol\",\n      \"содержание\": \"0.01% of fresh weight\",\n      \"влияние\": \"Potent GABAa receptor agonist causing sedation and hallucinations.\"\n    },\n    {\n      \"вещество\": \"Muscimol derivatives\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Contribute to the overall psychoactive profile of the mushroom.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "0.02% of fresh weight",
+          "влияние": "Powerful neurotoxic glutamate agonist causing confusion and agitation."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "0.01% of fresh weight",
+          "влияние": "Potent GABAa receptor agonist causing sedation and hallucinations."
+        },
+        {
+          "вещество": "Muscimol derivatives",
+          "содержание": "неизвестно",
+          "влияние": "Contribute to the overall psychoactive profile of the mushroom."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 3,
+      "thinking_len": 0,
+      "duration_s": 3.75,
+      "eval_count": 184,
+      "prompt_eval_count": 189,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita phalloides\",\n  \"состав\": [\n    {\n      \"вещество\": \"α-amanitin\",\n      \"содержание\": \"0.1% of fresh weight\",\n      \"влияние\": \"Potent inhibitor of RNA polymerase II causing severe liver failure.\"\n    },\n    {\n      \"вещество\": \"β-amanitin\",\n      \"содержание\": \"0.1% of fresh weight\",\n      \"влияние\": \"Causes lethal hepatotoxicity and renal failure.\"\n    },\n    {\n      \"вещество\": \"Phalloidin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Binds to actin filaments but is poorly absorbed by the gut.\"\n    },\n    {\n      \"вещество\": \"Protein\",\n      \"содержание\": \"2-3% of fresh weight\",\n      \"влияние\": \"Provides basic structural and metabolic function.\"\n    },\n    {\n      \"вещество\": \"Carbohydrates\",\n      \"содержание\": \"2-5% of fresh weight\",\n      \"влияние\": \"Serves as energy storage for the fungus.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "0.1% of fresh weight",
+          "влияние": "Potent inhibitor of RNA polymerase II causing severe liver failure."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "0.1% of fresh weight",
+          "влияние": "Causes lethal hepatotoxicity and renal failure."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "неизвестно",
+          "влияние": "Binds to actin filaments but is poorly absorbed by the gut."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "2-3% of fresh weight",
+          "влияние": "Provides basic structural and metabolic function."
+        },
+        {
+          "вещество": "Carbohydrates",
+          "содержание": "2-5% of fresh weight",
+          "влияние": "Serves as energy storage for the fungus."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 5.63,
+      "eval_count": 280,
+      "prompt_eval_count": 190,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita citrina\",\n  \"состав\": [\n    {\n      \"вещество\": \"Amanitine\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Causes severe gastrointestinal distress and liver damage.\"\n    },\n    {\n      \"вещество\": \"Muscarine\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Stimulates the parasympathetic nervous system, causing salivation and sweating.\"\n    },\n    {\n      \"вещество\": \"Citrinine\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"May have nephrotoxic effects on the kidneys.\"\n    },\n    {\n      \"вещество\": \"Protein\",\n      \"содержание\": \"3-5% of dry weight\",\n      \"влияние\": \"Provides essential amino acids for nutrition.\"\n    },\n    {\n      \"вещество\": \"Polysaccharides\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Serve as a source of energy and structural components.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Amanitine",
+          "содержание": "неизвестно",
+          "влияние": "Causes severe gastrointestinal distress and liver damage."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "неизвестно",
+          "влияние": "Stimulates the parasympathetic nervous system, causing salivation and sweating."
+        },
+        {
+          "вещество": "Citrinine",
+          "содержание": "неизвестно",
+          "влияние": "May have nephrotoxic effects on the kidneys."
+        },
+        {
+          "вещество": "Protein",
+          "содержание": "3-5% of dry weight",
+          "влияние": "Provides essential amino acids for nutrition."
+        },
+        {
+          "вещество": "Polysaccharides",
+          "содержание": "неизвестно",
+          "влияние": "Serve as a source of energy and structural components."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 5.4,
+      "eval_count": 269,
+      "prompt_eval_count": 190,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita rubescens\",\n  \"состав\": [\n    {\n      \"вещество\": \"Рубериновикиновая кислота\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Обладает умеренным гемолитическим и гастроинтестинальным действием.\"\n    },\n    {\n      \"вещество\": \"Белки\",\n      \"содержание\": \"3-5% of fresh weight\",\n      \"влияние\": \"Служат основным источником питания и строительным материалом.\"\n    },\n    {\n      \"вещество\": \"Полисахариды\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Оказывают влияние на иммунную систему и обмен веществ.\"\n    },\n    {\n      \"вещество\": \"Стеролы\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Регулируют уровень холестерина и структуру клеточных мембран.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Рубериновикиновая кислота",
+          "содержание": "неизвестно",
+          "влияние": "Обладает умеренным гемолитическим и гастроинтестинальным действием."
+        },
+        {
+          "вещество": "Белки",
+          "содержание": "3-5% of fresh weight",
+          "влияние": "Служат основным источником питания и строительным материалом."
+        },
+        {
+          "вещество": "Полисахариды",
+          "содержание": "неизвестно",
+          "влияние": "Оказывают влияние на иммунную систему и обмен веществ."
+        },
+        {
+          "вещество": "Стеролы",
+          "содержание": "неизвестно",
+          "влияние": "Регулируют уровень холестерина и структуру клеточных мембран."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 0,
+      "duration_s": 5.02,
+      "eval_count": 251,
+      "prompt_eval_count": 189,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita caesarea\",\n  \"состав\": [\n    {\n      \"вещество\": \"Белки\",\n      \"содержание\": \"3-4% of fresh weight\",\n      \"влияние\": \"Обеспечивают питательную ценность организма.\"\n    },\n    {\n      \"вещество\": \"Жиры\",\n      \"содержание\": \"0.4% of fresh weight\",\n      \"влияние\": \"Служат источником энергии и компонентов клеточных мембран.\"\n    },\n    {\n      \"вещество\": \"Углеводы\",\n      \"содержание\": \"2-3% of fresh weight\",\n      \"влияние\": \"Выступают в качестве основного источника энергии.\"\n    },\n    {\n      \"вещество\": \"Калий\",\n      \"содержание\": \"400 mg/kg\",\n      \"влияние\": \"Регулирует водно-солевой баланс и работу сердца.\"\n    },\n    {\n      \"вещество\": \"Фосфор\",\n      \"содержание\": \"100 mg/kg\",\n      \"влияние\": \"Необходим для метаболизма и строения костей.\"\n    },\n    {\n      \"вещество\": \"Эргостерол\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Является предшественником витамина D2.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Белки",
+          "содержание": "3-4% of fresh weight",
+          "влияние": "Обеспечивают питательную ценность организма."
+        },
+        {
+          "вещество": "Жиры",
+          "содержание": "0.4% of fresh weight",
+          "влияние": "Служат источником энергии и компонентов клеточных мембран."
+        },
+        {
+          "вещество": "Углеводы",
+          "содержание": "2-3% of fresh weight",
+          "влияние": "Выступают в качестве основного источника энергии."
+        },
+        {
+          "вещество": "Калий",
+          "содержание": "400 mg/kg",
+          "влияние": "Регулирует водно-солевой баланс и работу сердца."
+        },
+        {
+          "вещество": "Фосфор",
+          "содержание": "100 mg/kg",
+          "влияние": "Необходим для метаболизма и строения костей."
+        },
+        {
+          "вещество": "Эргостерол",
+          "содержание": "неизвестно",
+          "влияние": "Является предшественником витамина D2."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 6,
+      "thinking_len": 0,
+      "duration_s": 6.87,
+      "eval_count": 342,
+      "prompt_eval_count": 191,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\n  \"гриб\": \"Amanita virosa\",\n  \"состав\": [\n    {\n      \"вещество\": \"α-amanitin\",\n      \"содержание\": \"0.1 %\",\n      \"влияние\": \"Блокирует РНК-полимеразу II, вызывая тяжелое поражение печени и почек.\"\n    },\n    {\n      \"вещество\": \"β-amanitin\",\n      \"содержание\": \"0.1 %\",\n      \"влияние\": \"Мощный цитотоксический яд, приводящий к некрозу гепатоцитов.\"\n    },\n    {\n      \"вещество\": \"γ-amanitin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Оказывает токсическое воздействие на клетки организма.\"\n    },\n    {\n      \"вещество\": \"Phalloidin\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Связывается с актином, нарушая работу цитоскелета.\"\n    },\n    {\n      \"вещество\": \"Витамины группы B\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Участвуют в метаболических процессах организма.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "α-amanitin",
+          "содержание": "0.1 %",
+          "влияние": "Блокирует РНК-полимеразу II, вызывая тяжелое поражение печени и почек."
+        },
+        {
+          "вещество": "β-amanitin",
+          "содержание": "0.1 %",
+          "влияние": "Мощный цитотоксический яд, приводящий к некрозу гепатоцитов."
+        },
+        {
+          "вещество": "γ-amanitin",
+          "содержание": "неизвестно",
+          "влияние": "Оказывает токсическое воздействие на клетки организма."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "неизвестно",
+          "влияние": "Связывается с актином, нарушая работу цитоскелета."
+        },
+        {
+          "вещество": "Витамины группы B",
+          "содержание": "неизвестно",
+          "влияние": "Участвуют в метаболических процессах организма."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 6.21,
+      "eval_count": 310,
+      "prompt_eval_count": 189,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\n  \"гриб\": \"Armillaria mellea\",\n  \"состав\": [\n    {\n      \"вещество\": \"Белки\",\n      \"содержание\": \"2-4% of fresh weight\",\n      \"влияние\": \"Служат основным источником азота и строительным материалом для организма.\"\n    },\n    {\n      \"вещество\": \"Полисахариды (бета-глюканы)\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Оказывают иммуностимулирующее и противоопухолевое действие.\"\n    },\n    {\n      \"вещество\": \"Эргостерол\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Является предшественником витамина D2 в организме человека.\"\n    },\n    {\n      \"вещество\": \"Хитин\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Трудноперевариваемый структурный компонент клеточных стенок гриба.\"\n    },\n    {\n      \"вещество\": \"Минеральные вещества (K, P, Mg)\",\n      \"содержание\": \"неизвестно\",\n      \"влияние\": \"Необходимы для поддержания электролитного баланса и работы ферментов.\"\n    }\n  ]\n}",
+      "composition": [
+        {
+          "вещество": "Белки",
+          "содержание": "2-4% of fresh weight",
+          "влияние": "Служат основным источником азота и строительным материалом для организма."
+        },
+        {
+          "вещество": "Полисахариды (бета-глюканы)",
+          "содержание": "неизвестно",
+          "влияние": "Оказывают иммуностимулирующее и противоопухолевое действие."
+        },
+        {
+          "вещество": "Эргостерол",
+          "содержание": "неизвестно",
+          "влияние": "Является предшественником витамина D2 в организме человека."
+        },
+        {
+          "вещество": "Хитин",
+          "содержание": "неизвестно",
+          "влияние": "Трудноперевариваемый структурный компонент клеточных стенок гриба."
+        },
+        {
+          "вещество": "Минеральные вещества (K, P, Mg)",
+          "содержание": "неизвестно",
+          "влияние": "Необходимы для поддержания электролитного баланса и работы ферментов."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 0,
+      "duration_s": 6.38,
+      "eval_count": 324,
+      "prompt_eval_count": 190,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ],
+  "cells": [
+    "AMUS",
+    "APAN",
+    "APHA",
+    "ACIT",
+    "ARUB",
+    "ACAE",
+    "AVIO",
+    "AMEL"
+  ]
+}

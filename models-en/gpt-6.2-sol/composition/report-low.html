@@ -1,0 +1,1365 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Состав мухоморов — openai/gpt-6.2-sol, think low: 3 прогонов</title>
+<style>
+    :root { --fg:#1c2130; --mut:#6b7280; --line:#e3e6ea; }
+    * { box-sizing: border-box; }
+    body { font: 15px/1.5 system-ui, sans-serif; color: var(--fg);
+           background: #f6f7f9; margin: 0; padding: 28px 18px 60px; }
+    main { max-width: 1280px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 4px; }
+    h2 { font-size: 19px; margin: 34px 0 10px; }
+    h3 { font-size: 17px; margin: 26px 0 6px; }
+    h4 { font-size: 14px; margin: 16px 0 6px; color: var(--mut); }
+    .proto { color: var(--mut); margin: 0 0 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 6px; }
+    .chip { background: #fff; border: 1px solid var(--line); border-radius: 9px;
+            padding: 7px 12px; font-size: 14px; }
+    .chip b { font-size: 15px; }
+    .chip small { color: var(--mut); }
+    .mini-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    .mini-chips .chip { padding: 4px 10px; font-size: 12.5px; }
+    .mini-chips .chip b { font-size: 13px; }
+    .legend { display: flex; gap: 14px; align-items: center; margin: 8px 0;
+              font-size: 13px; flex-wrap: wrap; }
+    .legend .hint { color: var(--mut); font-size: 12px; }
+    .sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px;
+          margin-right: 5px; vertical-align: -2px; }
+    table.comp { border-collapse: separate; border-spacing: 3px; width: 100%;
+                 background: transparent; margin: 6px 0 10px; }
+    table.comp th { font-size: 12px; color: var(--mut); font-weight: 600;
+                    padding: 2px 6px; text-align: left; }
+    table.comp th.runhd { text-align: center; }
+    td.cell { height: 58px; min-width: 130px; border-radius: 7px; padding: 6px 8px;
+              position: relative; color: rgba(20,24,32,.85); vertical-align: middle; }
+    td.cell.na { background: #a9b0ba; }
+    td.cell .inner { display: flex; flex-direction: column; gap: 2px;
+                     overflow: hidden; }
+    td.cell .inner b { font-size: 12.5px; white-space: nowrap;
+                       overflow: hidden; text-overflow: ellipsis; }
+    td.cell .inner span { font-size: 11px; opacity: .8; line-height: 1.3;
+                          display: -webkit-box; -webkit-line-clamp: 2;
+                          -webkit-box-orient: vertical; overflow: hidden; }
+    /* подсказку позиционирует скрипт (position: fixed) относительно окна:
+       внутри .scroll и у верхних строк она обрезалась */
+    td.cell .tip { display: none; position: fixed; width: 330px; z-index: 30;
+                   background: #202634; color: #eef1f6; padding: 9px 11px;
+                   border-radius: 9px; font-size: 12px; line-height: 1.45;
+                   text-align: left; white-space: normal;
+                   box-shadow: 0 6px 18px rgba(0,0,0,.35); pointer-events: none; }
+    td.cell:hover .tip { display: block; }
+    td.cell:hover { outline: 2px solid #1c2130; }
+    td.name { font-size: 13px; padding: 2px 8px 2px 2px; max-width: 190px; }
+    td.freq { text-align: center; font-weight: 700; font-size: 12.5px;
+              color: var(--mut); }
+    td.mark { text-align: center; font-size: 14px; background: #fff;
+              border-radius: 6px; padding: 3px; }
+    td.mark.ok { color: #22834a; }
+    td.mark.no { color: #c9ccd2; }
+    table.miss td.cell, table.miss td.mark { height: 30px; }
+    code.id { font-size: 12px; background: #eef1f4; border-radius: 5px;
+              padding: 1px 6px; color: var(--mut); }
+    .mush { background: #fff; border: 1px solid var(--line); border-radius: 12px;
+            padding: 14px 16px 10px; margin: 14px 0 22px; }
+    details.raw { background: #fff; border: 1px solid var(--line);
+                  border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    details.raw summary { cursor: pointer; color: var(--mut); font-size: 13px;
+                          user-select: none; }
+    details.raw pre { background: #f4f6f8; border-radius: 6px; padding: 8px;
+                      font: 12px/1.45 ui-monospace, Menlo, monospace;
+                      white-space: pre-wrap; word-break: break-word; max-height: 420px;
+                      overflow: auto; }
+    /* border-collapse: separate + без overflow:hidden — иначе position:
+       sticky на шапке не работает в Chromium */
+    table.sx { border-collapse: separate; border-spacing: 0;
+               background: #fff; width: 100%;
+               border: 1px solid var(--line); border-radius: 12px; }
+    table.sx th:first-child { border-top-left-radius: 12px; }
+    table.sx th:last-child { border-top-right-radius: 12px; }
+    table.sx th, table.sx td { border-bottom: 1px solid var(--line);
+                 padding: 8px 12px; text-align: left; font-size: 14px; }
+    table.sx th { position: sticky; top: 0; background: #fff; z-index: 2; }
+    table.sx th { background: #f0f2f5; font-size: 13px; color: var(--mut); }
+    a.report-link { color: #315f9e; font-weight: 600; text-decoration: none; }
+    a.report-link:hover { text-decoration: underline; }
+    .ok-t { color: #22834a; font-weight: 600; }
+    .bad-t { color: #b03a3a; font-weight: 600; }
+    .warn-t { color: #8a6d1a; font-weight: 600; }
+    footer { color: var(--mut); font-size: 12.5px; margin-top: 40px; }
+    .backlink { display: inline-block; background: #edf1f7; color: #315f9e;
+                font-size: 13.5px; font-weight: 600; padding: 6px 14px;
+                border-radius: 8px; text-decoration: none; margin-bottom: 14px; }
+    .backlink:hover { background: #dfe7f3; }
+    .scroll { overflow-x: auto; }
+    .latin { font-weight: 400; font-style: italic; color: var(--mut);
+             font-size: 0.82em; }
+    td.mx { text-align: center; font-weight: 700;
+            font-size: 10.5px; color: rgba(20,24,32,.82); padding: 3px 1px;
+            border-radius: 4px; }
+    /* матрица всегда ровно в карточку: фиксированный лейаут делит ширину
+       поровну между сериями при любом их числе (21+ колонок) */
+    table.mx-tab { table-layout: fixed; width: 100%; min-width: 900px; }
+    table.mx-tab th.namehd, table.mx-tab td.name { width: 168px;
+        word-break: break-word; }
+    table.mx-tab th.mx-model { text-align: center; font-size: 10px;
+                               line-height: 1.2; padding: 3px 2px;
+                               overflow: hidden;
+                               border-left: 2px solid var(--line); }
+    table.mx-tab td.mx.grp { border-left: 2px solid var(--line); }
+    table.mx-tab th.mx-model:first-child { border-left: none; }
+    table.mx-tab th.mx-think { padding: 2px 3px; font-size: 9.5px;
+                               text-align: center; white-space: nowrap;
+                               font-weight: 400; color: var(--mut);
+                               border-left: 1px solid #cfd4db; }
+    td.mx.na { background: #e3e6ea; }
+    tr.mushhdr th { text-align: left; background: #eef1f4; font-size: 13.5px;
+                    padding: 7px 10px; color: var(--fg); }
+    tr.subhdr th { text-align: left; background: #f7f8fa; font-size: 12px;
+                   padding: 4px 10px; color: var(--mut); font-weight: 600; }
+    td.mx-miss { background: #e3e6ea; color: #8a8f98; font-weight: 400; }
+    td.fant-rest { font-size: 12px; font-weight: 400; color: #5a6069;
+                   line-height: 1.6; padding: 8px 10px; }
+    td.fant-total { text-align: center; font-size: 12px; font-weight: 700;
+                    color: #5a6069; background: #f1f3f6;
+                    border-left: 1px solid #e3e6ea; }
+    td.fant-total.name-c, td.name.fant-total { text-align: left;
+                    font-weight: 600; font-size: 12px; font-style: italic; }
+    .eth { background: #fff; border: 1px solid var(--line);
+           border-radius: 12px; padding: 14px 18px 6px; margin: 18px 0; }
+    .eth .intro { font-size: 13.5px; color: var(--mut); margin: 0 0 12px; }
+    .eth h3 { font-size: 15.5px; margin: 22px 0 4px; }
+    .eth .note { color: var(--mut); font-size: 13px; margin: 4px 0 8px; }
+    table.eth-t td { font-size: 13px; vertical-align: top; }
+    table.eth-t td.name-c { width: 20%; font-weight: 600; }
+    table.eth-t td.eff i { color: var(--mut); }
+    table.eth-t td.cont { width: 28%; }
+    table.eth-t td.eff { color: var(--mut); }
+    table.eth-t td, table.eth-t th { padding: 7px 10px; }
+    tr.grouphd td { background: #f0f2f5; font-size: 12px; font-weight: 600;
+                    color: var(--mut); padding: 4px 10px; }
+    tr.classhd td { background: #fbfcfe; font-size: 11px; color: #6b7280;
+                    padding: 3px 14px; font-style: italic; }
+    .badge { display: inline-block; background: #e7f2e9; color: #22834a;
+             font-size: 11px; font-weight: 600; padding: 1px 8px;
+             border-radius: 8px; vertical-align: 2px; margin-left: 6px; }
+    .conf { display: inline-block; font-size: 11px; padding: 1px 8px;
+            border-radius: 8px; white-space: nowrap; }
+    .conf-hi { background: #e7f2e9; color: #22834a; }
+    .conf-mid { background: #eef1f4; color: #6b7280; }
+    .conf-lo { background: #fdf3e0; color: #8a6d1a; }
+    .conf-dis { background: #fbeaea; color: #b03a3a; }
+    .notpres { font-size: 13px; background: #fdf6f6; border: 1px solid #f0d9d9;
+               border-radius: 8px; padding: 6px 10px; color: #7a4a4a;
+               margin: 4px 0 8px; }
+    td.src-c { font-size: 11.5px; color: var(--mut); }
+    .srclink { color: #315f9e; text-decoration: none;
+               border-bottom: 1px dotted #9ab2d4; }
+    .srclink:hover { color: #1c4587; border-bottom: 1px solid #315f9e; }
+    .mh { display: block; font-size: 11px; font-weight: 700; color: var(--fg); }
+    .mt { display: block; font-size: 10.5px; font-weight: 400; color: var(--mut); }
+    td.mk { text-align: center; font-size: 11.5px; white-space: nowrap; }
+    .mk-main { color: #22834a; font-weight: 700; }
+    .mk-trace { color: #64778a; }
+    .mk-disp { color: #8a6d1a; font-weight: 600; }
+    .mk-none { color: #b6bbc2; }
+    .method { background: #fff; border: 1px solid var(--line);
+              border-radius: 12px; padding: 14px 18px; margin: 18px 0; }
+    .method h3 { font-size: 14.5px; margin: 16px 0 6px; }
+    .method h3:first-child { margin-top: 0; }
+    .method p, .method li { font-size: 13.5px; }
+    .method ul { margin: 6px 0; padding-left: 20px; }
+    .method li { margin: 3px 0; }
+    .method code { background: #eef1f4; border-radius: 4px; padding: 0 5px;
+                   font-size: 12.5px; }
+    .prompt-sample { background: #f4f6f8; border: 1px solid var(--line);
+                     border-radius: 8px; padding: 10px 12px;
+                     font: 12.5px/1.5 ui-monospace, Menlo, monospace;
+                     white-space: pre-wrap; margin: 6px 0 10px;
+                     word-break: break-word; }
+    </style>
+<main>
+<a class="backlink" href="../../../report-en.html">← Сводный отчёт</a>
+<h1>Состав мухоморов — openai/gpt-6.2-sol, think low: 3 прогонов</h1>
+<p class="proto">клетка = вопрос «перечисли основные и характерные соединения гриба» (recall-генерация, промпты v4; один прогон = все 8 клеток); архивы серий v1–v3 с другими промптами в отчётах не участвуют. Цвет клетки = вердикт судьи (glm-5.3-flash low против эталона), серая = вещество не перечислено в этом прогоне; стабильность = средний Jaccard наборов веществ между прогонами</p>
+<div class="chip">Модель: <b>openai/gpt-6.2-sol</b><br><small>think low · прогонов: 3 (в таблице гриба — где его клетка спрашивалась)</small></div><div class="chip">Балл судьи (средний): <b>5.0 / 10</b><br><small>по оценённым клеткам</small></div><div class="chip">Галлюцинации: <b>62 / 131</b><br><small>доля вердиктов «галлюцинация»</small></div><div class="chip">Стабильность состава: <b>82%</b><br><small>средний попарный Jaccard веществ между прогонами</small></div><div class="chip">Стабильность реальных: <b>84%</b><br><small>Jaccard по веществам, признанным судьёй</small></div><div class="chip">JSON-разбор: <b>100%</b><br><small>(24 из 24 клеток)</small></div><div class="chip">Время: <b>92 c</b><br><small>токены: 4302 вх / 5939 вых</small></div><div class="chip">Эталон: <b>v12</b><br><small>судья видит справку целиком</small></div>
+
+<h2>Методика</h2>
+<div class="method">
+<h3>Запуск модели</h3>
+<p>Одна клетка = один независимый запрос к ollama
+<code>POST api.deepseek.com (через pi)/api/chat</code>, stream=false. Истории между клетками
+нет — клетки изолированы, каждый вопрос несёт system-рамку теста. Параметры
+генерации — дефолтные ollama (temperature и прочее не переопределяются),
+seed не фиксируется; уровень размышлений передаётся полем <code>think</code>
+(уровень размышлений этого отчёта: <b>low</b>).</p>
+<pre class="prompt-sample">{
+ &quot;model&quot;: &quot;openai/gpt-6.2-sol&quot;,
+ &quot;stream&quot;: false,
+ &quot;keep_alive&quot;: &quot;n/a (API stateless)&quot;,
+ &quot;think&quot;: &quot;low&quot;,
+ &quot;messages&quot;: [
+  {
+   &quot;role&quot;: &quot;system&quot;,
+   &quot;content&quot;: &quot;&lt;SYSTEM-ПРОМПТ — целиком ниже&gt;&quot;
+  },
+  {
+   &quot;role&quot;: &quot;user&quot;,
+   &quot;content&quot;: &quot;List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).&quot;
+  }
+ ]
+}</pre>
+<ul>
+<li>внутри прогона <code>keep_alive</code> = n/a (API stateless) — веса держатся
+загруженными;</li>
+<li>модель выгружается перед первым и после каждого прогона
+(<code>keep_alive: 0</code>) — изоляция прогонов, KV-кэш между сериями не
+переживает;</li>
+<li>серия: 5 прогонов на уровень размышлений; уровни не смешиваются;</li>
+<li>ответ должен быть строго JSON; при усечённом/дегенеративном ответе парсер
+достаёт целые фрагменты-объекты (пометка «ремонт», json_ok=false).</li>
+</ul>
+<h3>System-промпт (одинаков во всех запросах)</h3>
+<pre class="prompt-sample">You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {&quot;mushroom&quot;: &quot;...&quot;, &quot;composition&quot;: [{&quot;compound&quot;: &quot;...&quot;, &quot;amount&quot;: &quot;...&quot;, &quot;effect&quot;: &quot;...&quot;}]}. In &quot;amount&quot; give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write &quot;unknown&quot;. In &quot;effect&quot; give one short sentence about the compound&#x27;s effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.</pre>
+<h3>Пример user-сообщения — Fly agaric</h3>
+<pre class="prompt-sample">List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).</pre>
+<details class="raw"><summary>Пример ответа модели на эту клетку</summary><pre>{
+  &quot;mushroom&quot;: &quot;Fly agaric (Amanita muscaria)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitation.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordination.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscazone&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Its effects in humans are not well characterized.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscarine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This compound occurs in trace amounts 
+… (обрезано)</pre></details>
+<h3>Судья</h3>
+<p>Каждый ответ сверяется судьёй — <code>glm-5.3-flash</code>, thinking <code>low</code>,
+транспорт <code>pi</code> (провайдер zai). Судья получает эталонную справку
+состава гриба — запись этого гриба из <a class="report-link" target="_blank" rel="noopener" href="../../../ethalon-en.json">ethalon-en.json</a>, целиком файл не
+передаётся — и разобранный состав ответа; по каждому веществу
+выносит вердикт «реальное / спорно / галлюцинация», оценивает концентрацию
+(в норме / завышена / занижена) и влияние на человека, перечисляет пропущенные
+эталонно важные вещества и ставит балл 0–10. Ответы длиннее 100 веществ
+(дегенеративный перебор) режутся до первых 100 с пометкой. Вердикт строго
+JSON: невалидная схема — одна повторная попытка, иначе клетка исключается из
+метрик. Переиспользование вердиктов — по хэшам входов эталона: изменение
+входа конкретного гриба переоценивает только его клетки.</p>
+<details class="raw"><summary>Пример вердикта судьи</summary><pre>{
+ &quot;вещества&quot;: [
+  {
+   &quot;название&quot;: &quot;Ibotenic acid&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Muscimol&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;верно&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Muscazone&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  },
+  {
+   &quot;название&quot;: &quot;Muscarine&quot;,
+   &quot;статус&quot;: &quot;реальное&quot;,
+   &quot;концентрация&quot;: &quot;не указана&quot;,
+   &quot;влияние&quot;: &quot;частично&quot;
+  }
+ ],
+ &quot;пропущено_важное&quot;: [],
+ &quot;балл&quot;: 7,
+ &quot;комментарий&quot;: &quot;Модель верно называет все три основных изоксазола и мускарин, без галлюцинаций, но не указывает ни одной концентрации, а описания влияния расплывчаты: для иботеновой кислоты и мускарина упущена ключевая деталь справки (нейротоксичность/клиническая незначимость мускарина).&quot;
+}</pre></details>
+<details class="raw"><summary>Полный промпт судьи (system + критерии)</summary>
+<pre>Ты — судья теста на знание химического состава грибов. Тебе дают эталонную справку состава гриба (собранную из проверенных источников) и ответ тестируемой модели. Единственный источник истины о составе — справка: вердикты о присутствии веществ выносятся только по справке, собственные знания судьи не применяются. Твоя задача — строгий и честный вердикт строго в JSON. Никакого текста вне JSON.
+
+Задача: установи для каждого вещества из ответа модели, входит ли оно в переданный тебе эталонный состав. Единственный источник истины — справка; собственные знания судьи не применяются.
+
+По КАЖДОМУ веществу из ответа модели вынеси вердикт:
+- «статус»: «реальное» — вещество совпадает с записью из «основных» или «следовых» справки (сравнивай с названием вещества до пояснения в скобках); «спорно» — совпадает с записью из группы «спорные»; «галлюцинация» — среди записей справки такого вещества нет (выдумка, путаница с другим грибом, либо оно числится в «не_содержит»). Никаких исключений и никакой интерпретации: опечатка, форма слова, синоним или перевод, не совпадающие с записью справки, — тоже «галлюцинация».
+- «концентрация»: «в норме» — значение правдоподобно по порядку величины и единицам (проценты свежего/сухого веса, мг/кг и т.п.; при пересчёте свежий↔сухой учти, что сухой вес ~10 % свежего); «завышена» / «занижена» — порядок величины ошибочен; «не указана» — модель не дала значения; «нет данных» — в справке нет цифры, оценить нельзя;
+- «влияние»: «верно» / «частично» / «неверно» — краткое описание действия на человека строго по полю «влияние» справки; «нет данных» — модель не описала влияние или в справке его нет.
+
+Если в эталонной справке есть список «не_содержит» — это соединения, отсутствие которых в грибе подтверждено: упоминание любого из них как присутствующего — статус «галлюцинация», а их корректное отсутствие отмечай в комментарии.
+Затем: «пропущено_важное» — СУЩЕСТВЕННЫЕ эталонные вещества, которых в ответе нет (основные токсины и характерные компоненты; следовые пигменты и прочую мелочь не перечисляй). Пустой список — если всё важное названо.
+«балл» — 0–10: полнота и точность относительно эталона (галлюцинации снижают сильнее пропусков).
+«комментарий» — 1–2 предложения: главный характер ответа (знает / путает / фантазирует).
+
+Формат ответа строго:
+{&quot;вещества&quot;: [{&quot;название&quot;: &quot;&lt;как назвала модель&gt;&quot;, &quot;статус&quot;: &quot;реальное|спорно|галлюцинация&quot;, &quot;концентрация&quot;: &quot;в норме|завышена|занижена|не указана|нет данных&quot;, &quot;влияние&quot;: &quot;верно|частично|неверно|нет данных&quot;}], &quot;пропущено_важное&quot;: [&quot;...&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;...&quot;}
+
+Ответ absent: если ответ модели пуст или отсутствует — верни {&quot;вещества&quot;: [], &quot;пропущено_важное&quot;: [&quot;все основные&quot;], &quot;балл&quot;: 0, &quot;комментарий&quot;: &quot;ответ отсутствует&quot;}.
+</pre></details>
+</div>
+<div class="mush">
+<h3>Fly agaric <span class="latin">(Amanita muscaria)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>6.3 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>83%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>83%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>10</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 10 вердиктов)</div>
+  <div class="chip">реальных <b>10</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Ibotenic acid</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitation.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitat</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: It activates glutamate receptors and can cause nausea, confusion, and agitation.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates glutamate receptors and can cause nausea, confusion, and agitation.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: It activates glutamate receptors and can cause nausea, confusion, and agitation.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates glutamate receptors and can cause nausea, confusion, and agitation.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Muscarine</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscarine</b><br>Содержание: unknown<br>Влияние: This compound occurs in trace amounts and can cause sweating and salivation at sufficient doses.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This compound occurs in trace amounts and can cause sweating and salivation at sufficient </span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscarine</b><br>Содержание: unknown<br>Влияние: It can cause sweating and salivation, but fly agaric usually contains only trace amounts.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It can cause sweating and salivation, but fly agaric usually contains only trace amounts.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscarine</b><br>Содержание: unknown<br>Влияние: It occurs in trace amounts and can cause sweating and salivation at sufficient doses.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It occurs in trace amounts and can cause sweating and salivation at sufficient doses.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Muscimol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordination.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordi</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired coordination.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired c</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired coordination.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired c</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Muscazone</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscazone</b><br>Содержание: unknown<br>Влияние: Its effects in humans are not well characterized.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Its effects in humans are not well characterized.</span></div></td><td class="cell na"></td><td class="cell na"></td><td class="freq">1/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">ibotenic acid</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscimol</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscazone</td><td class="mark ok">✓</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Panther cap <span class="latin">(Amanita pantherina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>6.7 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>100%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>6</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 6 вердиктов)</div>
+  <div class="chip">реальных <b>6</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Ibotenic acid</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: It activates glutamate receptors and can cause agitation, confusion, and impaired coordination.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates glutamate receptors and can cause agitation, confusion, and impaired coordina</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: It activates glutamate receptors and can cause agitation, confusion, and nausea.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates glutamate receptors and can cause agitation, confusion, and nausea.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ibotenic acid</b><br>Содержание: unknown<br>Влияние: Ibotenic acid stimulates glutamate receptors and can cause nausea, confusion, and agitation.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Ibotenic acid stimulates glutamate receptors and can cause nausea, confusion, and agitatio</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Muscimol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: It activates GABA-A receptors and can cause drowsiness, altered perception, and loss of consciousness.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates GABA-A receptors and can cause drowsiness, altered perception, and loss of co</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: It activates GABA-A receptors and can cause drowsiness, impaired coordination, and altered perception.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It activates GABA-A receptors and can cause drowsiness, impaired coordination, and altered</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Muscimol</b><br>Содержание: unknown<br>Влияние: Muscimol activates GABA-A receptors and can cause drowsiness, impaired coordination, and altered perception.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Muscimol activates GABA-A receptors and can cause drowsiness, impaired coordination, and a</span></div></td><td class="freq">3/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">ibotenic acid</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscimol</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">muscazone</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Death cap <span class="latin">(Amanita phalloides)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>6.7 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>100%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>15</b></div>
+  <div class="chip">Галлюцинации: <b>0%</b> (0 из 15 вердиктов)</div>
+  <div class="chip">реальных <b>15</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Phallacidin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phallacidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments but contributes little to systemic poisoning after ingestion because it is poorly absorbed.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments but contributes little to systemic poisoning after ingestion</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phallacidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments but contributes little to poisoning after ingestion because it is poorly absorbed.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments but contributes little to poisoning after ingestion because </span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phallacidin</b><br>Содержание: unknown<br>Влияние: It binds actin filaments but contributes little to poisoning after ingestion because it is poorly absorbed.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It binds actin filaments but contributes little to poisoning after ingestion because it is</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Phalloidin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments but is poorly absorbed from the human gut.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It binds to actin filaments but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It binds to actin filaments but is poorly absorbed from the human gut.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments but is poorly absorbed from the human gut.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">α-Amanitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">β-Amanitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">γ-Amanitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II, but its individual contribution to human poisoning is not well established.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II, but its individual contribution to human poisoning is not w</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II, disrupting RNA synthesis in human cells.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II, disrupting RNA synthesis in human cells.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>γ-Amanitin</b><br>Содержание: unknown<br>Влияние: It contributes to poisoning by inhibiting RNA polymerase II.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It contributes to poisoning by inhibiting RNA polymerase II.</span></div></td><td class="freq">3/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">α-amanitin (chief amatoxin)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-amanitin</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">γ-amanitin</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">phalloidin</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>False death cap <span class="latin">(Amanita citrina)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>5.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>44%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>50%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>10</b></div>
+  <div class="chip">Галлюцинации: <b>20%</b> (2 из 10 вердиктов)</div>
+  <div class="chip">реальных <b>8</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Bufotenine (5-hydroxy-N,N-dimethyltryptamine)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Bufotenine (5-hydroxy-N,N-dimethyltryptamine)</b><br>Содержание: unknown<br>Влияние: This serotonin-receptor agonist can cause perceptual changes and nausea, depending on the dose and route of exposure.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This serotonin-receptor agonist can cause perceptual changes and nausea, depending on the </span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Bufotenine (5-hydroxy-N,N-dimethyltryptamine)</b><br>Содержание: unknown<br>Влияние: This serotonergic compound can alter perception and cause nausea.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This serotonergic compound can alter perception and cause nausea.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Bufotenine (5-hydroxy-N,N-dimethyltryptamine)</b><br>Содержание: unknown<br>Влияние: This serotonergic compound can alter perception, but its effects when ingested in the mushroom are poorly established.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This serotonergic compound can alter perception, but its effects when ingested in the mush</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)</b><br>Содержание: unknown<br>Влияние: At sufficient exposure, it can cause intense, short-lived alterations in perception and consciousness.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>At sufficient exposure, it can cause intense, short-lived alterations in perception and co</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)</b><br>Содержание: unknown<br>Влияние: This serotonergic compound can cause intense, short-lived changes in perception and consciousness.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This serotonergic compound can cause intense, short-lived changes in perception and consci</span></div></td><td class="freq">2/3</td></tr><tr><td class="name">N,N-Dimethyltryptamine (DMT)</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>N,N-Dimethyltryptamine (DMT)</b><br>Содержание: unknown<br>Влияние: It can cause brief, intense hallucinations when it reaches the bloodstream in sufficient amounts.<br>Судья: реальное · концентрация не указана · влияние неверно<br></div><div class="inner"><b>доля не указана</b><span>It can cause brief, intense hallucinations when it reaches the bloodstream in sufficient a</span></div></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>N,N-Dimethyltryptamine (DMT)</b><br>Содержание: unknown<br>Влияние: This compound can cause brief hallucinations when it reaches the bloodstream but is usually inactive when swallowed on its own.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This compound can cause brief hallucinations when it reaches the bloodstream but is usuall</span></div></td><td class="freq">2/3</td></tr><tr><td class="name">Beta-glucans</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These fungal polysaccharides contribute dietary fiber.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>These fungal polysaccharides contribute dietary fiber.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr><tr><td class="name">Chitin</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This fungal cell-wall polysaccharide acts as largely indigestible dietary fiber.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This fungal cell-wall polysaccharide acts as largely indigestible dietary fiber.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr><tr><td class="name">Ergosterol</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: This fungal sterol can convert to vitamin D2 upon ultraviolet exposure.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>This fungal sterol can convert to vitamin D2 upon ultraviolet exposure.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">bufotenin (5-hydroxy-N,N-dimethyltryptamine)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">bufotenin N-oxide</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Blusher <span class="latin">(Amanita rubescens)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>3.3 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>90%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>20</b></div>
+  <div class="chip">Галлюцинации: <b>85%</b> (17 из 20 вердиктов)</div>
+  <div class="chip">реальных <b>3</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Beta-glucans</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: Beta-glucans act as dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Beta-glucans act as dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These fungal polysaccharides contribute dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>These fungal polysaccharides contribute dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These fungal polysaccharides contribute to dietary fiber intake.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>These fungal polysaccharides contribute to dietary fiber intake.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Chitin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: Chitin is a structural polysaccharide that humans digest poorly.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Chitin is a structural polysaccharide that humans digest poorly.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: It acts as a largely indigestible dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It acts as a largely indigestible dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This fungal cell-wall polysaccharide acts mainly as dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This fungal cell-wall polysaccharide acts mainly as dietary fiber.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Ergosterol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: Ergosterol can be converted by ultraviolet light into vitamin D2, which supports calcium absorption.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Ergosterol can be converted by ultraviolet light into vitamin D2, which supports calcium a</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: It can form vitamin D2 under ultraviolet light before consumption.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It can form vitamin D2 under ultraviolet light before consumption.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: This fungal sterol can become vitamin D2 when the mushroom is exposed to ultraviolet light.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This fungal sterol can become vitamin D2 when the mushroom is exposed to ultraviolet light</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Mannitol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: Mannitol can cause bloating or diarrhea in sufficient amounts.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Mannitol can cause bloating or diarrhea in sufficient amounts.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: This sugar alcohol can cause bloating or diarrhea at high intakes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This sugar alcohol can cause bloating or diarrhea at high intakes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: This sugar alcohol can cause bloating or diarrhea at sufficient doses.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This sugar alcohol can cause bloating or diarrhea at sufficient doses.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Rubescenslysin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Rubescenslysin</b><br>Содержание: unknown<br>Влияние: This heat-sensitive protein can rupture human red blood cells in laboratory tests.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>This heat-sensitive protein can rupture human red blood cells in laboratory tests.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Rubescenslysin</b><br>Содержание: unknown<br>Влияние: This heat-labile protein can rupture human red blood cells in laboratory tests.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This heat-labile protein can rupture human red blood cells in laboratory tests.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Rubescenslysin</b><br>Содержание: unknown<br>Влияние: This heat-labile protein ruptures human red blood cells in laboratory assays.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This heat-labile protein ruptures human red blood cells in laboratory assays.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Trehalose</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: Trehalose is normally broken down into glucose in the small intestine.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Trehalose is normally broken down into glucose in the small intestine.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: Most people digest this sugar into glucose.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Most people digest this sugar into glucose.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: The digestive enzyme trehalase breaks this sugar down into glucose.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>The digestive enzyme trehalase breaks this sugar down into glucose.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Water</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: Water contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Water contributes to hydration.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: It contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It contributes to hydration.</span></div></td><td class="cell na"></td><td class="freq">2/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">hemolytic protein (rubescenslysin)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Caesar&#x27;s mushroom <span class="latin">(Amanita caesarea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>1.7 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>93%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>100%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>29</b></div>
+  <div class="chip">Галлюцинации: <b>90%</b> (26 из 29 вердиктов)</div>
+  <div class="chip">реальных <b>3</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Beta-glucans</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: Mushroom beta-glucans contribute dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Mushroom beta-glucans contribute dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: They contribute to dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>They contribute to dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These polysaccharides contribute to dietary fiber intake.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>These polysaccharides contribute to dietary fiber intake.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Chitin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: Chitin is a structural fiber that humans digest poorly.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Chitin is a structural fiber that humans digest poorly.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: It contributes largely indigestible dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It contributes largely indigestible dietary fiber.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This structural polysaccharide acts as largely indigestible dietary fiber.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This structural polysaccharide acts as largely indigestible dietary fiber.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Ergosterol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: UV exposure can convert ergosterol in the mushroom into vitamin D2, which supports calcium absorption.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>UV exposure can convert ergosterol in the mushroom into vitamin D2, which supports calcium</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: After UV exposure converts it to vitamin D2, it can contribute to vitamin D intake.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>After UV exposure converts it to vitamin D2, it can contribute to vitamin D intake.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: Ultraviolet exposure can convert it into vitamin D2, which supports calcium absorption.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Ultraviolet exposure can convert it into vitamin D2, which supports calcium absorption.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Linoleic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: Linoleic acid is an essential omega-6 fatty acid.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Linoleic acid is an essential omega-6 fatty acid.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: It is an essential fatty acid used in cell membranes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It is an essential fatty acid used in cell membranes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: This essential omega-6 fatty acid helps maintain cell membranes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This essential omega-6 fatty acid helps maintain cell membranes.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Mannitol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: Mannitol can cause bloating in people sensitive to sugar alcohols.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Mannitol can cause bloating in people sensitive to sugar alcohols.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: It can cause bloating or loose stools at high intakes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It can cause bloating or loose stools at high intakes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: This sugar alcohol can cause bloating or diarrhea in sensitive people.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This sugar alcohol can cause bloating or diarrhea in sensitive people.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Oleic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: Oleic acid supplies energy as a monounsaturated fat.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Oleic acid supplies energy as a monounsaturated fat.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: It provides energy as a monounsaturated fat.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It provides energy as a monounsaturated fat.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: This monounsaturated fatty acid provides energy.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This monounsaturated fatty acid provides energy.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Palmitic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: Palmitic acid supplies energy as a saturated fat.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Palmitic acid supplies energy as a saturated fat.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: It provides energy as a saturated fat.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It provides energy as a saturated fat.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: This saturated fatty acid provides energy.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This saturated fatty acid provides energy.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Trehalose</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: The intestinal enzyme trehalase breaks trehalose down into glucose.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>The intestinal enzyme trehalase breaks trehalose down into glucose.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: Most people digest it into glucose for energy.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Most people digest it into glucose for energy.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: Most people digest this sugar into glucose for energy.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Most people digest this sugar into glucose for energy.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Water</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: Water contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Water contributes to hydration.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: It contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It contributes to hydration.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: It contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It contributes to hydration.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Proteins</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: unknown<br>Влияние: Digestible proteins supply amino acids for tissue maintenance.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Digestible proteins supply amino acids for tissue maintenance.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Proteins</b><br>Содержание: unknown<br>Влияние: They supply amino acids used to build and maintain tissues.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>They supply amino acids used to build and maintain tissues.</span></div></td><td class="cell na"></td><td class="freq">2/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">malic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ascorbic acid (vitamin C)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">citric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ketoglutaric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">fumaric acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">shikimic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">succinic acid</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">ergosterol (provitamin D2)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Destroying angel <span class="latin">(Amanita virosa)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>7.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>64%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>50%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>14</b></div>
+  <div class="chip">Галлюцинации: <b>21%</b> (3 из 14 вердиктов)</div>
+  <div class="chip">реальных <b>11</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Phalloidin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It binds to filamentous actin but is poorly absorbed from the human gut.<br>Судья: галлюцинация · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It binds to filamentous actin but is poorly absorbed from the human gut.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It binds and stabilizes actin filaments but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It binds and stabilizes actin filaments but is poorly absorbed from the human gut.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phalloidin</b><br>Содержание: unknown<br>Влияние: It binds to actin but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It binds to actin but is poorly absorbed from the human gut.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">α-Amanitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>α-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Alpha-amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and can cause fatal liver failure.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and can cause fatal liver failure.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">β-Amanitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>β-Amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-amanitin</b><br>Содержание: unknown<br>Влияние: It inhibits RNA polymerase II and contributes to severe liver injury.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It inhibits RNA polymerase II and contributes to severe liver injury.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Phallacidin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Phallacidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments but is poorly absorbed from the human gut.<br>Судья: реальное · концентрация нет данных · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments but is poorly absorbed from the human gut.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Phallacidin</b><br>Содержание: unknown<br>Влияние: It binds to actin but contributes little to poisoning after ingestion because it is poorly absorbed.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It binds to actin but contributes little to poisoning after ingestion because it is poorly</span></div></td><td class="freq">2/3</td></tr><tr><td class="name">Viroisin</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Viroisin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments, but its contribution to human poisoning is unclear.<br>Судья: галлюцинация · концентрация нет данных · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments, but its contribution to human poisoning is unclear.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Viroisin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments, but its contribution to human poisoning is unclear.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments, but its contribution to human poisoning is unclear.</span></div></td><td class="cell na"></td><td class="freq">2/3</td></tr><tr><td class="name">Viroidin</td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Viroidin</b><br>Содержание: unknown<br>Влияние: It stabilizes actin filaments, but its contribution to human poisoning is unclear.<br>Судья: реальное · концентрация нет данных · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It stabilizes actin filaments, but its contribution to human poisoning is unclear.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">α-amanitin (chief amatoxin)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">β-amanitin</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">phallotoxins (phalloidin etc.)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark ok">✓</td></tr><tr><td class="name">virotoxins (viroisin, viroidin, deoxoviroisin, alaviroidin etc.)</td><td class="mark ok">✓</td><td class="mark ok">✓</td><td class="mark no">—</td></tr>
+</table></div>
+</div>
+<div class="mush">
+<h3>Honey fungus <span class="latin">(Armillaria mellea)</span></h3>
+<div class="mini-chips">
+  <div class="chip">Балл судьи: <b>3.0 / 10</b></div>
+  <div class="chip">Стабильность состава: <b>81%</b> <small>(Jaccard между прогонами)</small></div>
+  <div class="chip">Стабильность реальных: <b>87%</b> <small>(только признанные судьёй)</small></div>
+  <div class="chip">Перечислено соединений: <b>27</b></div>
+  <div class="chip">Галлюцинации: <b>52%</b> (14 из 27 вердиктов)</div>
+  <div class="chip">реальных <b>13</b> · спорных <b>0</b></div>
+</div>
+<div class="legend">
+  <span><span class="sw" style="background:#3aa25c"></span>реальное вещество</span>
+  <span><span class="sw" style="background:#e8b64c"></span>спорно</span>
+  <span><span class="sw" style="background:#d75f5f"></span>галлюцинация</span>
+  <span><span class="sw" style="background:#a9b0ba"></span>не перечислено в прогоне</span>
+  <span class="hint">наведите — содержание, влияние и вердикт судьи</span>
+</div>
+
+<div class="scroll"><table class="comp">
+<tr><th class="namehd">Соединение</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th><th>частота</th></tr>
+<tr><td class="name">Beta-glucans</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These cell-wall polysaccharides act as dietary fiber.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>These cell-wall polysaccharides act as dietary fiber.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These polysaccharides contribute to dietary fiber.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>These polysaccharides contribute to dietary fiber.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Beta-glucans</b><br>Содержание: unknown<br>Влияние: These polysaccharides contribute dietary fiber.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>These polysaccharides contribute dietary fiber.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Chitin</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This structural polysaccharide contributes largely indigestible fiber.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This structural polysaccharide contributes largely indigestible fiber.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This fungal cell-wall polysaccharide is largely indigestible in humans.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This fungal cell-wall polysaccharide is largely indigestible in humans.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Chitin</b><br>Содержание: unknown<br>Влияние: This fungal cell-wall polysaccharide is poorly digested by humans.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>This fungal cell-wall polysaccharide is poorly digested by humans.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Ergosterol</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: UV exposure can convert this fungal sterol into vitamin D2, which supports calcium absorption.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>UV exposure can convert this fungal sterol into vitamin D2, which supports calcium absorpt</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: After ultraviolet exposure converts it to vitamin D2, it can contribute to dietary vitamin D intake.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>After ultraviolet exposure converts it to vitamin D2, it can contribute to dietary vitamin</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Ergosterol</b><br>Содержание: unknown<br>Влияние: Ultraviolet light can convert it into vitamin D2, which helps humans absorb calcium.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>Ultraviolet light can convert it into vitamin D2, which helps humans absorb calcium.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Linoleic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: This essential omega-6 fatty acid helps maintain cell membranes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This essential omega-6 fatty acid helps maintain cell membranes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: It is an essential omega-6 fatty acid used in cell membranes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It is an essential omega-6 fatty acid used in cell membranes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Linoleic acid</b><br>Содержание: unknown<br>Влияние: This essential omega-6 fatty acid is needed for normal cell function.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This essential omega-6 fatty acid is needed for normal cell function.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Mannitol</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: This sugar alcohol can cause bloating or diarrhea in sufficient amounts.<br>Судья: реальное · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This sugar alcohol can cause bloating or diarrhea in sufficient amounts.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: It can cause bloating or diarrhea in sensitive people.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It can cause bloating or diarrhea in sensitive people.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Mannitol</b><br>Содержание: unknown<br>Влияние: This sugar alcohol can cause bloating or diarrhea at high intakes.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>This sugar alcohol can cause bloating or diarrhea at high intakes.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Oleic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: This monounsaturated fatty acid provides energy and is incorporated into cell lipids.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This monounsaturated fatty acid provides energy and is incorporated into cell lipids.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: It supplies energy and is incorporated into cell membranes.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It supplies energy and is incorporated into cell membranes.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Oleic acid</b><br>Содержание: unknown<br>Влияние: This monounsaturated fatty acid provides energy.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This monounsaturated fatty acid provides energy.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Palmitic acid</td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: This saturated fatty acid provides energy and is incorporated into cell lipids.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This saturated fatty acid provides energy and is incorporated into cell lipids.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: This saturated fatty acid supplies energy.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This saturated fatty acid supplies energy.</span></div></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Palmitic acid</b><br>Содержание: unknown<br>Влияние: This saturated fatty acid provides energy.<br>Судья: галлюцинация · концентрация нет данных · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>This saturated fatty acid provides energy.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Trehalose</td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: The intestinal enzyme trehalase breaks this sugar down into glucose.<br>Судья: реальное · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>The intestinal enzyme trehalase breaks this sugar down into glucose.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: It is normally broken down into glucose in the small intestine.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>It is normally broken down into glucose in the small intestine.</span></div></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Trehalose</b><br>Содержание: unknown<br>Влияние: Most people digest this disaccharide into glucose.<br>Судья: реальное · концентрация не указана · влияние верно<br></div><div class="inner"><b>доля не указана</b><span>Most people digest this disaccharide into glucose.</span></div></td><td class="freq">3/3</td></tr><tr><td class="name">Glutamic acid</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Glutamic acid</b><br>Содержание: unknown<br>Влияние: In its free form, it contributes to umami taste.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>In its free form, it contributes to umami taste.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr><tr><td class="name">Melleolides (sesquiterpene aryl esters)</td><td class="cell na"></td><td class="cell na"></td><td class="cell " style="background:#3aa25c"><div class="tip"><b>Melleolides (sesquiterpene aryl esters)</b><br>Содержание: unknown<br>Влияние: Their effects in humans after eating the mushroom are not established.<br>Судья: реальное · концентрация не указана · влияние частично<br></div><div class="inner"><b>доля не указана</b><span>Their effects in humans after eating the mushroom are not established.</span></div></td><td class="freq">1/3</td></tr><tr><td class="name">Water</td><td class="cell na"></td><td class="cell " style="background:#d75f5f"><div class="tip"><b>Water</b><br>Содержание: unknown<br>Влияние: It contributes to hydration.<br>Судья: галлюцинация · концентрация не указана · влияние нет данных<br></div><div class="inner"><b>доля не указана</b><span>It contributes to hydration.</span></div></td><td class="cell na"></td><td class="freq">1/3</td></tr>
+</table></div>
+<h4>Пропуски эталонных основных веществ</h4>
+<div class="legend"><span class="hint">✓ — вещество названо в прогоне, — — нет</span></div>
+
+<div class="scroll"><table class="comp miss">
+<tr><th class="namehd">Эталонные соединения (основные)</th><th class="runhd">run-01</th><th class="runhd">run-02</th><th class="runhd">run-03</th></tr>
+<tr><td class="name">heat-labile gastrointestinal irritants (proteinaceous)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark no">—</td></tr><tr><td class="name">melleolides (sesquiterpene antibiotics: orsellinic-acid esters of protoilludane alcohols, some chlorinated)</td><td class="mark no">—</td><td class="mark no">—</td><td class="mark ok">✓</td></tr>
+</table></div>
+</div><h2>Ответы моделей (raw)</h2><details class="raw"><summary>Fly agaric · run-01 · 3.05 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Fly agaric (Amanita muscaria)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This excitatory glutamate receptor agonist can contribute to nausea, confusion, and agitation.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This GABA-A receptor agonist can cause drowsiness, altered perception, and impaired coordination.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscazone&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Its effects in humans are not well characterized.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscarine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This compound occurs in trace amounts and can cause sweating and salivation at sufficient doses.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-01 · 3.38 c · 2 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Panther cap (Amanita pantherina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates glutamate receptors and can cause agitation, confusion, and impaired coordination.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates GABA-A receptors and can cause drowsiness, altered perception, and loss of consciousness.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-01 · 4.71 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Death cap (Amanita phalloides)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;α-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;β-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;γ-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II, but its individual contribution to human poisoning is not well established.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phallacidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments but contributes little to systemic poisoning after ingestion because it is poorly absorbed.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-01 · 3.36 c · 3 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;False death cap (Amanita citrina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Bufotenine (5-hydroxy-N,N-dimethyltryptamine)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This serotonin-receptor agonist can cause perceptual changes and nausea, depending on the dose and route of exposure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;At sufficient exposure, it can cause intense, short-lived alterations in perception and consciousness.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;N,N-Dimethyltryptamine (DMT)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It can cause brief, intense hallucinations when it reaches the bloodstream in sufficient amounts.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-01 · 4.05 c · 7 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Blusher (Amanita rubescens)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Water contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Chitin is a structural polysaccharide that humans digest poorly.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Beta-glucans act as dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Trehalose is normally broken down into glucose in the small intestine.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Mannitol can cause bloating or diarrhea in sufficient amounts.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Ergosterol can be converted by ultraviolet light into vitamin D2, which supports calcium absorption.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Rubescenslysin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This heat-sensitive protein can rupture human red blood cells in laboratory tests.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-01 · 4.29 c · 10 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Caesar&#x27;s mushroom (Amanita caesarea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Water contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Digestible proteins supply amino acids for tissue maintenance.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Mushroom beta-glucans contribute dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Chitin is a structural fiber that humans digest poorly.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;The intestinal enzyme trehalase breaks trehalose down into glucose.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Mannitol can cause bloating in people sensitive to sugar alcohols.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Linoleic acid is an essential omega-6 fatty acid.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Oleic acid supplies energy as a monounsaturated fat.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Palmitic acid supplies energy as a saturated fat.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;UV exposure can convert ergosterol in the mushroom into vitamin D2, which supports calcium absorption.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-01 · 4.11 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Destroying angel (Amanita virosa)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;α-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;β-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds to filamentous actin but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Viroisin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments, but its contribution to human poisoning is unclear.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-01 · 3.57 c · 8 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Honey fungus (Armillaria mellea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;The intestinal enzyme trehalase breaks this sugar down into glucose.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This sugar alcohol can cause bloating or diarrhea in sufficient amounts.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These cell-wall polysaccharides act as dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This structural polysaccharide contributes largely indigestible fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;UV exposure can convert this fungal sterol into vitamin D2, which supports calcium absorption.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This essential omega-6 fatty acid helps maintain cell membranes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This monounsaturated fatty acid provides energy and is incorporated into cell lipids.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This saturated fatty acid provides energy and is incorporated into cell lipids.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-02 · 2.58 c · 3 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Fly agaric (Amanita muscaria)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates glutamate receptors and can cause nausea, confusion, and agitation.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired coordination.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscarine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It can cause sweating and salivation, but fly agaric usually contains only trace amounts.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-02 · 3.15 c · 2 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Panther cap (Amanita pantherina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates glutamate receptors and can cause agitation, confusion, and nausea.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates GABA-A receptors and can cause drowsiness, impaired coordination, and altered perception.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-02 · 4.65 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Death cap (Amanita phalloides)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;α-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;β-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;γ-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II, disrupting RNA synthesis in human cells.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds to actin filaments but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phallacidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments but contributes little to poisoning after ingestion because it is poorly absorbed.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-02 · 3.57 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;False death cap (Amanita citrina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Bufotenine (5-hydroxy-N,N-dimethyltryptamine)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This serotonergic compound can alter perception and cause nausea.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal cell-wall polysaccharide acts as largely indigestible dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These fungal polysaccharides contribute dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal sterol can convert to vitamin D2 upon ultraviolet exposure.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-02 · 3.33 c · 7 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Blusher (Amanita rubescens)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Rubescenslysin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This heat-labile protein can rupture human red blood cells in laboratory tests.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It acts as a largely indigestible dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These fungal polysaccharides contribute dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Most people digest this sugar into glucose.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This sugar alcohol can cause bloating or diarrhea at high intakes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It can form vitamin D2 under ultraviolet light before consumption.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-02 · 4.72 c · 10 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Caesar&#x27;s mushroom (Amanita caesarea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Proteins&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;They supply amino acids used to build and maintain tissues.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Most people digest it into glucose for energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It can cause bloating or loose stools at high intakes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;They contribute to dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes largely indigestible dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It is an essential fatty acid used in cell membranes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It provides energy as a monounsaturated fat.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It provides energy as a saturated fat.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;After UV exposure converts it to vitamin D2, it can contribute to vitamin D intake.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-02 · 3.33 c · 6 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Destroying angel (Amanita virosa)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;α-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;β-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds and stabilizes actin filaments but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phallacidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Viroisin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments, but its contribution to human poisoning is unclear.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Viroidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments, but its contribution to human poisoning is unclear.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-02 · 6.38 c · 10 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Honey fungus (Armillaria mellea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It is normally broken down into glucose in the small intestine.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It can cause bloating or diarrhea in sensitive people.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These polysaccharides contribute to dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal cell-wall polysaccharide is largely indigestible in humans.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Glutamic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;In its free form, it contributes to umami taste.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It is an essential omega-6 fatty acid used in cell membranes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It supplies energy and is incorporated into cell membranes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This saturated fatty acid supplies energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;After ultraviolet exposure converts it to vitamin D2, it can contribute to dietary vitamin D intake.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Fly agaric · run-03 · 2.48 c · 3 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Fly agaric (Amanita muscaria)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates glutamate receptors and can cause nausea, confusion, and agitation.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It activates GABA-A receptors and can cause drowsiness, altered perception, and impaired coordination.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscarine&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It occurs in trace amounts and can cause sweating and salivation at sufficient doses.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Panther cap · run-03 · 2.55 c · 2 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Panther cap (Amanita pantherina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Ibotenic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Ibotenic acid stimulates glutamate receptors and can cause nausea, confusion, and agitation.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Muscimol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Muscimol activates GABA-A receptors and can cause drowsiness, impaired coordination, and altered perception.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Death cap · run-03 · 4.61 c · 5 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Death cap (Amanita phalloides)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;α-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;β-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;γ-Amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes to poisoning by inhibiting RNA polymerase II.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It stabilizes actin filaments but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phallacidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds actin filaments but contributes little to poisoning after ingestion because it is poorly absorbed.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>False death cap · run-03 · 3.97 c · 3 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;False death cap (Amanita citrina)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Bufotenine (5-hydroxy-N,N-dimethyltryptamine)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This serotonergic compound can alter perception, but its effects when ingested in the mushroom are poorly established.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;5-Methoxy-N,N-dimethyltryptamine (5-MeO-DMT)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This serotonergic compound can cause intense, short-lived changes in perception and consciousness.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;N,N-Dimethyltryptamine (DMT)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This compound can cause brief hallucinations when it reaches the bloodstream but is usually inactive when swallowed on its own.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Blusher · run-03 · 4.06 c · 6 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Blusher (Amanita rubescens)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Rubescenslysin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This heat-labile protein ruptures human red blood cells in laboratory assays.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal cell-wall polysaccharide acts mainly as dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These fungal polysaccharides contribute to dietary fiber intake.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;The digestive enzyme trehalase breaks this sugar down into glucose.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This sugar alcohol can cause bloating or diarrhea at sufficient doses.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal sterol can become vitamin D2 when the mushroom is exposed to ultraviolet light.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Caesar&#x27;s mushroom · run-03 · 3.64 c · 9 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Caesar&#x27;s mushroom (Amanita caesarea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Water&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It contributes to hydration.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Most people digest this sugar into glucose for energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This sugar alcohol can cause bloating or diarrhea in sensitive people.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This structural polysaccharide acts as largely indigestible dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These polysaccharides contribute to dietary fiber intake.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This essential omega-6 fatty acid helps maintain cell membranes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This monounsaturated fatty acid provides energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This saturated fatty acid provides energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Ultraviolet exposure can convert it into vitamin D2, which supports calcium absorption.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Destroying angel · run-03 · 4.13 c · 4 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Destroying angel (Amanita virosa)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Alpha-amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and can cause fatal liver failure.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Beta-amanitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It inhibits RNA polymerase II and contributes to severe liver injury.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phalloidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds to actin but is poorly absorbed from the human gut.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Phallacidin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;It binds to actin but contributes little to poisoning after ingestion because it is poorly absorbed.&quot;
+    }
+  ]
+}</pre></details>
+<details class="raw"><summary>Honey fungus · run-03 · 3.95 c · 9 веществ</summary><pre>{
+  &quot;mushroom&quot;: &quot;Honey fungus (Armillaria mellea)&quot;,
+  &quot;composition&quot;: [
+    {
+      &quot;compound&quot;: &quot;Beta-glucans&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;These polysaccharides contribute dietary fiber.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Chitin&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This fungal cell-wall polysaccharide is poorly digested by humans.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Mannitol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This sugar alcohol can cause bloating or diarrhea at high intakes.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Trehalose&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Most people digest this disaccharide into glucose.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Linoleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This essential omega-6 fatty acid is needed for normal cell function.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Oleic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This monounsaturated fatty acid provides energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Palmitic acid&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;This saturated fatty acid provides energy.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Ergosterol&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Ultraviolet light can convert it into vitamin D2, which helps humans absorb calcium.&quot;
+    },
+    {
+      &quot;compound&quot;: &quot;Melleolides (sesquiterpene aryl esters)&quot;,
+      &quot;amount&quot;: &quot;unknown&quot;,
+      &quot;effect&quot;: &quot;Their effects in humans after eating the mushroom are not established.&quot;
+    }
+  ]
+}</pre></details>
+<footer>построено build_mush_report.py · 2026-11-21 15:22 UTC · данные: run-*/session.json, run-*/verdicts.json</footer>
+</main>
+<script>
+(function () {
+  let live = null;
+  document.addEventListener('mouseover', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (!td || td === live) return;
+    if (live) hide(live);
+    const tip = td.querySelector('.tip');
+    if (!tip) return;
+    live = td;
+    tip.style.display = 'block';
+    const r = td.getBoundingClientRect();
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = r.left + r.width / 2 - w / 2;
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    let y = r.top - h - 8;                 // над клеткой
+    if (y < 8) y = r.bottom + 8;           // не влезло — под клеткой
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    const td = e.target.closest && e.target.closest('td.cell');
+    if (td) hide(td);
+  });
+  function hide(td) {
+    const tip = td.querySelector('.tip');
+    if (tip) tip.style.display = 'none';
+    live = null;
+  }
+  window.addEventListener('scroll', () => {
+    if (live) hide(live);
+  }, true);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+{
+  "model": "k3.1-pro",
+  "run": 1,
+  "started_at": "2026-11-21T03:29:17.187780+00:00",
+  "base_url": "api.deepseek.com (через pi)",
+  "protocol": "pi (anthropic-messages, kimi-coding api)",
+  "provider": "kimi-coding",
+  "keep_alive": "n/a (API stateless)",
+  "think": "low",
+  "question_count": 8,
+  "questionnaire": "4.3-en",
+  "questionnaire_file": "questions-composition-en.json",
+  "system_prompt": "You are taking a test on your knowledge of the chemical composition of mushrooms. Answer strictly in JSON using exactly these keys: {\"mushroom\": \"...\", \"composition\": [{\"compound\": \"...\", \"amount\": \"...\", \"effect\": \"...\"}]}. In \"amount\" give a number with a unit (% of fresh weight, % of dry weight, mg/kg, mg/g, or per fruiting body) — if you do not know, write \"unknown\". In \"effect\" give one short sentence about the compound's effect on humans. List the main chemical compounds of this mushroom. Answer in English. No text outside the JSON.",
+  "totals": {
+    "duration_s": 118.0,
+    "prompt_tokens": 2122,
+    "output_tokens": 4311,
+    "cached_tokens": 0
+  },
+  "turns": [
+    {
+      "id": "AMUS",
+      "topic": "Fly agaric",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of fly agaric (Amanita muscaria).",
+      "answer_raw": "{\"mushroom\":\"Fly agaric (Amanita muscaria)\",\"composition\":[{\"compound\":\"Ibotenic acid\",\"amount\":\"unknown\",\"effect\":\"Acts on glutamate receptors and can cause excitation, confusion, hallucinations, and other neurotoxic effects.\"},{\"compound\":\"Muscimol\",\"amount\":\"unknown\",\"effect\":\"Activates GABA-A receptors and can cause sedation, dizziness, altered perception, and delirium.\"},{\"compound\":\"Muscazone\",\"amount\":\"unknown\",\"effect\":\"A related isoxazole compound whose human effects are poorly characterized.\"},{\"compound\":\"Muscarine\",\"amount\":\"unknown\",\"effect\":\"Occurs only in trace amounts and can stimulate muscarinic receptors, causing sweating, salivation, and gastrointestinal symptoms at sufficient doses.\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "Acts on glutamate receptors and can cause excitation, confusion, hallucinations, and other neurotoxic effects."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "Activates GABA-A receptors and can cause sedation, dizziness, altered perception, and delirium."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "A related isoxazole compound whose human effects are poorly characterized."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Occurs only in trace amounts and can stimulate muscarinic receptors, causing sweating, salivation, and gastrointestinal symptoms at sufficient doses."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 128,
+      "duration_s": 17.58,
+      "eval_count": 299,
+      "prompt_eval_count": 267,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APAN",
+      "topic": "Panther cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of panther cap (Amanita pantherina).",
+      "answer_raw": "{\"mushroom\":\"Panther cap (Amanita pantherina)\",\"composition\":[{\"compound\":\"Ibotenic acid\",\"amount\":\"unknown\",\"effect\":\"A neurotoxic glutamate-receptor agonist that can cause agitation, confusion, seizures, and other central nervous system effects.\"},{\"compound\":\"Muscimol\",\"amount\":\"unknown\",\"effect\":\"A psychoactive GABA-A receptor agonist that can cause sedation, delirium, hallucinations, and impaired coordination.\"},{\"compound\":\"Muscazone\",\"amount\":\"unknown\",\"effect\":\"A minor related compound whose pharmacological effects in humans are poorly understood.\"},{\"compound\":\"Muscarine\",\"amount\":\"unknown\",\"effect\":\"Present only in trace amounts, it can activate muscarinic receptors and cause parasympathetic symptoms such as salivation and sweating.\"}]}",
+      "composition": [
+        {
+          "вещество": "Ibotenic acid",
+          "содержание": "unknown",
+          "влияние": "A neurotoxic glutamate-receptor agonist that can cause agitation, confusion, seizures, and other central nervous system effects."
+        },
+        {
+          "вещество": "Muscimol",
+          "содержание": "unknown",
+          "влияние": "A psychoactive GABA-A receptor agonist that can cause sedation, delirium, hallucinations, and impaired coordination."
+        },
+        {
+          "вещество": "Muscazone",
+          "содержание": "unknown",
+          "влияние": "A minor related compound whose pharmacological effects in humans are poorly understood."
+        },
+        {
+          "вещество": "Muscarine",
+          "содержание": "unknown",
+          "влияние": "Present only in trace amounts, it can activate muscarinic receptors and cause parasympathetic symptoms such as salivation and sweating."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 4,
+      "thinking_len": 221,
+      "duration_s": 12.76,
+      "eval_count": 402,
+      "prompt_eval_count": 266,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "APHA",
+      "topic": "Death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of death cap (Amanita phalloides).",
+      "answer_raw": "{\"mushroom\":\"Death cap (Amanita phalloides)\",\"composition\":[{\"compound\":\"Alpha-amanitin\",\"amount\":\"unknown\",\"effect\":\"Inhibits RNA polymerase II and can cause severe liver and kidney damage, often with fatal outcomes.\"},{\"compound\":\"Beta-amanitin\",\"amount\":\"unknown\",\"effect\":\"Inhibits RNA polymerase II and contributes to potentially fatal liver toxicity.\"},{\"compound\":\"Gamma-amanitin\",\"amount\":\"unknown\",\"effect\":\"Acts as a cytotoxic RNA polymerase II inhibitor and contributes to poisoning.\"},{\"compound\":\"Phalloidin\",\"amount\":\"unknown\",\"effect\":\"Stabilizes actin filaments and damages cells, but its poor oral absorption limits its role in human poisoning.\"},{\"compound\":\"Phallacidin\",\"amount\":\"unknown\",\"effect\":\"Disrupts actin dynamics in cells but contributes little to poisoning because it is poorly absorbed orally.\"},{\"compound\":\"Phallisin\",\"amount\":\"unknown\",\"effect\":\"Interferes with cellular actin and is cytotoxic, with limited significance after oral ingestion.\"},{\"compound\":\"Virotoxins\",\"amount\":\"unknown\",\"effect\":\"Bind actin and disrupt cell function, but they are not considered major contributors to human death-cap poisoning.\"}]}",
+      "composition": [
+        {
+          "вещество": "Alpha-amanitin",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II and can cause severe liver and kidney damage, often with fatal outcomes."
+        },
+        {
+          "вещество": "Beta-amanitin",
+          "содержание": "unknown",
+          "влияние": "Inhibits RNA polymerase II and contributes to potentially fatal liver toxicity."
+        },
+        {
+          "вещество": "Gamma-amanitin",
+          "содержание": "unknown",
+          "влияние": "Acts as a cytotoxic RNA polymerase II inhibitor and contributes to poisoning."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "unknown",
+          "влияние": "Stabilizes actin filaments and damages cells, but its poor oral absorption limits its role in human poisoning."
+        },
+        {
+          "вещество": "Phallacidin",
+          "содержание": "unknown",
+          "влияние": "Disrupts actin dynamics in cells but contributes little to poisoning because it is poorly absorbed orally."
+        },
+        {
+          "вещество": "Phallisin",
+          "содержание": "unknown",
+          "влияние": "Interferes with cellular actin and is cytotoxic, with limited significance after oral ingestion."
+        },
+        {
+          "вещество": "Virotoxins",
+          "содержание": "unknown",
+          "влияние": "Bind actin and disrupt cell function, but they are not considered major contributors to human death-cap poisoning."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 138,
+      "duration_s": 11.34,
+      "eval_count": 401,
+      "prompt_eval_count": 265,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACIT",
+      "topic": "False death cap",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of false death cap (Amanita citrina).",
+      "answer_raw": "{\"mushroom\":\"False death cap (Amanita citrina)\",\"composition\":[{\"compound\":\"Bufotenine (5-hydroxy-N,N-dimethyltryptamine)\",\"amount\":\"unknown\",\"effect\":\"It is a psychoactive tryptamine, but reported concentrations in this mushroom are too low for significant psychoactive effects.\"},{\"compound\":\"Alpha-amanitin\",\"amount\":\"unknown\",\"effect\":\"Even small quantities are dangerous because this cyclic peptide inhibits RNA polymerase II and can cause severe liver and kidney damage.\"}]}",
+      "composition": [
+        {
+          "вещество": "Bufotenine (5-hydroxy-N,N-dimethyltryptamine)",
+          "содержание": "unknown",
+          "влияние": "It is a psychoactive tryptamine, but reported concentrations in this mushroom are too low for significant psychoactive effects."
+        },
+        {
+          "вещество": "Alpha-amanitin",
+          "содержание": "unknown",
+          "влияние": "Even small quantities are dangerous because this cyclic peptide inhibits RNA polymerase II and can cause severe liver and kidney damage."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 2,
+      "thinking_len": 408,
+      "duration_s": 13.95,
+      "eval_count": 522,
+      "prompt_eval_count": 265,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ARUB",
+      "topic": "Blusher",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of blusher (Amanita rubescens).",
+      "answer_raw": "{\"mushroom\":\"Blusher (Amanita rubescens)\",\"composition\":[{\"compound\":\"Rubescenslysin\",\"amount\":\"unknown\",\"effect\":\"This heat-labile hemolytic protein can damage red blood cells when the mushroom is eaten raw.\"},{\"compound\":\"Beta-glucans\",\"amount\":\"unknown\",\"effect\":\"These fungal polysaccharides can modulate immune activity and contribute dietary fiber.\"},{\"compound\":\"Ergosterol\",\"amount\":\"unknown\",\"effect\":\"This fungal sterol is converted to vitamin D2 by ultraviolet exposure.\"},{\"compound\":\"Mannitol\",\"amount\":\"unknown\",\"effect\":\"This sugar alcohol provides sweetness and can have a laxative effect when consumed in large amounts.\"},{\"compound\":\"Trehalose\",\"amount\":\"unknown\",\"effect\":\"This digestible disaccharide provides energy after breakdown into glucose.\"},{\"compound\":\"Linoleic acid\",\"amount\":\"unknown\",\"effect\":\"This essential omega-6 fatty acid supports cell-membrane structure and normal lipid metabolism.\"},{\"compound\":\"Phenolic compounds\",\"amount\":\"unknown\",\"effect\":\"These compounds contribute antioxidant activity, although their dietary significance varies.\"}]}",
+      "composition": [
+        {
+          "вещество": "Rubescenslysin",
+          "содержание": "unknown",
+          "влияние": "This heat-labile hemolytic protein can damage red blood cells when the mushroom is eaten raw."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "These fungal polysaccharides can modulate immune activity and contribute dietary fiber."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "This fungal sterol is converted to vitamin D2 by ultraviolet exposure."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "This sugar alcohol provides sweetness and can have a laxative effect when consumed in large amounts."
+        },
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "This digestible disaccharide provides energy after breakdown into glucose."
+        },
+        {
+          "вещество": "Linoleic acid",
+          "содержание": "unknown",
+          "влияние": "This essential omega-6 fatty acid supports cell-membrane structure and normal lipid metabolism."
+        },
+        {
+          "вещество": "Phenolic compounds",
+          "содержание": "unknown",
+          "влияние": "These compounds contribute antioxidant activity, although their dietary significance varies."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 493,
+      "duration_s": 9.39,
+      "eval_count": 729,
+      "prompt_eval_count": 265,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "ACAE",
+      "topic": "Caesar's mushroom",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of Caesar's mushroom (Amanita caesarea).",
+      "answer_raw": "{\"mushroom\":\"Caesar's mushroom (Amanita caesarea)\",\"composition\":[{\"compound\":\"Trehalose\",\"amount\":\"unknown\",\"effect\":\"A digestible disaccharide that provides energy.\"},{\"compound\":\"Mannitol\",\"amount\":\"unknown\",\"effect\":\"A sugar alcohol that provides limited energy and can cause digestive discomfort in large amounts.\"},{\"compound\":\"Beta-glucans\",\"amount\":\"unknown\",\"effect\":\"Cell-wall polysaccharides that contribute dietary fiber and may modulate immune activity.\"},{\"compound\":\"Ergosterol\",\"amount\":\"unknown\",\"effect\":\"A fungal sterol that can be converted to vitamin D2 by ultraviolet light.\"},{\"compound\":\"Linoleic acid\",\"amount\":\"unknown\",\"effect\":\"An essential omega-6 fatty acid required for normal human physiology.\"},{\"compound\":\"Oleic acid\",\"amount\":\"unknown\",\"effect\":\"A monounsaturated fatty acid used for energy and cell-membrane formation.\"},{\"compound\":\"Palmitic acid\",\"amount\":\"unknown\",\"effect\":\"A saturated fatty acid that provides energy and serves as a membrane lipid component.\"},{\"compound\":\"Glutamic acid\",\"amount\":\"unknown\",\"effect\":\"A protein-building amino acid that also contributes to the mushroom's savory taste.\"},{\"compound\":\"Carotenoids\",\"amount\":\"unknown\",\"effect\":\"Pigments associated with the orange-red cap that can have antioxidant activity.\"}]}",
+      "composition": [
+        {
+          "вещество": "Trehalose",
+          "содержание": "unknown",
+          "влияние": "A digestible disaccharide that provides energy."
+        },
+        {
+          "вещество": "Mannitol",
+          "содержание": "unknown",
+          "влияние": "A sugar alcohol that provides limited energy and can cause digestive discomfort in large amounts."
+        },
+        {
+          "вещество": "Beta-glucans",
+          "содержание": "unknown",
+          "влияние": "Cell-wall polysaccharides that contribute dietary fiber and may modulate immune activity."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "A fungal sterol that can be converted to vitamin D2 by ultraviolet light."
+        },
+        {
+          "вещество": "Linoleic acid",
+          "содержание": "unknown",
+          "влияние": "An essential omega-6 fatty acid required for normal human physiology."
+        },
+        {
+          "вещество": "Oleic acid",
+          "содержание": "unknown",
+          "влияние": "A monounsaturated fatty acid used for energy and cell-membrane formation."
+        },
+        {
+          "вещество": "Palmitic acid",
+          "содержание": "unknown",
+          "влияние": "A saturated fatty acid that provides energy and serves as a membrane lipid component."
+        },
+        {
+          "вещество": "Glutamic acid",
+          "содержание": "unknown",
+          "влияние": "A protein-building amino acid that also contributes to the mushroom's savory taste."
+        },
+        {
+          "вещество": "Carotenoids",
+          "содержание": "unknown",
+          "влияние": "Pigments associated with the orange-red cap that can have antioxidant activity."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 9,
+      "thinking_len": 419,
+      "duration_s": 19.2,
+      "eval_count": 707,
+      "prompt_eval_count": 266,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AVIO",
+      "topic": "Destroying angel",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of destroying angel (Amanita virosa).",
+      "answer_raw": "{\"mushroom\":\"Destroying angel (Amanita virosa)\",\"composition\":[{\"compound\":\"α-Amanitin\",\"amount\":\"unknown\",\"effect\":\"A highly toxic amatoxin that inhibits RNA polymerase II and can cause fatal liver and kidney failure.\"},{\"compound\":\"β-Amanitin\",\"amount\":\"unknown\",\"effect\":\"A highly toxic amatoxin that inhibits RNA synthesis and contributes to severe liver injury.\"},{\"compound\":\"γ-Amanitin\",\"amount\":\"unknown\",\"effect\":\"A toxic amatoxin that inhibits RNA polymerase II and damages the liver.\"},{\"compound\":\"Phalloidin\",\"amount\":\"unknown\",\"effect\":\"A phallotoxin that stabilizes actin filaments and damages cells, although it is poorly absorbed from the gut.\"},{\"compound\":\"Phallacidin\",\"amount\":\"unknown\",\"effect\":\"A phallotoxin that disrupts actin dynamics and is toxic to liver cells but poorly absorbed orally.\"},{\"compound\":\"Viroidin\",\"amount\":\"unknown\",\"effect\":\"A virotoxin that binds actin and disrupts the cytoskeleton, with limited systemic toxicity after oral ingestion.\"},{\"compound\":\"Viroisin\",\"amount\":\"unknown\",\"effect\":\"A virotoxin that interferes with actin filaments and is toxic to cells but poorly absorbed from the digestive tract.\"}]}",
+      "composition": [
+        {
+          "вещество": "α-Amanitin",
+          "содержание": "unknown",
+          "влияние": "A highly toxic amatoxin that inhibits RNA polymerase II and can cause fatal liver and kidney failure."
+        },
+        {
+          "вещество": "β-Amanitin",
+          "содержание": "unknown",
+          "влияние": "A highly toxic amatoxin that inhibits RNA synthesis and contributes to severe liver injury."
+        },
+        {
+          "вещество": "γ-Amanitin",
+          "содержание": "unknown",
+          "влияние": "A toxic amatoxin that inhibits RNA polymerase II and damages the liver."
+        },
+        {
+          "вещество": "Phalloidin",
+          "содержание": "unknown",
+          "влияние": "A phallotoxin that stabilizes actin filaments and damages cells, although it is poorly absorbed from the gut."
+        },
+        {
+          "вещество": "Phallacidin",
+          "содержание": "unknown",
+          "влияние": "A phallotoxin that disrupts actin dynamics and is toxic to liver cells but poorly absorbed orally."
+        },
+        {
+          "вещество": "Viroidin",
+          "содержание": "unknown",
+          "влияние": "A virotoxin that binds actin and disrupts the cytoskeleton, with limited systemic toxicity after oral ingestion."
+        },
+        {
+          "вещество": "Viroisin",
+          "содержание": "unknown",
+          "влияние": "A virotoxin that interferes with actin filaments and is toxic to cells but poorly absorbed from the digestive tract."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 7,
+      "thinking_len": 282,
+      "duration_s": 19.43,
+      "eval_count": 560,
+      "prompt_eval_count": 264,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    },
+    {
+      "id": "AMEL",
+      "topic": "Honey fungus",
+      "prompt": "List the main chemical compounds found in the fruiting bodies of honey fungus (Armillaria mellea).",
+      "answer_raw": "{\"mushroom\":\"Honey fungus (Armillaria mellea)\",\"composition\":[{\"compound\":\"Polysaccharides, principally β-glucans\",\"amount\":\"unknown\",\"effect\":\"They can modulate immune activity, although their effects in humans depend on the extract and dose.\"},{\"compound\":\"Melleolides, including melleolide A and related sesquiterpene aryl esters\",\"amount\":\"unknown\",\"effect\":\"They show antimicrobial and cytotoxic activity in laboratory studies, with no established therapeutic use in humans.\"},{\"compound\":\"Armillaric acid\",\"amount\":\"unknown\",\"effect\":\"This sesquiterpenoid has shown biological activity in vitro, but its effects on humans are not established.\"},{\"compound\":\"Ergosterol\",\"amount\":\"unknown\",\"effect\":\"It is a fungal sterol that can be converted to vitamin D2 by ultraviolet exposure.\"},{\"compound\":\"Adenosine and related nucleosides\",\"amount\":\"unknown\",\"effect\":\"Adenosine affects cardiovascular and nervous-system signaling, but dietary amounts in this mushroom have not established a clinical effect.\"}]}",
+      "composition": [
+        {
+          "вещество": "Polysaccharides, principally β-glucans",
+          "содержание": "unknown",
+          "влияние": "They can modulate immune activity, although their effects in humans depend on the extract and dose."
+        },
+        {
+          "вещество": "Melleolides, including melleolide A and related sesquiterpene aryl esters",
+          "содержание": "unknown",
+          "влияние": "They show antimicrobial and cytotoxic activity in laboratory studies, with no established therapeutic use in humans."
+        },
+        {
+          "вещество": "Armillaric acid",
+          "содержание": "unknown",
+          "влияние": "This sesquiterpenoid has shown biological activity in vitro, but its effects on humans are not established."
+        },
+        {
+          "вещество": "Ergosterol",
+          "содержание": "unknown",
+          "влияние": "It is a fungal sterol that can be converted to vitamin D2 by ultraviolet exposure."
+        },
+        {
+          "вещество": "Adenosine and related nucleosides",
+          "содержание": "unknown",
+          "влияние": "Adenosine affects cardiovascular and nervous-system signaling, but dietary amounts in this mushroom have not established a clinical effect."
+        }
+      ],
+      "json_ok": true,
+      "n_substances": 5,
+      "thinking_len": 464,
+      "duration_s": 14.35,
+      "eval_count": 691,
+      "prompt_eval_count": 264,
+      "prompt_eval_cached_count": 0,
+      "done_reason": "stop"
+    }
+  ]
+}
